@@ -1,6 +1,7 @@
 import { getLatestArticles } from '@/lib/articles'
 import { getAllTopics } from '@/lib/topics'
 import { HeroSection } from '@/components/home/HeroSection'
+import { IntelligenceHero } from '@/components/home/IntelligenceHero'
 import { LatestArticles } from '@/components/home/LatestArticles'
 import { TopicsSection } from '@/components/home/TopicsSection'
 import { SupplyChainMetrics } from '@/components/home/SupplyChainMetrics'
@@ -20,6 +21,7 @@ export default async function HomePage() {
     <main id="main-content" className="bg-[#fafaf9]">
       <div className="w-full bg-white">
         <HeroSection />
+        <IntelligenceHero article={latestArticles[0]} />
         <LatestArticles articles={latestArticles} />
         <TopicsSection topics={topics} />
         <SupplyChainMetrics />
