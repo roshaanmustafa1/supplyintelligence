@@ -9,7 +9,7 @@ export function HeroSection() {
       <Container size="full" className="py-5 sm:py-8 lg:py-10">
         <div className="grid overflow-hidden border border-slate-200 bg-[#f6f7f6] lg:grid-cols-[1.05fr_.95fr]">
           <div className="flex min-h-[360px] flex-col justify-center px-7 py-12 sm:px-12 lg:px-14 lg:py-16">
-            <p className="mb-5 text-[11px] font-bold uppercase tracking-[0.18em] text-[#007c75]">
+            <p className="mb-5 text-[11px] font-bold uppercase tracking-[0.18em] text-[#0284c7]">
               Supply Intelligence Journal
             </p>
             <h1 className="max-w-xl font-serif text-4xl font-semibold leading-[1.06] tracking-[-0.035em] text-slate-950 sm:text-5xl lg:text-[3.65rem]">
@@ -21,7 +21,7 @@ export function HeroSection() {
             <div className="mt-8">
               <Link
                 href="/blog"
-                className="group inline-flex items-center justify-center gap-2 bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#007c75] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#007c75]"
+                className="group inline-flex items-center justify-center gap-2 bg-[#0284c7] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7]"
               >
                 <span>Explore Articles</span>
                 <ArrowRight className="size-3.5 sm:size-4 transition-transform duration-200 group-hover:translate-x-1" />

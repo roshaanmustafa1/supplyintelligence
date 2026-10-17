@@ -46,9 +46,9 @@ export function MobileNavigation({ onOpenSearch }: MobileNavigationProps) {
   const navLinks = [
     { label: 'Home', href: '/' },
     { label: 'Articles', href: '/blog' },
-    { label: 'Topics', href: '/#topics' },
-    { label: 'About', href: '/#about-editorial' },
-    { label: 'Contact', href: '/#contact-editorial' },
+    { label: 'Topics', href: '/topics' },
+    { label: 'About', href: '/about' },
+    { label: 'Contact', href: '/contact' },
   ]
 
   return (
@@ -122,7 +122,7 @@ export function MobileNavigation({ onOpenSearch }: MobileNavigationProps) {
             const isActive =
               link.href === '/'
                 ? pathname === '/'
-                : pathname.startsWith(link.href) && link.href !== '/#topics' && link.href !== '/#about-editorial' && link.href !== '/#contact-editorial'
+                : pathname?.startsWith(link.href)
 
             return (
               <Link

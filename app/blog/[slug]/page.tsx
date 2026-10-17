@@ -1,13 +1,12 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getAllArticles, getArticleBySlug, getRelatedArticles } from '@/lib/articles'
-import { Container } from '@/components/common/Container'
-import { ArticleHeader } from '@/components/blog/ArticleHeader'
-import { ArticleContent } from '@/components/blog/ArticleContent'
+import { ArticleJsonLd } from '@/components/seo/JsonLd'
+import { ArticleHeroBanner } from '@/components/blog/ArticleHeroBanner'
+import { SingleArticleContent } from '@/components/blog/SingleArticleContent'
+import { BlogSidebar } from '@/components/blog/BlogSidebar'
 import { RelatedArticles } from '@/components/blog/RelatedArticles'
 import { NewsletterSection } from '@/components/home/NewsletterSection'
-import { AdSlot } from '@/components/ads/AdSlot'
-import { ArticleJsonLd } from '@/components/seo/JsonLd'
 
 interface ArticlePageProps {
   params: Promise<{
@@ -75,33 +74,45 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     notFound()
   }
 
-  const relatedArticles = await getRelatedArticles(article.slug, article.categorySlug, 3)
+  const relatedArticles = await getRelatedArticles(article.slug, article.categorySlug, 4)
 
   return (
     <>
       <ArticleJsonLd article={article} />
 
-      <article id="main-content" className="pt-8 sm:pt-12">
-        <Container size="narrow">
-          {/* Article Header with Breadcrumbs, Title, Meta, and Hero Image */}
-          <ArticleHeader article={article} />
+      {/* Top Hero Banner matching the screenshot's dark page title banner */}
+      <ArticleHeroBanner
+        title={article.title}
+        category={article.category}
+        categorySlug={article.categorySlug}
+      />
 
-          {/* Reserved Leaderboard Ad Slot above content */}
-          <AdSlot slot="article-top-leaderboard" variant="leaderboard" className="my-8" />
+      {/* Main Content Area with Full-Width 2-Column Layout */}
+      <main id="main-content" className="w-full bg-[#f7f8f8] py-8 sm:py-12 lg:py-14">
+        <div className="w-full px-6 sm:px-10 lg:px-16 xl:px-24">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 xl:gap-10 items-start">
+            {/* Left Column (Article content, media gallery, quote, tags, comments) */}
+            <div className="lg:col-span-8">
+              <SingleArticleContent article={article} />
+            </div>
 
-          {/* Article Content with semantic typography, executive takeaways, and in-article ad slot */}
-          <ArticleContent article={article} />
+            {/* Right Column (Sidebar widgets: search, category, recent posts, author, tags) */}
+            <aside className="lg:col-span-4" aria-label="Sidebar Intelligence">
+              <BlogSidebar
+                currentCategorySlug={article.categorySlug}
+                author={article.author}
+                recentArticles={relatedArticles}
+              />
+            </aside>
+          </div>
+        </div>
+      </main>
 
-          {/* Reserved Bottom Article Ad Slot */}
-          <AdSlot slot="article-bottom-leaderboard" variant="article-bottom" className="my-8" />
-        </Container>
+      {/* Related Articles Section */}
+      <RelatedArticles articles={relatedArticles.slice(0, 3)} />
 
-        {/* Related Articles Section */}
-        <RelatedArticles articles={relatedArticles} />
-
-        {/* Newsletter Subscription CTA */}
-        <NewsletterSection />
-      </article>
+      {/* Newsletter Subscription CTA */}
+      <NewsletterSection />
     </>
   )
 }

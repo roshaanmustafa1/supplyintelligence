@@ -22,21 +22,21 @@ export function SectionHeading({
   return (
     <div
       className={cn(
-        'flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between border-b border-border-subtle pb-5',
+        'flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between border-b border-slate-200 pb-4 mb-8',
         className
       )}
     >
-      <div className="space-y-1">
+      <div>
         {eyebrow && (
-          <p className="text-xs font-bold uppercase tracking-wider text-brand-blue">
+          <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-[#0284c7]">
             {eyebrow}
           </p>
         )}
-        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+        <h2 className="font-serif text-3xl font-semibold tracking-tight text-slate-950">
           {title}
         </h2>
         {description && (
-          <p className="text-sm text-muted-foreground max-w-2xl">
+          <p className="mt-1 text-sm text-slate-600 max-w-2xl leading-relaxed">
             {description}
           </p>
         )}
@@ -45,10 +45,10 @@ export function SectionHeading({
       {actionHref && actionLabel && (
         <Link
           href={actionHref}
-          className="group inline-flex items-center gap-1.5 text-sm font-semibold text-brand-blue hover:text-brand-blue-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm transition-colors shrink-0"
+          className="group inline-flex items-center gap-1 text-sm font-semibold text-[#0284c7] hover:text-slate-950 transition-colors shrink-0"
         >
           <span>{actionLabel}</span>
-          <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+          <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />
         </Link>
       )}
     </div>

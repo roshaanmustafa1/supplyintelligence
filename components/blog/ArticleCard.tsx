@@ -39,16 +39,16 @@ export function ArticleCard({
         <div className="mb-3">
           <Link
             href={`/blog?topic=${article.categorySlug}`}
-            className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#007c75] hover:text-slate-950 transition-colors"
+            className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#0284c7] hover:text-slate-950 transition-colors"
           >
             {article.category}
           </Link>
         </div>
 
-        <h3 className="font-serif text-xl font-semibold leading-tight tracking-tight text-slate-950 transition-colors group-hover:text-[#007c75] mb-3 line-clamp-2">
+        <h3 className="font-serif text-xl font-semibold leading-tight tracking-tight text-slate-950 transition-colors group-hover:text-[#0284c7] mb-3 line-clamp-2">
           <Link
             href={`/blog/${article.slug}`}
-            className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-blue rounded-xs"
+            className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#0284c7] rounded-xs"
           >
             {article.title}
           </Link>
@@ -67,7 +67,7 @@ export function ArticleCard({
             href={`/blog/${article.slug}`}
             tabIndex={-1}
             aria-hidden="true"
-            className="inline-flex size-5 items-center justify-center text-[#007c75] transition-transform duration-200 group-hover:translate-x-1"
+            className="inline-flex size-5 items-center justify-center text-[#0284c7] transition-transform duration-200 group-hover:translate-x-1"
           >
             <ArrowRight className="size-3.5" />
           </Link>

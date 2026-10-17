@@ -1,5 +1,7 @@
 import { topics, type Topic } from '@/data/topics'
 
+export type { Topic }
+
 export async function getAllTopics(): Promise<Topic[]> {
   return topics
 }

@@ -2,6 +2,7 @@ export interface ArticleAuthor {
   name: string
   role: string
   bio: string
+  avatar?: string
 }
 
 export interface ArticleSection {
@@ -59,6 +60,7 @@ export const articles: Article[] = [
       name: 'Marcus Vance',
       role: 'Head of Strategic Procurement Research',
       bio: 'Advising Fortune 500 supply chains on operating model design, spend visibility, and procurement transformation.',
+      avatar: '/images/author-marcus.jpg',
     },
     keyTakeaways: [
       'Workflows without quantitative telemetry produce operational opacity rather than business outcomes.',
@@ -133,6 +135,7 @@ export const articles: Article[] = [
       name: 'Elena Rostova',
       role: 'Director of Logistics Systems & Network Design',
       bio: 'Specializing in warehouse automation, freight network topology, and systemic operational flow.',
+      avatar: '/images/author-elena.jpg',
     },
     keyTakeaways: [
       'Friction in supply chains rarely stems from lack of worker effort; it stems from architectural misalignments in workflow flow.',
@@ -205,6 +208,7 @@ export const articles: Article[] = [
       name: 'Dr. Aris Thorne',
       role: 'Principal AI & Automation Strategist',
       bio: 'Leading enterprise machine learning implementations across global sourcing, contract compliance, and supply analytics.',
+      avatar: '/images/commenter-ben.jpg',
     },
     keyTakeaways: [
       'Generative and predictive AI deliver the highest procurement ROI when applied to bounded, high-volume document workflows.',
@@ -275,6 +279,7 @@ export const articles: Article[] = [
       name: 'Capt. Julian Mercer',
       role: 'Maritime Logistics & Port Infrastructure Advisor',
       bio: 'Former port operations superintendent and global ocean freight strategy consultant.',
+      avatar: '/images/quote-alexander.jpg',
     },
     keyTakeaways: [
       'Single-route maritime dependencies remain the single largest systemic vulnerability for transatlantic and transpacific importers.',
@@ -334,6 +339,7 @@ export const articles: Article[] = [
       name: 'Claire Kensington',
       role: 'Capital Projects & Infrastructure Lead',
       bio: 'Advising industrial owners and engineering contractors on multi-billion-dollar project procurement and lifecycle risk.',
+      avatar: '/images/author-elena.jpg',
     },
     keyTakeaways: [
       'Over 65% of mega-project cost overruns originate during early procurement contracting rather than physical construction.',
@@ -389,6 +395,7 @@ export const articles: Article[] = [
       name: 'Marcus Vance',
       role: 'Head of Strategic Procurement Research',
       bio: 'Advising Fortune 500 supply chains on operating model design, spend visibility, and procurement transformation.',
+      avatar: '/images/author-marcus.jpg',
     },
     keyTakeaways: [
       'Legacy ERP core systems will not be ripped and replaced; they must be wrapped with modern event-driven API middleware.',

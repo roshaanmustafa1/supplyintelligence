@@ -15,11 +15,11 @@ export function ArticleGrid({
 }: ArticleGridProps) {
   if (articles.length === 0) {
     return (
-      <div className="rounded-lg border border-border bg-card p-12 text-center">
-        <p className="text-base font-medium text-foreground">
+      <div className="border border-slate-200 bg-[#fbfcfb] p-12 text-center">
+        <p className="font-serif text-xl font-semibold text-slate-950">
           No articles found matching this selection.
         </p>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <p className="mt-2 text-sm text-slate-600">
           Try selecting another topic or clearing search filters.
         </p>
       </div>

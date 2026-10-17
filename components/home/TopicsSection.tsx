@@ -5,6 +5,7 @@ import {
   Cpu,
   Truck,
   ShoppingBag,
+  ArrowRight,
   type LucideIcon,
 } from 'lucide-react'
 import { type Topic } from '@/data/topics'
@@ -27,10 +28,22 @@ export function TopicsSection({ topics }: TopicsSectionProps) {
   return (
     <section id="topics" className="bg-[#f6f7f6] py-10 sm:py-12 border-b border-slate-200">
       <Container size="full">
-        <div className="mb-5">
-          <h2 className="font-serif text-2xl font-semibold tracking-tight text-slate-950">
-            Explore by Topic
-          </h2>
+        <div className="mb-5 flex items-end justify-between">
+          <div>
+            <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.16em] text-[#0284c7]">
+              Research Taxonomies
+            </p>
+            <h2 className="font-serif text-2xl font-semibold tracking-tight text-slate-950">
+              Explore by Topic
+            </h2>
+          </div>
+          <Link
+            href="/topics"
+            className="group inline-flex items-center gap-1 text-xs sm:text-sm font-semibold text-[#0284c7] hover:text-slate-950 transition-colors"
+          >
+            <span>Full Topic Directory</span>
+            <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />
+          </Link>
         </div>
 
         <div className="overflow-hidden border-y border-slate-200 bg-white">
@@ -44,14 +57,14 @@ export function TopicsSection({ topics }: TopicsSectionProps) {
                   href={`/blog?topic=${topic.slug}`}
                   className={cn(
                     'group relative flex flex-col items-center justify-center p-5 sm:p-6 text-center transition-colors duration-200',
-                    'hover:bg-[#eaf5f3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#007c75]'
+                    'hover:bg-[#f0f9ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7]'
                   )}
                 >
-                  <div className="mb-2 flex size-8 items-center justify-center text-[#007c75] transition-transform duration-200 group-hover:scale-110">
+                  <div className="mb-2 flex size-8 items-center justify-center text-[#0284c7] transition-transform duration-200 group-hover:scale-110">
                     <IconComponent className="size-5 sm:size-5.5" strokeWidth={1.8} aria-hidden="true" />
                   </div>
 
-                  <h3 className="text-xs font-semibold text-slate-800 transition-colors group-hover:text-[#007c75] leading-tight">
+                  <h3 className="text-xs font-semibold text-slate-800 transition-colors group-hover:text-[#0284c7] leading-tight">
                     {topic.name}
                   </h3>
                 </Link>

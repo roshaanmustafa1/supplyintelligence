@@ -27,16 +27,16 @@ export function AdSlot({
       data-ad-slot={slot}
       data-ad-variant={variant}
       className={cn(
-        'my-8 mx-auto w-full flex flex-col items-center justify-center rounded-lg border border-dashed border-border bg-surface-subtle/80 p-4 transition-colors',
+        'my-8 mx-auto w-full flex flex-col items-center justify-center border border-slate-200 bg-[#fbfcfb] p-4 transition-colors',
         variantStyles[variant],
         className
       )}
     >
       <div className="flex flex-col items-center justify-center gap-1 text-center select-none pointer-events-none">
-        <span className="text-[10px] font-semibold tracking-widest uppercase text-muted-foreground/80">
+        <span className="text-[10px] font-bold tracking-[0.16em] uppercase text-slate-400">
           ADVERTISEMENT
         </span>
-        <span className="text-[11px] font-medium text-muted-foreground/60">
+        <span className="text-[11px] font-medium text-slate-400">
           Reserved Commercial Placement · Slot: {slot}
         </span>
       </div>

@@ -17,14 +17,10 @@ export function Header() {
   const navItems = [
     { label: 'Home', href: '/' },
     { label: 'Articles', href: '/blog' },
-    { label: 'Topics', href: '/#topics' },
-    { label: 'About', href: '/#about-editorial' },
-    { label: 'Contact', href: '/#contact-editorial' },
+    { label: 'Topics', href: '/topics' },
+    { label: 'About', href: '/about' },
+    { label: 'Contact', href: '/contact' },
   ]
-
-  if (pathname?.startsWith('/v2')) {
-    return null
-  }
 
   return (
     <>
@@ -43,19 +39,16 @@ export function Header() {
                   const isActive =
                     item.href === '/'
                       ? pathname === '/'
-                      : pathname.startsWith(item.href) &&
-                      item.href !== '/#topics' &&
-                      item.href !== '/#about-editorial' &&
-                      item.href !== '/#contact-editorial'
+                      : pathname?.startsWith(item.href)
 
                   return (
                     <Link
                       key={item.label}
                       href={item.href}
                       className={cn(
-                        'relative py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue rounded-xs',
+                        'relative py-6 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] rounded-xs',
                         isActive
-                          ? 'text-[#007c75] font-semibold'
+                          ? 'text-[#0284c7] font-semibold'
                           : 'text-slate-700 hover:text-slate-900'
                       )}
                     >
@@ -63,7 +56,7 @@ export function Header() {
                       {/* Active indicator underline */}
                       {isActive && (
                         <span
-                          className="absolute inset-x-0 bottom-0 h-px bg-[#007c75]"
+                          className="absolute inset-x-0 bottom-0 h-0.5 bg-[#0284c7]"
                           aria-hidden="true"
                         />
                       )}

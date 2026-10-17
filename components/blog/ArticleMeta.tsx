@@ -19,30 +19,30 @@ export function ArticleMeta({
   return (
     <div
       className={cn(
-        'flex flex-wrap items-center gap-2 text-xs text-muted-foreground',
+        'flex flex-wrap items-center gap-2 text-xs text-slate-500',
         className
       )}
     >
       {authorName && (
         <>
-          <span className="font-medium text-foreground">{authorName}</span>
-          <span aria-hidden="true" className="text-muted-foreground/60">
-            ·
+          <span className="font-semibold text-slate-800">{authorName}</span>
+          <span aria-hidden="true" className="text-slate-300">
+            &bull;
           </span>
         </>
       )}
 
       <div className="inline-flex items-center gap-1">
-        {showIcons && <Calendar className="size-3 text-muted-foreground/80" aria-hidden="true" />}
+        {showIcons && <Calendar className="size-3 text-slate-400" aria-hidden="true" />}
         <time dateTime={date}>{date}</time>
       </div>
 
-      <span aria-hidden="true" className="text-muted-foreground/60">
-        ·
+      <span aria-hidden="true" className="text-slate-300">
+        &bull;
       </span>
 
       <div className="inline-flex items-center gap-1">
-        {showIcons && <Clock className="size-3 text-muted-foreground/80" aria-hidden="true" />}
+        {showIcons && <Clock className="size-3 text-slate-400" aria-hidden="true" />}
         <span>{readingTime}</span>
       </div>
     </div>

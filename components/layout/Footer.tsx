@@ -1,26 +1,20 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 import { Container } from '@/components/common/Container'
 import { Logo } from '@/components/layout/Logo'
 
 export function Footer() {
-  const pathname = usePathname()
-
-  if (pathname?.startsWith('/v2')) {
-    return null
-  }
   const navLinks = [
     { label: 'Home', href: '/' },
     { label: 'Articles', href: '/blog' },
-    { label: 'Topics', href: '/#topics' },
-    { label: 'About', href: '/#about-editorial' },
-    { label: 'Contact', href: '/#contact-editorial' },
+    { label: 'Topics', href: '/topics' },
+    { label: 'About', href: '/about' },
+    { label: 'Contact', href: '/contact' },
   ]
 
   return (
-    <footer className="bg-[#111817] text-slate-300 py-10 sm:py-12 border-t border-slate-800">
+    <footer className="bg-[#0a1128] text-slate-300 py-10 sm:py-12 border-t border-slate-800">
       <Container size="wide">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8">
           {/* Left: Brand Logo in dark mode */}
