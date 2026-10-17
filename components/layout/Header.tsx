@@ -29,7 +29,7 @@ export function Header() {
           <div className="flex h-16 items-center justify-between">
             {/* Brand Logo */}
             <div className="flex items-center">
-              <Logo imageClassName={pathname === '/' ? 'h-10 sm:h-11' : undefined} />
+              <Logo imageClassName="h-10 sm:h-11" />
             </div>
 
             {/* Desktop Navigation */}
