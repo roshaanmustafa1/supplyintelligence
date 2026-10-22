@@ -65,7 +65,7 @@ export function ContactForm() {
   if (status === 'success') {
     return (
       <div className="rounded-2xl border border-sky-200 bg-sky-50/70 p-8 sm:p-10 text-center animate-in fade-in duration-300">
-        <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-[#0284c7] text-white shadow-md mb-4">
+        <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-brand-sky text-white shadow-md mb-4">
           <CheckCircle2 className="size-8" />
         </div>
         <h3 className="font-serif text-2xl font-bold text-slate-900 mb-2">
@@ -84,7 +84,7 @@ export function ContactForm() {
           <button
             type="button"
             onClick={handleReset}
-            className="px-6 py-2.5 rounded-xl bg-[#0284c7] hover:bg-[#0369a1] text-white text-xs sm:text-sm font-semibold transition-colors shadow-xs"
+            className="px-6 py-2.5 rounded-xl bg-brand-sky hover:bg-brand-sky-hover text-white text-xs sm:text-sm font-semibold transition-colors shadow-xs"
           >
             Submit Another Inquiry
           </button>
@@ -106,7 +106,7 @@ export function ContactForm() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label htmlFor="contact-name" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-            Full Name <span className="text-[#0284c7]">*</span>
+            Full Name <span className="text-brand-sky">*</span>
           </label>
           <input
             id="contact-name"
@@ -116,13 +116,13 @@ export function ContactForm() {
             value={formData.name}
             onChange={handleChange}
             placeholder="e.g. Marcus Vance"
-            className="w-full px-4 py-3 text-xs sm:text-sm bg-white border border-slate-300 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0284c7] focus:ring-1 focus:ring-[#0284c7] transition-all shadow-2xs"
+            className="w-full px-4 py-3 text-xs sm:text-sm bg-white border border-slate-300 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-brand-sky focus:ring-1 focus:ring-brand-sky transition-all shadow-2xs"
           />
         </div>
 
         <div>
           <label htmlFor="contact-email" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-            Business Email <span className="text-[#0284c7]">*</span>
+            Business Email <span className="text-brand-sky">*</span>
           </label>
           <input
             id="contact-email"
@@ -132,7 +132,7 @@ export function ContactForm() {
             value={formData.email}
             onChange={handleChange}
             placeholder="name@enterprise.com"
-            className="w-full px-4 py-3 text-xs sm:text-sm bg-white border border-slate-300 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0284c7] focus:ring-1 focus:ring-[#0284c7] transition-all shadow-2xs"
+            className="w-full px-4 py-3 text-xs sm:text-sm bg-white border border-slate-300 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-brand-sky focus:ring-1 focus:ring-brand-sky transition-all shadow-2xs"
           />
         </div>
       </div>
@@ -141,7 +141,7 @@ export function ContactForm() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label htmlFor="contact-company" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-            Organization / Company <span className="text-[#0284c7]">*</span>
+            Organization / Company <span className="text-brand-sky">*</span>
           </label>
           <input
             id="contact-company"
@@ -151,7 +151,7 @@ export function ContactForm() {
             value={formData.company}
             onChange={handleChange}
             placeholder="e.g. Global Logistics Inc."
-            className="w-full px-4 py-3 text-xs sm:text-sm bg-white border border-slate-300 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0284c7] focus:ring-1 focus:ring-[#0284c7] transition-all shadow-2xs"
+            className="w-full px-4 py-3 text-xs sm:text-sm bg-white border border-slate-300 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-brand-sky focus:ring-1 focus:ring-brand-sky transition-all shadow-2xs"
           />
         </div>
 
@@ -166,7 +166,7 @@ export function ContactForm() {
             value={formData.role}
             onChange={handleChange}
             placeholder="e.g. VP of Procurement"
-            className="w-full px-4 py-3 text-xs sm:text-sm bg-white border border-slate-300 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0284c7] focus:ring-1 focus:ring-[#0284c7] transition-all shadow-2xs"
+            className="w-full px-4 py-3 text-xs sm:text-sm bg-white border border-slate-300 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-brand-sky focus:ring-1 focus:ring-brand-sky transition-all shadow-2xs"
           />
         </div>
       </div>
@@ -175,14 +175,14 @@ export function ContactForm() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label htmlFor="contact-inquiryType" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-            Inquiry Classification <span className="text-[#0284c7]">*</span>
+            Inquiry Classification <span className="text-brand-sky">*</span>
           </label>
           <select
             id="contact-inquiryType"
             name="inquiryType"
             value={formData.inquiryType}
             onChange={handleChange}
-            className="w-full px-4 py-3 text-xs sm:text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-[#0284c7] focus:ring-1 focus:ring-[#0284c7] transition-all shadow-2xs"
+            className="w-full px-4 py-3 text-xs sm:text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-brand-sky focus:ring-1 focus:ring-brand-sky transition-all shadow-2xs"
           >
             {inquiryOptions.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -203,7 +203,7 @@ export function ContactForm() {
             value={formData.subject}
             onChange={handleChange}
             placeholder="e.g. Field Study on Nearshoring Variance"
-            className="w-full px-4 py-3 text-xs sm:text-sm bg-white border border-slate-300 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0284c7] focus:ring-1 focus:ring-[#0284c7] transition-all shadow-2xs"
+            className="w-full px-4 py-3 text-xs sm:text-sm bg-white border border-slate-300 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-brand-sky focus:ring-1 focus:ring-brand-sky transition-all shadow-2xs"
           />
         </div>
       </div>
@@ -211,7 +211,7 @@ export function ContactForm() {
       {/* Row 4: Message */}
       <div>
         <label htmlFor="contact-message" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-          Message / Brief Description <span className="text-[#0284c7]">*</span>
+          Message / Brief Description <span className="text-brand-sky">*</span>
         </label>
         <textarea
           id="contact-message"
@@ -221,7 +221,7 @@ export function ContactForm() {
           value={formData.message}
           onChange={handleChange}
           placeholder="Please outline the context of your inquiry, relevant data, or proposed collaboration..."
-          className="w-full px-4 py-3 text-xs sm:text-sm bg-white border border-slate-300 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0284c7] focus:ring-1 focus:ring-[#0284c7] transition-all resize-y shadow-2xs"
+          className="w-full px-4 py-3 text-xs sm:text-sm bg-white border border-slate-300 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-brand-sky focus:ring-1 focus:ring-brand-sky transition-all resize-y shadow-2xs"
         />
       </div>
 
@@ -230,7 +230,7 @@ export function ContactForm() {
         <button
           type="submit"
           disabled={status === 'loading'}
-          className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-[#0284c7] hover:bg-[#0369a1] active:bg-[#075985] text-white text-xs sm:text-sm font-semibold transition-all shadow-xs hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] focus-visible:ring-offset-2 disabled:opacity-70 cursor-pointer"
+          className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-brand-sky hover:bg-brand-sky-hover active:bg-brand-sky-active text-white text-xs sm:text-sm font-semibold transition-all shadow-xs hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky focus-visible:ring-offset-2 disabled:opacity-70 cursor-pointer"
         >
           {status === 'loading' ? (
             <>

@@ -25,14 +25,10 @@ export function PageHeroBanner({
   children,
 }: PageHeroBannerProps) {
   return (
-    <section className="relative w-full bg-[#0a1128] text-white py-12 sm:py-16 lg:py-20 overflow-hidden border-b border-slate-800">
+    <section className="relative w-full bg-editorial-navy text-white py-12 sm:py-16 lg:py-20 overflow-hidden border-b border-slate-800">
       {/* Subtle background ambient sky glow matching single blog page */}
       <div
-        className="absolute inset-0 opacity-15 pointer-events-none"
-        style={{
-          backgroundImage:
-            'radial-gradient(circle at 50% 30%, rgba(2, 132, 199, 0.35) 0%, transparent 70%), radial-gradient(circle at 80% 80%, rgba(14, 165, 233, 0.2) 0%, transparent 50%)',
-        }}
+        className="pointer-events-none absolute inset-0 bg-hero-glow opacity-15"
       />
 
       <div className="relative w-full px-6 sm:px-10 lg:px-16 xl:px-24 text-left">

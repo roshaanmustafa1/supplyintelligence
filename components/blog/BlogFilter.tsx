@@ -81,10 +81,10 @@ export function BlogFilter({
             aria-selected={selectedTopic === 'all'}
             onClick={() => handleTopicClick('all')}
             className={cn(
-              'px-4 py-2 text-xs font-semibold tracking-wide transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7]',
+              'px-4 py-2 text-xs font-semibold tracking-wide transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky',
               selectedTopic === 'all'
-                ? 'bg-[#0284c7] text-white border border-[#0284c7] hover:bg-slate-950 hover:border-slate-950'
-                : 'border border-slate-200 bg-white text-slate-700 hover:bg-[#f0f9ff] hover:text-[#0284c7] hover:border-[#bae6fd]'
+                ? 'bg-brand-sky text-white border border-brand-sky hover:bg-slate-950 hover:border-slate-950'
+                : 'border border-slate-200 bg-white text-slate-700 hover:bg-editorial-sky-surface hover:text-brand-sky hover:border-editorial-sky-border'
             )}
           >
             All Articles
@@ -100,10 +100,10 @@ export function BlogFilter({
                 aria-selected={isActive}
                 onClick={() => handleTopicClick(topic.slug)}
                 className={cn(
-                  'px-4 py-2 text-xs font-semibold tracking-wide transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7]',
+                  'px-4 py-2 text-xs font-semibold tracking-wide transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky',
                   isActive
-                    ? 'bg-[#0284c7] text-white border border-[#0284c7] hover:bg-slate-950 hover:border-slate-950'
-                    : 'border border-slate-200 bg-white text-slate-700 hover:bg-[#f0f9ff] hover:text-[#0284c7] hover:border-[#bae6fd]'
+                    ? 'bg-brand-sky text-white border border-brand-sky hover:bg-slate-950 hover:border-slate-950'
+                    : 'border border-slate-200 bg-white text-slate-700 hover:bg-editorial-sky-surface hover:text-brand-sky hover:border-editorial-sky-border'
                 )}
               >
                 {topic.name}
@@ -125,7 +125,7 @@ export function BlogFilter({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search in articles..."
-              className="w-full border border-slate-300 bg-white py-2 pl-9 pr-8 text-xs text-slate-900 placeholder:text-slate-400 transition-colors focus:border-[#0284c7] focus:outline-none focus:ring-1 focus:ring-[#0284c7]"
+              className="w-full border border-slate-300 bg-white py-2 pl-9 pr-8 text-xs text-slate-900 placeholder:text-slate-400 transition-colors focus:border-brand-sky focus:outline-none focus:ring-1 focus:ring-brand-sky"
             />
             {searchQuery && (
               <button
@@ -146,7 +146,7 @@ export function BlogFilter({
         <span>
           Showing {visibleArticles.length} of {filteredArticles.length} article{filteredArticles.length === 1 ? '' : 's'}
           {selectedTopic !== 'all' && (
-            <span className="ml-1 font-semibold text-[#0284c7]">
+            <span className="ml-1 font-semibold text-brand-sky">
               in &quot;{activeTopicName}&quot;
             </span>
           )}
@@ -161,7 +161,7 @@ export function BlogFilter({
           <button
             type="button"
             onClick={handleClearFilters}
-            className="font-semibold text-[#0284c7] hover:text-slate-950 hover:underline transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#0284c7]"
+            className="font-semibold text-brand-sky hover:text-slate-950 hover:underline transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-sky"
           >
             Reset filters
           </button>
@@ -170,7 +170,7 @@ export function BlogFilter({
 
       {/* Empty State */}
       {filteredArticles.length === 0 ? (
-        <div className="border border-slate-200 bg-[#fbfcfb] p-12 text-center">
+        <div className="border border-slate-200 bg-editorial-card p-12 text-center">
           <h3 className="font-serif text-xl font-semibold text-slate-950 mb-2">
             No articles found matching this selection.
           </h3>
@@ -180,7 +180,7 @@ export function BlogFilter({
           <button
             type="button"
             onClick={handleClearFilters}
-            className="mt-6 inline-flex items-center justify-center bg-[#0284c7] px-5 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-slate-950"
+            className="mt-6 inline-flex items-center justify-center bg-brand-sky px-5 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-slate-950"
           >
             Reset Filters
           </button>
@@ -189,23 +189,23 @@ export function BlogFilter({
         <>
           {/* Featured Lead Editorial Story (Shown on All Articles view) */}
           {leadArticle && (
-            <article className="group border border-slate-200 bg-[#f6f7f6] grid grid-cols-1 lg:grid-cols-[1.15fr_.85fr] overflow-hidden transition-colors duration-200 hover:border-slate-400">
+            <article className="group border border-slate-200 bg-editorial-surface grid grid-cols-1 lg:grid-cols-[1.15fr_.85fr] overflow-hidden transition-colors duration-200 hover:border-slate-400">
               <div className="p-7 sm:p-10 lg:p-12 flex flex-col justify-between">
                 <div>
                   <div className="flex flex-wrap items-center gap-2.5 mb-3.5">
-                    <span className="text-[10px] font-bold uppercase tracking-[0.16em] bg-[#f0f9ff] text-[#0284c7] px-2.5 py-1 border border-[#bae6fd]">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.16em] bg-editorial-sky-surface text-brand-sky px-2.5 py-1 border border-editorial-sky-border">
                       Featured Lead Story
                     </span>
                     <button
                       type="button"
                       onClick={() => handleTopicClick(leadArticle.categorySlug)}
-                      className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#0284c7] hover:text-slate-950 transition-colors"
+                      className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand-sky hover:text-slate-950 transition-colors"
                     >
                       {leadArticle.category}
                     </button>
                   </div>
 
-                  <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold leading-tight tracking-tight text-slate-950 group-hover:text-[#0284c7] transition-colors mb-4">
+                  <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold leading-tight tracking-tight text-slate-950 group-hover:text-brand-sky transition-colors mb-4">
                     <Link href={`/blog/${leadArticle.slug}`}>
                       {leadArticle.title}
                     </Link>
@@ -227,7 +227,7 @@ export function BlogFilter({
 
                   <Link
                     href={`/blog/${leadArticle.slug}`}
-                    className="group/link inline-flex items-center gap-2 bg-[#0284c7] px-5 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-slate-950"
+                    className="group/link inline-flex items-center gap-2 bg-brand-sky px-5 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-slate-950"
                   >
                     <span>Read Lead Story</span>
                     <ArrowRight className="size-3.5 transition-transform group-hover/link:translate-x-1" />
@@ -262,7 +262,7 @@ export function BlogFilter({
               <button
                 type="button"
                 onClick={() => setVisibleCount((prev) => prev + 6)}
-                className="border border-slate-300 bg-white px-8 py-3.5 text-sm font-semibold text-slate-900 transition-colors hover:bg-slate-950 hover:text-white hover:border-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7]"
+                className="border border-slate-300 bg-white px-8 py-3.5 text-sm font-semibold text-slate-900 transition-colors hover:bg-slate-950 hover:text-white hover:border-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky"
               >
                 Load More Articles ({filteredArticles.length - visibleCount} remaining)
               </button>

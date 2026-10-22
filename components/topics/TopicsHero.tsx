@@ -4,7 +4,7 @@ import { Container } from '@/components/common/Container'
 
 export function TopicsHero() {
   return (
-    <section className="border-b border-slate-800 bg-[#0a1128] py-12 text-white sm:py-16 lg:py-20">
+    <section className="border-b border-slate-800 bg-editorial-navy py-12 text-white sm:py-16 lg:py-20">
       <Container size="full">
         <div className="grid items-end gap-8 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
           <div>

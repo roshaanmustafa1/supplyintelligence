@@ -47,12 +47,12 @@ const caseStudies: CaseStudyItem[] = [
 
 export function IndustryCaseStudies() {
   return (
-    <section className="bg-[#f6f7f6] py-12 sm:py-16 border-b border-slate-200">
+    <section className="bg-editorial-surface py-12 sm:py-16 border-b border-slate-200">
       <Container size="full">
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-8 pb-4 border-b border-slate-200 gap-4">
           <div>
-            <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-[#0284c7]">
+            <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-brand-sky">
               Field Reports & Operational Perspectives
             </p>
             <h2 className="font-serif text-3xl font-semibold tracking-tight text-slate-950">
@@ -65,7 +65,7 @@ export function IndustryCaseStudies() {
 
           <Link
             href="/blog"
-            className="group inline-flex items-center gap-1 text-sm font-semibold text-[#0284c7] hover:text-slate-950 shrink-0"
+            className="group inline-flex items-center gap-1 text-sm font-semibold text-brand-sky hover:text-slate-950 shrink-0"
           >
             <span>View All Field Reports</span>
             <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />
@@ -99,11 +99,11 @@ export function IndustryCaseStudies() {
               {/* Content */}
               <div className="sm:col-span-7 flex flex-col justify-between p-6 sm:p-7">
                 <div>
-                  <div className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#0284c7] mb-2">
+                  <div className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand-sky mb-2">
                     {study.category}
                   </div>
 
-                  <h3 className="font-serif text-lg sm:text-xl font-semibold leading-snug tracking-tight text-slate-950 group-hover:text-[#0284c7] transition-colors mb-2.5 line-clamp-2">
+                  <h3 className="font-serif text-lg sm:text-xl font-semibold leading-snug tracking-tight text-slate-950 group-hover:text-brand-sky transition-colors mb-2.5 line-clamp-2">
                     <Link href={`/blog/${study.slug}`}>
                       {study.title}
                     </Link>
@@ -123,7 +123,7 @@ export function IndustryCaseStudies() {
 
                   <Link
                     href={`/blog/${study.slug}`}
-                    className="inline-flex size-5 shrink-0 items-center justify-center text-[#0284c7] transition-transform duration-200 group-hover:translate-x-1"
+                    className="inline-flex size-5 shrink-0 items-center justify-center text-brand-sky transition-transform duration-200 group-hover:translate-x-1"
                     aria-label={`Read ${study.title}`}
                   >
                     <ArrowRight className="size-3.5" />

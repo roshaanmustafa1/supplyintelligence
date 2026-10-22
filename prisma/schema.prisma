@@ -1,0 +1,626 @@
+// SupplyIntelligence Prisma Schema
+// Database: SQLite (dev) / PostgreSQL (production)
+// ORM: Prisma 6.x
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ─────────────────────────────────────────────────────
+// Note: SQLite does not support native enums; stored as strings.
+
+// ArticleStatus lifecycle:
+// IDEA → RESEARCHING → DRAFT → AI_GENERATING → NEEDS_REVIEW
+//      → APPROVED → SCHEDULED → PUBLISHED → ARCHIVED
+//      → REJECTED | FAILED
+
+// ─── Users & Roles ─────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  name          String?
+  passwordHash  String?
+  avatar        String?
+  // Role: SUPER_ADMIN | ADMIN | EDITOR | AUTHOR | VIEWER
+  role          String    @default("AUTHOR")
+  isActive      Boolean   @default(true)
+  lastLoginAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  articles         Article[]       @relation("ArticleAuthor")
+  approvals        ArticleApproval[]
+  auditLogs        AuditLog[]
+  notifications    Notification[]
+  aiJobs           AIJob[]
+  sessions         Session[]
+
+  @@map("users")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ─── Content Structure ────────────────────────────────────────────
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  image       String?
+  imageAlt    String?
+  // SEO
+  seoTitle       String?
+  seoDescription String?
+  // Hierarchy
+  parentId    String?
+  parent      Category?  @relation("CategoryChildren", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryChildren")
+  // Sort order for display
+  sortOrder   Int        @default(0)
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  articles    Article[]
+
+  @@map("categories")
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+
+  articleTags ArticleTag[]
+
+  @@map("tags")
+}
+
+model ArticleTag {
+  articleId String
+  tagId     String
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([articleId, tagId])
+  @@map("article_tags")
+}
+
+// ─── Articles ─────────────────────────────────────────────────────
+
+model Article {
+  id          String   @id @default(cuid())
+  // Slugs must be URL-safe and unique
+  slug        String   @unique
+  title       String
+  excerpt     String?
+  // Tiptap-compatible JSON stored as text
+  bodyJson    String?  @default("{}")
+  // Rendered HTML (derived from bodyJson on save)
+  bodyHtml    String?
+  // Status: IDEA | RESEARCHING | DRAFT | AI_GENERATING | NEEDS_REVIEW
+  //       | APPROVED | SCHEDULED | PUBLISHED | ARCHIVED | REJECTED | FAILED
+  status      String   @default("DRAFT")
+  // Content type: NEWS | EXPLAINER | ANALYSIS | HOWTO | TECHNOLOGY
+  //             | CASE_STUDY | MARKET | EDUCATIONAL | COMPARISON
+  contentType String   @default("EXPLAINER")
+
+  // Media
+  featuredImage    String?
+  featuredImageAlt String?
+
+  // Relations
+  authorId    String
+  author      User     @relation("ArticleAuthor", fields: [authorId], references: [id])
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id])
+  articleTags ArticleTag[]
+  versions    ArticleVersion[]
+  approvals   ArticleApproval[]
+  mediaUsages MediaUsage[]
+
+  // SEO
+  seoTitle       String?
+  seoDescription String?
+  canonicalUrl   String?
+  ogImage        String?
+  primaryKeyword String?
+  // Comma-separated secondary keywords
+  secondaryKeywords String?
+
+  // Reading experience
+  readingTimeMinutes Int?
+  wordCount          Int?
+
+  // Timestamps
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  scheduledAt   DateTime?
+  publishedAt   DateTime?
+  archivedAt    DateTime?
+
+  // AI provenance
+  isAiGenerated      Boolean @default(false)
+  aiProvenanceId     String?
+  aiProvenance       ArticleAIProvenance? @relation(fields: [aiProvenanceId], references: [id])
+
+  // Sources
+  sources     ArticleSource[]
+
+  // Publication events
+  publicationEvents PublicationEvent[]
+
+  @@index([slug])
+  @@index([status])
+  @@index([authorId])
+  @@index([categoryId])
+  @@index([publishedAt])
+  @@map("articles")
+}
+
+model ArticleVersion {
+  id         String   @id @default(cuid())
+  articleId  String
+  article    Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  versionNum Int
+  title      String
+  bodyJson   String?
+  bodyHtml   String?
+  status     String
+  createdAt  DateTime @default(now())
+  createdBy  String   // user id
+
+  @@unique([articleId, versionNum])
+  @@map("article_versions")
+}
+
+model ArticleApproval {
+  id        String   @id @default(cuid())
+  articleId String
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  // Decision: APPROVED | REJECTED | NEEDS_REVISION
+  decision  String
+  comment   String?
+  createdAt DateTime @default(now())
+
+  @@map("article_approvals")
+}
+
+model ArticleSource {
+  id        String   @id @default(cuid())
+  articleId String
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  url       String?
+  title     String?
+  author    String?
+  // Publication date of source material
+  publishedDate String?
+  accessedAt  DateTime?
+  note        String?
+  createdAt   DateTime @default(now())
+
+  @@map("article_sources")
+}
+
+model PublicationEvent {
+  id        String   @id @default(cuid())
+  articleId String
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  // Event type: PUBLISHED | UNPUBLISHED | UPDATED | SCHEDULED | ARCHIVED
+  event     String
+  performedBy String  // user or agent id
+  metadata  String?   // JSON blob
+  createdAt DateTime  @default(now())
+
+  @@map("publication_events")
+}
+
+// ─── Media Library ───────────────────────────────────────────────
+
+model MediaAsset {
+  id          String   @id @default(cuid())
+  filename    String
+  originalName String
+  mimeType    String
+  sizeBytes   Int
+  // Path relative to storage root (or S3 key)
+  storagePath String
+  // Public URL
+  url         String
+  altText     String?
+  caption     String?
+  // Source type: UPLOAD | AI_GENERATED | STOCK
+  sourceType  String   @default("UPLOAD")
+  uploadedBy  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  usages MediaUsage[]
+
+  @@map("media_assets")
+}
+
+model MediaUsage {
+  id         String     @id @default(cuid())
+  assetId    String
+  asset      MediaAsset @relation(fields: [assetId], references: [id])
+  articleId  String
+  article    Article    @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  context    String?    // e.g. "featured_image", "body"
+  createdAt  DateTime   @default(now())
+
+  @@map("media_usages")
+}
+
+// ─── AI Providers & Configuration ────────────────────────────────
+
+model AIProvider {
+  id           String   @id @default(cuid())
+  name         String   @unique  // e.g. "google-gemini"
+  displayLabel String           // e.g. "Google Gemini"
+  // Encrypted credential — never returned to client plaintext
+  encryptedApiKey String?
+  isEnabled    Boolean  @default(false)
+  isDefault    Boolean  @default(false)
+  priority     Int      @default(0)
+  // Configuration JSON: model, temperature, maxTokens, timeout, etc.
+  configJson   String   @default("{}")
+  // Daily / monthly budget in USD cents (0 = unlimited)
+  dailyBudgetCents   Int @default(0)
+  monthlyBudgetCents Int @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  models AIModelConfiguration[]
+  jobs   AIJob[]
+  usage  AIUsage[]
+
+  @@map("ai_providers")
+}
+
+model AIModelConfiguration {
+  id          String     @id @default(cuid())
+  providerId  String
+  provider    AIProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  modelId     String     // e.g. "gemini-2.0-flash-exp"
+  displayName String
+  isDefault   Boolean    @default(false)
+  // Capabilities: JSON array of strings
+  capabilities String   @default("[]")
+  // Model-specific params JSON
+  paramsJson   String   @default("{}")
+  createdAt    DateTime @default(now())
+
+  @@unique([providerId, modelId])
+  @@map("ai_model_configurations")
+}
+
+// ─── AI Agents ────────────────────────────────────────────────────
+
+model AIAgent {
+  id          String   @id @default(cuid())
+  // Type: TOPIC_DISCOVERY | RESEARCH | WRITER | EDITORIAL_QA
+  //       SEO_OPTIMIZER | PUBLISHER | CONTENT_MAINTENANCE
+  agentType   String   @unique
+  displayName String
+  description String?
+  isEnabled   Boolean  @default(true)
+  // Operating mode: MANUAL | ASSISTED | AUTONOMOUS
+  operatingMode String  @default("MANUAL")
+  // Permission bitmap stored as JSON
+  permissionsJson String @default("{}")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  jobs AIJob[]
+
+  @@map("ai_agents")
+}
+
+// ─── Automation Rules ─────────────────────────────────────────────
+
+model AutomationRule {
+  id           String   @id @default(cuid())
+  name         String
+  isEnabled    Boolean  @default(false)
+  // Cron expression (UTC)
+  cronExpression String
+  timezone     String   @default("UTC")
+  // Allowed category ids — JSON array
+  allowedCategoryIds String @default("[]")
+  // Content type restrictions — JSON array
+  allowedContentTypes String @default("[]")
+  // Limits
+  dailyArticleLimit  Int @default(1)
+  weeklyArticleLimit Int @default(5)
+  // Quality gate min score (0-100)
+  minQualityScore Int @default(70)
+  // Publication policy: AUTONOMOUS | REVIEW_REQUIRED
+  publicationPolicy String @default("REVIEW_REQUIRED")
+  // Budget per run in USD cents
+  budgetPerRunCents Int @default(0)
+  // Notification config JSON
+  notificationConfigJson String @default("{}")
+  lastRunAt  DateTime?
+  nextRunAt  DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  runs AutomationRun[]
+
+  @@map("automation_rules")
+}
+
+model AutomationRun {
+  id        String   @id @default(cuid())
+  ruleId    String
+  rule      AutomationRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+  // Status: RUNNING | COMPLETED | FAILED | CANCELLED
+  status    String   @default("RUNNING")
+  startedAt DateTime @default(now())
+  finishedAt DateTime?
+  articlesCreated Int @default(0)
+  errorMessage String?
+  // Run metadata JSON
+  metadataJson String @default("{}")
+
+  jobs AIJob[]
+
+  @@map("automation_runs")
+}
+
+// ─── AI Jobs ──────────────────────────────────────────────────────
+
+model AIJob {
+  id            String   @id @default(cuid())
+  // Type: TOPIC_DISCOVERY | RESEARCH | GENERATE_OUTLINE | GENERATE_ARTICLE
+  //       QA_REVIEW | SEO_OPTIMIZE | PUBLISH | MAINTENANCE
+  jobType       String
+  // Status: QUEUED | RUNNING | COMPLETED | FAILED | CANCELLED | PAUSED
+  status        String   @default("QUEUED")
+  // Idempotency key to prevent duplicate runs
+  idempotencyKey String  @unique @default(cuid())
+  providerId    String?
+  provider      AIProvider? @relation(fields: [providerId], references: [id])
+  agentId       String?
+  agent         AIAgent?    @relation(fields: [agentId], references: [id])
+  requestedBy   String?     // user id or "system"
+  requestedByUser User?     @relation(fields: [requestedBy], references: [id])
+  automationRunId String?
+  automationRun   AutomationRun? @relation(fields: [automationRunId], references: [id])
+  // Input JSON
+  inputJson     String   @default("{}")
+  // Output JSON (partial or complete)
+  outputJson    String   @default("{}")
+  errorMessage  String?
+  retryCount    Int      @default(0)
+  maxRetries    Int      @default(3)
+  // Token usage
+  inputTokens   Int      @default(0)
+  outputTokens  Int      @default(0)
+  // Cost in USD cents (estimated)
+  estimatedCostCents Int @default(0)
+  startedAt     DateTime?
+  completedAt   DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  steps AIJobStep[]
+  usage AIUsage[]
+  researchSources AIResearchSource[]
+
+  @@index([status])
+  @@index([jobType])
+  @@map("ai_jobs")
+}
+
+model AIJobStep {
+  id        String   @id @default(cuid())
+  jobId     String
+  job       AIJob    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  stepName  String
+  status    String   @default("PENDING")
+  inputJson  String?
+  outputJson String?
+  errorMessage String?
+  startedAt  DateTime?
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+
+  @@map("ai_job_steps")
+}
+
+model AIUsage {
+  id           String   @id @default(cuid())
+  providerId   String
+  provider     AIProvider @relation(fields: [providerId], references: [id])
+  jobId        String?
+  job          AIJob?     @relation(fields: [jobId], references: [id])
+  modelId      String
+  inputTokens  Int    @default(0)
+  outputTokens Int    @default(0)
+  // Cost in USD cents (estimated from pricing table)
+  estimatedCostCents Int @default(0)
+  // Actual cost from provider billing (if available)
+  actualCostCents Int?
+  recordedAt   DateTime @default(now())
+
+  @@index([providerId, recordedAt])
+  @@map("ai_usage")
+}
+
+model AIResearchSource {
+  id        String   @id @default(cuid())
+  jobId     String
+  job       AIJob    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  url       String?
+  title     String?
+  snippet   String?
+  // Reliability score 0-100
+  reliabilityScore Int?
+  publishedDate String?
+  retrievedAt   DateTime @default(now())
+
+  claims AIResearchClaim[]
+
+  @@map("ai_research_sources")
+}
+
+model AIResearchClaim {
+  id       String           @id @default(cuid())
+  sourceId String
+  source   AIResearchSource @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  claim    String
+  // Verification: UNVERIFIED | SUPPORTED | CONTRADICTED | UNCERTAIN
+  verification String @default("UNVERIFIED")
+  notes    String?
+
+  @@map("ai_research_claims")
+}
+
+model ArticleAIProvenance {
+  id          String   @id @default(cuid())
+  jobId       String?
+  agentType   String?
+  providerId  String?
+  modelId     String?
+  generatedAt DateTime @default(now())
+  // QA score 0-100 (advisory only)
+  qaScore     Int?
+  // SEO score 0-100
+  seoScore    Int?
+  // Research quality: number of verified sources
+  verifiedSourceCount Int @default(0)
+  // Was human review completed before publish?
+  humanReviewed Boolean @default(false)
+  reviewerId   String?
+  reviewedAt   DateTime?
+
+  articles Article[]
+
+  @@map("article_ai_provenance")
+}
+
+// ─── Editorial Tasks ───────────────────────────────────────────────
+
+model EditorialTask {
+  id          String   @id @default(cuid())
+  articleId   String?
+  assignedTo  String?  // user id
+  // Type: REVIEW | APPROVE | SEO_CHECK | FACT_CHECK | PUBLISH
+  taskType    String
+  // Priority: LOW | MEDIUM | HIGH | URGENT
+  priority    String   @default("MEDIUM")
+  dueAt       DateTime?
+  completedAt DateTime?
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("editorial_tasks")
+}
+
+// ─── Notifications ─────────────────────────────────────────────────
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // Type: AI_DRAFT_READY | REVIEW_NEEDED | ARTICLE_PUBLISHED | JOB_FAILED
+  //       BUDGET_ALERT | PROVIDER_DOWN | AGENT_PAUSED | SCHEDULED_PUBLISHED
+  type      String
+  title     String
+  body      String?
+  // Target resource link
+  actionUrl String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId, isRead])
+  @@map("notifications")
+}
+
+// ─── Audit Logs ────────────────────────────────────────────────────
+
+model AuditLog {
+  id           String   @id @default(cuid())
+  // Actor: user id or agent identifier
+  actorId      String?
+  actorType    String   @default("USER") // USER | AGENT | SYSTEM
+  actorUser    User?    @relation(fields: [actorId], references: [id])
+  // Action verb: ARTICLE_CREATED | ARTICLE_PUBLISHED | AGENT_EXECUTED | etc.
+  action       String
+  // Target resource
+  resourceType String?  // ARTICLE | CATEGORY | AI_PROVIDER | etc.
+  resourceId   String?
+  // Snapshot of changes (JSON diff)
+  changesBefore String?
+  changesAfter  String?
+  // Request correlation
+  correlationId String?
+  ipAddress     String?
+  userAgent     String?
+  createdAt     DateTime @default(now())
+
+  @@index([actorId, createdAt])
+  @@index([resourceType, resourceId])
+  @@map("audit_logs")
+}
+
+// ─── Website Settings ──────────────────────────────────────────────
+
+model WebsiteSetting {
+  id          String   @id @default(cuid())
+  // Dot-notation key e.g. "site.name", "site.tagline"
+  key         String   @unique
+  value       String
+  // Value type: STRING | JSON | BOOLEAN | NUMBER
+  valueType   String   @default("STRING")
+  // Is this a secret that should not be returned to clients?
+  isSecret    Boolean  @default(false)
+  updatedAt   DateTime @updatedAt
+  updatedBy   String?
+
+  @@map("website_settings")
+}
+
+model Redirect {
+  id          String   @id @default(cuid())
+  fromPath    String   @unique
+  toPath      String
+  // Status code: 301 | 302
+  statusCode  Int      @default(301)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  @@map("redirects")
+}

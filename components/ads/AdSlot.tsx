@@ -27,7 +27,7 @@ export function AdSlot({
       data-ad-slot={slot}
       data-ad-variant={variant}
       className={cn(
-        'my-8 mx-auto w-full flex flex-col items-center justify-center border border-slate-200 bg-[#fbfcfb] p-4 transition-colors',
+        'my-8 mx-auto w-full flex flex-col items-center justify-center border border-slate-200 bg-editorial-card p-4 transition-colors',
         variantStyles[variant],
         className
       )}

@@ -5,12 +5,12 @@ import { Container } from '@/components/common/Container'
 
 export function ExecutiveDeepDive() {
   return (
-    <section className="bg-[#f6f7f6] py-12 sm:py-16 border-b border-slate-200">
+    <section className="bg-editorial-surface py-12 sm:py-16 border-b border-slate-200">
       <Container size="full">
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-8 pb-4 border-b border-slate-200 gap-4">
           <div>
-            <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-[#0284c7]">
+            <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-brand-sky">
               Special Report & Strategic Briefing
             </p>
             <h2 className="font-serif text-3xl font-semibold tracking-tight text-slate-950">
@@ -22,7 +22,7 @@ export function ExecutiveDeepDive() {
           </div>
 
           <div className="flex items-center gap-2 text-xs text-slate-500 font-medium shrink-0 self-start sm:self-end">
-            <ShieldCheck className="size-3.5 text-[#0284c7]" />
+            <ShieldCheck className="size-3.5 text-brand-sky" />
             <span>Peer-Reviewed Practitioner Briefing</span>
           </div>
         </div>
@@ -33,7 +33,7 @@ export function ExecutiveDeepDive() {
           <div className="p-7 sm:p-10 lg:p-12 flex flex-col justify-between">
             <div>
               <div className="flex flex-wrap items-center gap-2.5 mb-4">
-                <span className="text-[10px] font-bold uppercase tracking-[0.16em] bg-[#f0f9ff] text-[#0284c7] px-2.5 py-1 border border-[#bae6fd]">
+                <span className="text-[10px] font-bold uppercase tracking-[0.16em] bg-editorial-sky-surface text-brand-sky px-2.5 py-1 border border-editorial-sky-border">
                   Q4 2025 Release
                 </span>
                 <span className="text-xs text-slate-500 font-medium">
@@ -54,7 +54,7 @@ export function ExecutiveDeepDive() {
               {/* 3 Value Metrics Strip */}
               <div className="grid grid-cols-3 divide-x divide-slate-200 border-y border-slate-200 py-4 my-6 max-w-xl">
                 <div className="pr-4">
-                  <div className="font-serif text-2xl sm:text-3xl font-semibold text-[#0284c7] tracking-tight">
+                  <div className="font-serif text-2xl sm:text-3xl font-semibold text-brand-sky tracking-tight">
                     -38%
                   </div>
                   <div className="text-[11px] font-semibold text-slate-600 mt-1 uppercase tracking-wider">
@@ -82,11 +82,11 @@ export function ExecutiveDeepDive() {
               {/* Key Findings Bullets */}
               <ul className="space-y-2.5 text-xs sm:text-sm text-slate-700 mb-8">
                 <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="size-4 text-[#0284c7] shrink-0 mt-0.5" />
+                  <CheckCircle2 className="size-4 text-brand-sky shrink-0 mt-0.5" />
                   <span>Dual-corridor routing reduces maritime chokepoint exposure by 62%.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="size-4 text-[#0284c7] shrink-0 mt-0.5" />
+                  <CheckCircle2 className="size-4 text-brand-sky shrink-0 mt-0.5" />
                   <span>Contractual indexation models protect operational margins against unexpected spot freight spikes.</span>
                 </li>
               </ul>
@@ -96,7 +96,7 @@ export function ExecutiveDeepDive() {
             <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-slate-100">
               <Link
                 href="/blog/resilient-freight-corridors-global-bottlenecks"
-                className="group inline-flex items-center justify-center gap-2 bg-[#0284c7] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7]"
+                className="group inline-flex items-center justify-center gap-2 bg-brand-sky px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky"
               >
                 <FileText className="size-4" />
                 <span>Read Full Executive Report</span>
@@ -105,7 +105,7 @@ export function ExecutiveDeepDive() {
 
               <a
                 href="#newsletter-email"
-                className="inline-flex items-center justify-center gap-2 border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-800 transition-colors hover:border-slate-950 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7]"
+                className="inline-flex items-center justify-center gap-2 border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-800 transition-colors hover:border-slate-950 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky"
               >
                 <Download className="size-4 text-slate-500" />
                 <span>Download Executive PDF</span>
@@ -142,7 +142,7 @@ export function ExecutiveDeepDive() {
 
             {/* Bottom Caption */}
             <div className="absolute bottom-5 left-5 right-5 z-10 text-white">
-              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#0284c7] mb-1">
+              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-brand-sky mb-1">
                 Featured Logistics Corridor Analysis
               </p>
               <p className="text-sm font-semibold text-slate-100 leading-snug">

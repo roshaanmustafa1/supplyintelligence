@@ -112,7 +112,7 @@ export function SingleArticleContent({ article }: SingleArticleContentProps) {
                   key={idx}
                   className="flex items-start gap-3 text-sm sm:text-base text-slate-700 leading-relaxed"
                 >
-                  <span className="size-2 rounded-full bg-[#0284c7] shrink-0 mt-2" />
+                  <span className="size-2 rounded-full bg-brand-sky shrink-0 mt-2" />
                   <span>{item}</span>
                 </li>
               ))}
@@ -143,8 +143,8 @@ export function SingleArticleContent({ article }: SingleArticleContentProps) {
           </div>
 
           {section.callout && (
-            <div className="my-6 rounded-xl border-l-4 border-[#0284c7] bg-sky-50/60 p-5 border border-sky-100">
-              <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#0284c7]">
+            <div className="my-6 rounded-xl border-l-4 border-brand-sky bg-sky-50/60 p-5 border border-sky-100">
+              <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-brand-sky">
                 {section.callout.title}
               </h4>
               <p className="mt-1 text-xs sm:text-sm text-slate-700 leading-relaxed">
@@ -158,7 +158,7 @@ export function SingleArticleContent({ article }: SingleArticleContentProps) {
       {/* Executive Key Takeaways Box */}
       {article.keyTakeaways && article.keyTakeaways.length > 0 && (
         <div className="my-8 rounded-2xl bg-slate-50/90 border border-slate-200/80 p-6 sm:p-7 shadow-2xs">
-          <div className="flex items-center gap-2 text-[#0284c7] mb-3">
+          <div className="flex items-center gap-2 text-brand-sky mb-3">
             <BookmarkCheck className="size-5 shrink-0" />
             <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-900">
               Executive Key Takeaways
@@ -167,7 +167,7 @@ export function SingleArticleContent({ article }: SingleArticleContentProps) {
           <ul className="space-y-2.5 text-xs sm:text-sm text-slate-700 leading-relaxed">
             {article.keyTakeaways.map((takeaway, idx) => (
               <li key={idx} className="flex items-start gap-2.5">
-                <CheckCircle2 className="size-4 text-[#0284c7] shrink-0 mt-0.5" />
+                <CheckCircle2 className="size-4 text-brand-sky shrink-0 mt-0.5" />
                 <span>{takeaway}</span>
               </li>
             ))}

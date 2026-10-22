@@ -2,11 +2,6 @@ import type { Metadata } from 'next'
 import { Inter, Geist_Mono, Poppins } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
-import { Header } from '@/components/layout/Header'
-import { Footer } from '@/components/layout/Footer'
-import { SkipToContent } from '@/components/common/SkipToContent'
-import { OrganizationJsonLd, WebSiteJsonLd } from '@/components/seo/JsonLd'
-import { AgentationDev } from '@/components/dev/AgentationDev'
 import { cn } from '@/lib/utils'
 
 const inter = Inter({
@@ -29,7 +24,7 @@ const fontMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://supplyintelligence.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://supplyintelligence.com'),
   title: {
     default: 'Supply Intelligence | Procurement, Supply Chain & AI Insights',
     template: '%s | Supply Intelligence',
@@ -106,13 +101,7 @@ export default function RootLayout({
     >
       <body className="flex min-h-screen flex-col bg-background text-foreground antialiased selection:bg-brand-blue/20 selection:text-foreground">
         <ThemeProvider>
-          <SkipToContent />
-          <OrganizationJsonLd />
-          <WebSiteJsonLd />
-          <Header />
-          <div className="flex-1">{children}</div>
-          <Footer />
-          {process.env.NODE_ENV === 'development' && <AgentationDev />}
+          {children}
         </ThemeProvider>
       </body>
     </html>

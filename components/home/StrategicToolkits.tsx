@@ -60,7 +60,7 @@ export function StrategicToolkits() {
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-8 pb-4 border-b border-slate-200 gap-4">
           <div>
-            <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-[#0284c7]">
+            <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-brand-sky">
               Practitioner Toolkits & Frameworks
             </p>
             <h2 className="font-serif text-3xl font-semibold tracking-tight text-slate-950">
@@ -73,7 +73,7 @@ export function StrategicToolkits() {
 
           <Link
             href="/blog"
-            className="group inline-flex items-center gap-1 text-sm font-semibold text-[#0284c7] hover:text-slate-950 shrink-0"
+            className="group inline-flex items-center gap-1 text-sm font-semibold text-brand-sky hover:text-slate-950 shrink-0"
           >
             <span>All Toolkits & Guides</span>
             <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />
@@ -93,21 +93,21 @@ export function StrategicToolkits() {
                 <div>
                   {/* Top Meta Bar */}
                   <div className="flex items-center justify-between mb-4">
-                    <div className="flex size-10 items-center justify-center border border-slate-200 bg-[#f6f7f6] text-[#0284c7] group-hover:bg-[#0284c7] group-hover:text-white transition-colors duration-200">
+                    <div className="flex size-10 items-center justify-center border border-slate-200 bg-editorial-surface text-brand-sky group-hover:bg-brand-sky group-hover:text-white transition-colors duration-200">
                       <Icon className="size-5" strokeWidth={1.8} />
                     </div>
-                    <span className="text-[10px] font-bold uppercase tracking-[0.14em] px-2.5 py-1 bg-[#f6f7f6] text-slate-700 border border-slate-200">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.14em] px-2.5 py-1 bg-editorial-surface text-slate-700 border border-slate-200">
                       {toolkit.formatBadge}
                     </span>
                   </div>
 
                   {/* Category Kicker */}
-                  <div className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#0284c7] mb-2">
+                  <div className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand-sky mb-2">
                     {toolkit.category}
                   </div>
 
                   {/* Title */}
-                  <h3 className="font-serif text-xl font-semibold text-slate-950 leading-snug group-hover:text-[#0284c7] transition-colors mb-3">
+                  <h3 className="font-serif text-xl font-semibold text-slate-950 leading-snug group-hover:text-brand-sky transition-colors mb-3">
                     <Link href={toolkit.linkHref}>
                       {toolkit.title}
                     </Link>
@@ -122,7 +122,7 @@ export function StrategicToolkits() {
                   <div className="space-y-2 pt-3 border-t border-slate-100 mb-6">
                     {toolkit.features.map((feature, i) => (
                       <div key={i} className="flex items-center gap-2 text-xs text-slate-600">
-                        <CheckSquare className="size-3.5 text-[#0284c7] shrink-0" />
+                        <CheckSquare className="size-3.5 text-brand-sky shrink-0" />
                         <span>{feature}</span>
                       </div>
                     ))}
@@ -136,7 +136,7 @@ export function StrategicToolkits() {
                   </span>
                   <Link
                     href={toolkit.linkHref}
-                    className="inline-flex items-center gap-1 text-xs font-bold text-[#0284c7] group-hover:text-slate-950 transition-colors"
+                    className="inline-flex items-center gap-1 text-xs font-bold text-brand-sky group-hover:text-slate-950 transition-colors"
                   >
                     <span>Access Framework</span>
                     <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />

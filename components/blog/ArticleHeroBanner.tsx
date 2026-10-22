@@ -13,14 +13,10 @@ export function ArticleHeroBanner({
   categorySlug,
 }: ArticleHeroBannerProps) {
   return (
-    <section className="relative w-full bg-[#0a1128] text-white py-14 sm:py-18 lg:py-22 overflow-hidden border-b border-slate-800">
+    <section className="relative w-full bg-editorial-navy text-white py-14 sm:py-18 lg:py-22 overflow-hidden border-b border-slate-800">
       {/* Subtle background ambient glow and grid pattern */}
       <div
-        className="absolute inset-0 opacity-15 pointer-events-none"
-        style={{
-          backgroundImage:
-            'radial-gradient(circle at 50% 30%, rgba(2, 132, 199, 0.35) 0%, transparent 70%), radial-gradient(circle at 80% 80%, rgba(14, 165, 233, 0.2) 0%, transparent 50%)',
-        }}
+        className="pointer-events-none absolute inset-0 bg-hero-glow opacity-15"
       />
 
 

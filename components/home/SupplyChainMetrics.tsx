@@ -84,20 +84,19 @@ function Sparkline({ points, isPositive }: { points: number[]; isPositive: boole
   })
 
   const pathD = `M ${coordinates.join(' L ')}`
-  const strokeColor = isPositive ? '#0284c7' : '#b45309'
 
   return (
     <svg
       width={width}
       height={height}
       viewBox={`0 0 ${width} ${height}`}
-      className="overflow-visible"
+      className={isPositive ? 'overflow-visible text-brand-sky' : 'overflow-visible text-editorial-warning'}
       aria-hidden="true"
     >
       <path
         d={pathD}
         fill="none"
-        stroke={strokeColor}
+        stroke="currentColor"
         strokeWidth="1.75"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -108,7 +107,7 @@ function Sparkline({ points, isPositive }: { points: number[]; isPositive: boole
           cx={coordinates[coordinates.length - 1].split(',')[0]}
           cy={coordinates[coordinates.length - 1].split(',')[1]}
           r="2.5"
-          fill={strokeColor}
+          fill="currentColor"
         />
       )}
     </svg>
@@ -149,7 +148,7 @@ export function SupplyChainMetrics() {
                 key={item.id}
                 onMouseEnter={() => setHoveredMetric(item.id)}
                 onMouseLeave={() => setHoveredMetric(null)}
-                className="group relative flex flex-col justify-between p-6 sm:p-7 transition-colors duration-200 hover:bg-[#fbfcfb]"
+                className="group relative flex flex-col justify-between p-6 sm:p-7 transition-colors duration-200 hover:bg-editorial-card"
               >
                 <div>
                   {/* Category & Change Badge */}
@@ -159,8 +158,8 @@ export function SupplyChainMetrics() {
                     </span>
                     <span
                       className={`inline-flex items-center gap-1 px-2 py-0.5 text-[11px] font-semibold border ${item.isPositive
-                        ? 'bg-[#f0f9ff] text-[#0284c7] border-[#bae6fd]'
-                        : 'bg-amber-50 text-[#0284c7] border-amber-200'
+                        ? 'bg-editorial-sky-surface text-brand-sky border-editorial-sky-border'
+                        : 'bg-amber-50 text-brand-sky border-amber-200'
                         }`}
                     >
                       {item.direction === 'up' ? (
@@ -198,7 +197,7 @@ export function SupplyChainMetrics() {
                     <span>{item.timeframe}</span>
                     <Link
                       href="/blog"
-                      className="inline-flex items-center gap-0.5 text-[#0284c7] font-semibold hover:text-slate-950 transition-colors"
+                      className="inline-flex items-center gap-0.5 text-brand-sky font-semibold hover:text-slate-950 transition-colors"
                     >
                       <span>Analysis</span>
                       <ArrowUpRight className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />

@@ -17,7 +17,7 @@ export function CategoryBadge({
   const content = (
     <span
       className={cn(
-        'inline-flex items-center text-[11px] font-bold tracking-[0.14em] uppercase text-[#0284c7] transition-colors hover:text-slate-950',
+        'inline-flex items-center text-[11px] font-bold tracking-[0.14em] uppercase text-brand-sky transition-colors hover:text-slate-950',
         className
       )}
     >

@@ -28,7 +28,7 @@ export function SectionHeading({
     >
       <div>
         {eyebrow && (
-          <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-[#0284c7]">
+          <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-brand-sky">
             {eyebrow}
           </p>
         )}
@@ -45,7 +45,7 @@ export function SectionHeading({
       {actionHref && actionLabel && (
         <Link
           href={actionHref}
-          className="group inline-flex items-center gap-1 text-sm font-semibold text-[#0284c7] hover:text-slate-950 transition-colors shrink-0"
+          className="group inline-flex items-center gap-1 text-sm font-semibold text-brand-sky hover:text-slate-950 transition-colors shrink-0"
         >
           <span>{actionLabel}</span>
           <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />

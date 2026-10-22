@@ -14,7 +14,7 @@ export function Footer() {
   ]
 
   return (
-    <footer className="bg-[#0a1128] text-slate-300 py-10 sm:py-12 border-t border-slate-800">
+    <footer className="bg-editorial-navy text-slate-300 py-10 sm:py-12 border-t border-slate-800">
       <Container size="wide">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8">
           {/* Left: Brand Logo in dark mode */}

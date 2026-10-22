@@ -1,3 +1,9 @@
+# Project styling
+
+- Use Tailwind utilities for component styling. Do not create custom component CSS files or CSS classes.
+- Define custom colors as named Tailwind theme tokens in `app/theme.css`; use those tokens or Tailwind palette colors in components, never raw color values.
+- Preserve the existing dashboard design and interaction behavior when changing styling.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 # This is NOT the Next.js you know

@@ -52,10 +52,10 @@ export function ArticleMediaGallery({
               type="button"
               onClick={() => setIsVideoModalOpen(true)}
               aria-label="Play executive video briefing"
-              className="relative inline-flex items-center justify-center size-14 sm:size-16 rounded-full bg-[#0284c7] text-white shadow-lg shadow-[#0284c7]/40 hover:bg-[#0369a1] hover:scale-110 active:scale-95 transition-all focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 cursor-pointer"
+              className="relative inline-flex items-center justify-center size-14 sm:size-16 rounded-full bg-brand-sky text-white shadow-lg shadow-brand-sky/40 hover:bg-brand-sky-hover hover:scale-110 active:scale-95 transition-all focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 cursor-pointer"
             >
               {/* Subtle outer pulsing ring */}
-              <span className="absolute -inset-1.5 rounded-full bg-[#0284c7]/30 animate-ping pointer-events-none opacity-75" />
+              <span className="absolute -inset-1.5 rounded-full bg-brand-sky/30 animate-ping pointer-events-none opacity-75" />
               <Play className="size-6 sm:size-7 fill-white text-white ml-0.5" />
             </button>
           </div>
@@ -77,7 +77,7 @@ export function ArticleMediaGallery({
             {/* Modal Header */}
             <div className="flex items-center justify-between px-5 py-3.5 bg-slate-800/80 border-b border-slate-700 text-white">
               <div className="flex items-center gap-2">
-                <span className="size-2.5 rounded-full bg-[#0284c7]" />
+                <span className="size-2.5 rounded-full bg-brand-sky" />
                 <h3 className="text-sm font-semibold tracking-wide">
                   Executive Briefing: Operational Negligence & Contractual Risk
                 </h3>
@@ -95,7 +95,7 @@ export function ArticleMediaGallery({
             {/* Video Container */}
             <div className="relative aspect-video w-full bg-black flex items-center justify-center">
               <div className="text-center p-6 text-white space-y-3">
-                <div className="inline-flex size-16 items-center justify-center rounded-full bg-[#0284c7]/20 text-[#0284c7] ring-8 ring-[#0284c7]/10 mb-2">
+                <div className="inline-flex size-16 items-center justify-center rounded-full bg-brand-sky/20 text-brand-sky ring-8 ring-brand-sky/10 mb-2">
                   <Play className="size-8 fill-current ml-1" />
                 </div>
                 <h4 className="text-lg font-bold">

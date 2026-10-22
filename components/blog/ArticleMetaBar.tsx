@@ -33,7 +33,7 @@ export function ArticleMetaBar({
             className="object-cover"
           />
         </div>
-        <span className="hover:text-[#0284c7] transition-colors">{author.name}</span>
+        <span className="hover:text-brand-sky transition-colors">{author.name}</span>
       </div>
 
       <span className="text-slate-300 hidden sm:inline" aria-hidden="true">
@@ -53,9 +53,9 @@ export function ArticleMetaBar({
       {/* Category / Topic */}
       <Link
         href={`/blog?topic=${categorySlug}`}
-        className="flex items-center gap-1.5 text-slate-600 hover:text-[#0284c7] transition-colors"
+        className="flex items-center gap-1.5 text-slate-600 hover:text-brand-sky transition-colors"
       >
-        <Tag className="size-3.5 text-[#0284c7]" />
+        <Tag className="size-3.5 text-brand-sky" />
         <span>{category}</span>
       </Link>
 
@@ -66,7 +66,7 @@ export function ArticleMetaBar({
       {/* Comments Count Anchor */}
       <a
         href="#comments"
-        className="flex items-center gap-1.5 text-slate-600 hover:text-[#0284c7] transition-colors"
+        className="flex items-center gap-1.5 text-slate-600 hover:text-brand-sky transition-colors"
       >
         <MessageSquare className="size-3.5 text-slate-400" />
         <span>{commentsCount} Comments</span>

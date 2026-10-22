@@ -65,12 +65,12 @@ export function BlogSidebar({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search..."
-            className="flex-1 px-4 py-2.5 text-xs sm:text-sm bg-white border border-slate-200/90 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0284c7] focus:border-transparent transition-all shadow-2xs"
+            className="flex-1 px-4 py-2.5 text-xs sm:text-sm bg-white border border-slate-200/90 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-sky focus:border-transparent transition-all shadow-2xs"
           />
           <button
             type="submit"
             aria-label="Search"
-            className="size-10 sm:size-10.5 rounded-xl bg-[#0284c7] hover:bg-[#0369a1] text-white flex items-center justify-center transition-colors shadow-2xs shrink-0 cursor-pointer"
+            className="size-10 sm:size-10.5 rounded-xl bg-brand-sky hover:bg-brand-sky-hover text-white flex items-center justify-center transition-colors shadow-2xs shrink-0 cursor-pointer"
           >
             <Search className="size-4" />
           </button>
@@ -91,7 +91,7 @@ export function BlogSidebar({
               return (
                 <div
                   key={cat.name}
-                  className="w-full bg-[#0284c7] text-white font-semibold text-xs sm:text-sm px-4 py-3 rounded-xl flex items-center justify-between shadow-xs transition-colors"
+                  className="w-full bg-brand-sky text-white font-semibold text-xs sm:text-sm px-4 py-3 rounded-xl flex items-center justify-between shadow-xs transition-colors"
                 >
                   <span>{cat.name}</span>
                   <ChevronDown className="size-4 text-white/90" />
@@ -103,12 +103,12 @@ export function BlogSidebar({
               <Link
                 key={cat.name}
                 href={`/blog?topic=${cat.slug}`}
-                className="w-full bg-white hover:bg-slate-50 text-slate-700 hover:text-[#0284c7] border border-slate-200/90 hover:border-[#0284c7] text-xs sm:text-sm px-4 py-3 rounded-xl flex items-center justify-between transition-all shadow-2xs group"
+                className="w-full bg-white hover:bg-slate-50 text-slate-700 hover:text-brand-sky border border-slate-200/90 hover:border-brand-sky text-xs sm:text-sm px-4 py-3 rounded-xl flex items-center justify-between transition-all shadow-2xs group"
               >
-                <span className="font-medium group-hover:text-[#0284c7] transition-colors">
+                <span className="font-medium group-hover:text-brand-sky transition-colors">
                   {cat.name}
                 </span>
-                <ChevronRight className="size-4 text-slate-400 group-hover:text-[#0284c7] group-hover:translate-x-0.5 transition-all" />
+                <ChevronRight className="size-4 text-slate-400 group-hover:text-brand-sky group-hover:translate-x-0.5 transition-all" />
               </Link>
             )
           })}
@@ -141,7 +141,7 @@ export function BlogSidebar({
                   <Calendar className="size-3 text-slate-400 shrink-0" />
                   <span>{post.date}</span>
                 </div>
-                <h4 className="font-semibold text-xs sm:text-[13px] text-slate-800 group-hover:text-[#0284c7] transition-colors line-clamp-2 leading-snug">
+                <h4 className="font-semibold text-xs sm:text-[13px] text-slate-800 group-hover:text-brand-sky transition-colors line-clamp-2 leading-snug">
                   <Link
                     href={`/blog/${post.slug}`}
                     className="focus-visible:outline-none focus-visible:underline"
@@ -175,7 +175,7 @@ export function BlogSidebar({
         <h4 className="font-bold text-base text-slate-900 mt-3 leading-tight">
           {author.name}
         </h4>
-        <p className="text-xs font-semibold text-[#0284c7] uppercase tracking-wider mt-1">
+        <p className="text-xs font-semibold text-brand-sky uppercase tracking-wider mt-1">
           {author.role}
         </p>
 
@@ -190,7 +190,7 @@ export function BlogSidebar({
             target="_blank"
             rel="noopener noreferrer"
             aria-label="X / Twitter"
-            className="p-1.5 rounded-lg hover:text-[#0284c7] transition-colors"
+            className="p-1.5 rounded-lg hover:text-brand-sky transition-colors"
           >
             <IconX className="size-4" />
           </a>
@@ -199,14 +199,14 @@ export function BlogSidebar({
             target="_blank"
             rel="noopener noreferrer"
             aria-label="LinkedIn"
-            className="p-1.5 rounded-lg hover:text-[#0284c7] transition-colors"
+            className="p-1.5 rounded-lg hover:text-brand-sky transition-colors"
           >
             <IconLinkedIn className="size-4" />
           </a>
           <a
             href="mailto:editorial@supplyintelligence.com"
             aria-label="Email"
-            className="p-1.5 rounded-lg hover:text-[#0284c7] transition-colors"
+            className="p-1.5 rounded-lg hover:text-brand-sky transition-colors"
           >
             <Mail className="size-4" />
           </a>
@@ -226,8 +226,8 @@ export function BlogSidebar({
               href={`/blog?topic=${currentCategorySlug || 'procurement'}`}
               className={`text-xs px-3 py-1.5 rounded-lg transition-all ${
                 tag.featured
-                  ? 'bg-[#0284c7] text-white hover:bg-[#0369a1] shadow-2xs font-semibold'
-                  : 'bg-white text-slate-700 hover:text-[#0284c7] hover:border-[#0284c7] border border-slate-200/90 shadow-2xs font-medium'
+                  ? 'bg-brand-sky text-white hover:bg-brand-sky-hover shadow-2xs font-semibold'
+                  : 'bg-white text-slate-700 hover:text-brand-sky hover:border-brand-sky border border-slate-200/90 shadow-2xs font-medium'
               }`}
             >
               #{tag.label}

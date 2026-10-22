@@ -111,7 +111,7 @@ export function ArticleComments() {
               <button
                 type="button"
                 onClick={() => handleReplyClick(comment.name)}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-[#0284c7] transition-colors px-3 py-1.5 rounded-lg hover:bg-white"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-brand-sky transition-colors px-3 py-1.5 rounded-lg hover:bg-white"
               >
                 <CornerDownLeft className="size-3.5" />
                 <span>Reply</span>
@@ -142,7 +142,7 @@ export function ArticleComments() {
             </p>
 
             {replyTo && (
-              <div className="mt-3 inline-flex items-center gap-2 bg-sky-100 text-[#0284c7] px-3 py-1 rounded-md text-xs font-semibold">
+              <div className="mt-3 inline-flex items-center gap-2 bg-sky-100 text-brand-sky px-3 py-1 rounded-md text-xs font-semibold">
                 <span>Replying to {replyTo}</span>
                 <button
                   type="button"
@@ -173,7 +173,7 @@ export function ArticleComments() {
                   placeholder="First Name"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  className="w-full px-4 py-3 text-xs sm:text-sm bg-white border border-slate-200/90 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0284c7] focus:border-transparent transition-all shadow-2xs"
+                  className="w-full px-4 py-3 text-xs sm:text-sm bg-white border border-slate-200/90 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-sky focus:border-transparent transition-all shadow-2xs"
                 />
               </div>
 
@@ -185,7 +185,7 @@ export function ArticleComments() {
                   placeholder="Last Name"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-                  className="w-full px-4 py-3 text-xs sm:text-sm bg-white border border-slate-200/90 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0284c7] focus:border-transparent transition-all shadow-2xs"
+                  className="w-full px-4 py-3 text-xs sm:text-sm bg-white border border-slate-200/90 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-sky focus:border-transparent transition-all shadow-2xs"
                 />
               </div>
             </div>
@@ -200,7 +200,7 @@ export function ArticleComments() {
                   placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 text-xs sm:text-sm bg-white border border-slate-200/90 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0284c7] focus:border-transparent transition-all shadow-2xs"
+                  className="w-full px-4 py-3 text-xs sm:text-sm bg-white border border-slate-200/90 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-sky focus:border-transparent transition-all shadow-2xs"
                 />
               </div>
 
@@ -212,7 +212,7 @@ export function ArticleComments() {
                   placeholder="Phone"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full px-4 py-3 text-xs sm:text-sm bg-white border border-slate-200/90 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0284c7] focus:border-transparent transition-all shadow-2xs"
+                  className="w-full px-4 py-3 text-xs sm:text-sm bg-white border border-slate-200/90 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-sky focus:border-transparent transition-all shadow-2xs"
                 />
               </div>
             </div>
@@ -226,7 +226,7 @@ export function ArticleComments() {
                 placeholder="Write your comment here..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                className="w-full px-4 py-3 text-xs sm:text-sm bg-white border border-slate-200/90 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0284c7] focus:border-transparent transition-all resize-y shadow-2xs"
+                className="w-full px-4 py-3 text-xs sm:text-sm bg-white border border-slate-200/90 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-sky focus:border-transparent transition-all resize-y shadow-2xs"
               />
             </div>
 
@@ -236,7 +236,7 @@ export function ArticleComments() {
                 type="checkbox"
                 checked={saveInfo}
                 onChange={(e) => setSaveInfo(e.target.checked)}
-                className="size-4 rounded border-slate-300 text-[#0284c7] focus:ring-[#0284c7]"
+                className="size-4 rounded border-slate-300 text-brand-sky focus:ring-brand-sky"
               />
               <label htmlFor="save-info" className="text-xs text-slate-500 select-none">
                 Save my name, email, and website in this browser for the next time I comment.
@@ -246,7 +246,7 @@ export function ArticleComments() {
             <div className="pt-2">
               <button
                 type="submit"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#0284c7] hover:bg-[#0369a1] active:bg-[#075985] text-white text-xs sm:text-sm font-semibold transition-all shadow-xs hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] focus-visible:ring-offset-2"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-brand-sky hover:bg-brand-sky-hover active:bg-brand-sky-active text-white text-xs sm:text-sm font-semibold transition-all shadow-xs hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky focus-visible:ring-offset-2"
               >
                 <span>Post Comment</span>
                 <Send className="size-3.5" />

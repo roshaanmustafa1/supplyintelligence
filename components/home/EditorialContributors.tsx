@@ -63,7 +63,7 @@ export function EditorialContributors() {
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-8 pb-4 border-b border-slate-200 gap-4">
           <div>
-            <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-[#0284c7]">
+            <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-brand-sky">
               Editorial Board & Contributing Fellows
             </p>
             <h2 className="font-serif text-3xl font-semibold tracking-tight text-slate-950">
@@ -75,7 +75,7 @@ export function EditorialContributors() {
           </div>
 
           <div className="flex items-center gap-2 text-xs text-slate-500 font-medium shrink-0 self-start sm:self-end">
-            <UserCheck className="size-3.5 text-[#0284c7]" />
+            <UserCheck className="size-3.5 text-brand-sky" />
             <span>Peer-Reviewed Practitioner Standards</span>
           </div>
         </div>
@@ -85,21 +85,21 @@ export function EditorialContributors() {
           {contributors.map((person) => (
             <div
               key={person.name}
-              className="group flex flex-col justify-between p-6 sm:p-7 transition-colors duration-200 hover:bg-[#fbfcfb]"
+              className="group flex flex-col justify-between p-6 sm:p-7 transition-colors duration-200 hover:bg-editorial-card"
             >
               <div>
                 {/* Header: Monogram & Domain Tag */}
                 <div className="flex items-center justify-between mb-5">
-                  <div className="flex size-11 items-center justify-center border border-slate-200 bg-[#f6f7f6] text-slate-950 font-serif text-sm font-semibold tracking-wider group-hover:border-[#0284c7] group-hover:text-[#0284c7] transition-colors">
+                  <div className="flex size-11 items-center justify-center border border-slate-200 bg-editorial-surface text-slate-950 font-serif text-sm font-semibold tracking-wider group-hover:border-brand-sky group-hover:text-brand-sky transition-colors">
                     {person.initials}
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-[0.14em] px-2 py-0.5 bg-[#f0f9ff] text-[#0284c7] border border-[#bae6fd]">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.14em] px-2 py-0.5 bg-editorial-sky-surface text-brand-sky border border-editorial-sky-border">
                     {person.domainTag}
                   </span>
                 </div>
 
                 {/* Name */}
-                <h3 className="font-serif text-lg font-semibold text-slate-950 group-hover:text-[#0284c7] transition-colors mb-1">
+                <h3 className="font-serif text-lg font-semibold text-slate-950 group-hover:text-brand-sky transition-colors mb-1">
                   {person.name}
                 </h3>
 
@@ -114,7 +114,7 @@ export function EditorialContributors() {
                 </p>
 
                 {/* Focus Quote / Tag */}
-                <div className="text-[11px] text-slate-600 leading-relaxed border-l-2 border-[#0284c7] pl-2.5 my-3">
+                <div className="text-[11px] text-slate-600 leading-relaxed border-l-2 border-brand-sky pl-2.5 my-3">
                   {person.focus}
                 </div>
               </div>
@@ -126,10 +126,10 @@ export function EditorialContributors() {
                 </span>
                 <Link
                   href={`/blog/${person.recentArticleSlug}`}
-                  className="group/link flex items-start justify-between gap-2 text-xs text-slate-700 font-medium hover:text-[#0284c7] transition-colors leading-snug"
+                  className="group/link flex items-start justify-between gap-2 text-xs text-slate-700 font-medium hover:text-brand-sky transition-colors leading-snug"
                 >
                   <span className="line-clamp-2">{person.recentArticleTitle}</span>
-                  <ArrowRight className="size-3.5 text-slate-400 group-hover/link:text-[#0284c7] group-hover/link:translate-x-0.5 transition-all shrink-0 mt-0.5" />
+                  <ArrowRight className="size-3.5 text-slate-400 group-hover/link:text-brand-sky group-hover/link:translate-x-0.5 transition-all shrink-0 mt-0.5" />
                 </Link>
               </div>
             </div>

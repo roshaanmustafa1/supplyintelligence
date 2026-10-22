@@ -14,14 +14,14 @@ export function LatestArticles({ articles }: LatestArticlesProps) {
       <Container size="full">
         <div className="flex items-end justify-between mb-7 pb-4 border-b border-slate-200">
           <div>
-            <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-[#0284c7]">From the journal</p>
+            <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-brand-sky">From the journal</p>
             <h2 className="font-serif text-3xl font-semibold tracking-tight text-slate-950">
               Latest Articles
             </h2>
           </div>
           <Link
             href="/blog"
-            className="group inline-flex items-center gap-1 text-sm font-semibold text-[#0284c7] hover:text-slate-950"
+            className="group inline-flex items-center gap-1 text-sm font-semibold text-brand-sky hover:text-slate-950"
           >
             <span>View All Articles</span>
             <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />

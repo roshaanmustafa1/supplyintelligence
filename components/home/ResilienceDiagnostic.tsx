@@ -64,7 +64,7 @@ export function ResilienceDiagnostic() {
       <Container size="full">
         <div className="rounded-2xl border border-slate-200/90 bg-white shadow-sm overflow-hidden">
           {/* Top Banner Header */}
-          <div className="bg-[#0B192C] px-6 sm:px-10 py-8 text-white">
+          <div className="bg-footer-navy px-6 sm:px-10 py-8 text-white">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
                 <div className="inline-flex items-center gap-2 mb-1.5 text-sky-400 text-xs font-bold uppercase tracking-wider">
@@ -107,7 +107,7 @@ export function ResilienceDiagnostic() {
                       onClick={() => setSpend(tier.id as SpendTier)}
                       className={`px-3 py-2.5 rounded-lg text-xs font-semibold border transition-all text-center ${
                         spend === tier.id
-                          ? 'border-[#0284c7] bg-sky-50/80 text-[#0284c7] ring-1 ring-[#0284c7]'
+                          ? 'border-brand-sky bg-sky-50/80 text-brand-sky ring-1 ring-brand-sky'
                           : 'border-slate-200 text-slate-700 hover:bg-slate-50'
                       }`}
                     >
@@ -132,7 +132,7 @@ export function ResilienceDiagnostic() {
                       onClick={() => setBottleneck(key)}
                       className={`p-3 rounded-lg text-left text-xs font-medium border transition-all ${
                         bottleneck === key
-                          ? 'border-[#0284c7] bg-sky-50/80 text-[#0284c7] ring-1 ring-[#0284c7] font-semibold'
+                          ? 'border-brand-sky bg-sky-50/80 text-brand-sky ring-1 ring-brand-sky font-semibold'
                           : 'border-slate-200 text-slate-700 hover:bg-slate-50'
                       }`}
                     >
@@ -159,7 +159,7 @@ export function ResilienceDiagnostic() {
                       onClick={() => setMaturity(lvl.id as Maturity)}
                       className={`px-3 py-2.5 rounded-lg text-xs font-medium border transition-all text-center ${
                         maturity === lvl.id
-                          ? 'border-[#0284c7] bg-sky-50/80 text-[#0284c7] ring-1 ring-[#0284c7] font-semibold'
+                          ? 'border-brand-sky bg-sky-50/80 text-brand-sky ring-1 ring-brand-sky font-semibold'
                           : 'border-slate-200 text-slate-700 hover:bg-slate-50'
                       }`}
                     >
@@ -184,7 +184,7 @@ export function ResilienceDiagnostic() {
                       <DollarSign className="size-4 text-emerald-600" />
                       <span>Estimated Working Capital Unlocked</span>
                     </div>
-                    <div className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] tracking-tight">
+                    <div className="text-2xl sm:text-3xl font-extrabold text-editorial-ink tracking-tight">
                       {calculations.capital}
                     </div>
                     <p className="text-[11px] text-slate-500 mt-1">
@@ -196,10 +196,10 @@ export function ResilienceDiagnostic() {
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-3.5 rounded-lg bg-white border border-slate-200/80 shadow-2xs">
                       <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 mb-1">
-                        <Clock className="size-3.5 text-[#0284c7]" />
+                        <Clock className="size-3.5 text-brand-sky" />
                         <span>Lead-Time</span>
                       </div>
-                      <div className="text-xl font-bold text-[#0284c7]">
+                      <div className="text-xl font-bold text-brand-sky">
                         -{calculations.leadTimeReduction}
                       </div>
                       <p className="text-[10px] text-slate-500 mt-0.5">Order-to-receipt</p>
@@ -210,7 +210,7 @@ export function ResilienceDiagnostic() {
                         <Zap className="size-3.5 text-amber-500" />
                         <span>Labor Reclaimed</span>
                       </div>
-                      <div className="text-xl font-bold text-[#0F172A]">
+                      <div className="text-xl font-bold text-editorial-ink">
                         {calculations.headcountHours}
                       </div>
                       <p className="text-[10px] text-slate-500 mt-0.5">Friction eliminated</p>
@@ -232,7 +232,7 @@ export function ResilienceDiagnostic() {
               <div className="mt-6 pt-4 border-t border-slate-200">
                 <Link
                   href={`/blog/${bottleneckLabels[bottleneck].targetSlug}`}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-[#0284c7] hover:bg-[#0369a1] py-2.5 px-4 text-xs font-semibold text-white shadow-2xs transition-colors"
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-brand-sky hover:bg-brand-sky-hover py-2.5 px-4 text-xs font-semibold text-white shadow-2xs transition-colors"
                 >
                   <span>Read Recommended Playbook</span>
                   <ArrowRight className="size-3.5" />

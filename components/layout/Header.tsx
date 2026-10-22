@@ -46,9 +46,9 @@ export function Header() {
                       key={item.label}
                       href={item.href}
                       className={cn(
-                        'relative py-6 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] rounded-xs',
+                        'relative py-6 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky rounded-xs',
                         isActive
-                          ? 'text-[#0284c7] font-semibold'
+                          ? 'text-brand-sky font-semibold'
                           : 'text-slate-700 hover:text-slate-900'
                       )}
                     >
@@ -56,7 +56,7 @@ export function Header() {
                       {/* Active indicator underline */}
                       {isActive && (
                         <span
-                          className="absolute inset-x-0 bottom-0 h-0.5 bg-[#0284c7]"
+                          className="absolute inset-x-0 bottom-0 h-0.5 bg-brand-sky"
                           aria-hidden="true"
                         />
                       )}

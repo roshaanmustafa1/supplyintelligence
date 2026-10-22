@@ -32,7 +32,7 @@ export function NewsletterSection() {
         <div className="relative overflow-hidden border border-slate-900 bg-slate-950 p-8 sm:p-12 lg:p-14 text-white">
           {/* Subtle Grid Accent */}
           <div
-            className="absolute inset-0 bg-[radial-gradient(#0284c7_1px,transparent_1px)] [background-size:24px_24px] opacity-15 pointer-events-none"
+            className="absolute inset-0 bg-newsletter-grid [background-size:24px_24px] opacity-15 pointer-events-none"
             aria-hidden="true"
           />
 
@@ -49,7 +49,7 @@ export function NewsletterSection() {
                     className="size-4 object-contain brightness-0 invert"
                   />
                 </div>
-                <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#0284c7]">
+                <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-sky">
                   The Executive Intelligence Briefing
                 </p>
               </div>
@@ -64,7 +64,7 @@ export function NewsletterSection() {
 
               <div className="flex flex-wrap items-center gap-y-2 gap-x-4 pt-2 text-xs text-slate-400 font-medium">
                 <span className="flex items-center gap-1.5">
-                  <ShieldCheck className="size-3.5 text-[#0284c7]" />
+                  <ShieldCheck className="size-3.5 text-brand-sky" />
                   <span>Verified Practitioner Data</span>
                 </span>
                 <span className="text-slate-600">&bull;</span>
@@ -79,9 +79,9 @@ export function NewsletterSection() {
               {status === 'submitted' ? (
                 <div
                   role="status"
-                  className="flex items-start gap-3 bg-[#0284c7]/20 border border-[#0284c7] p-5 text-white"
+                  className="flex items-start gap-3 bg-brand-sky/20 border border-brand-sky p-5 text-white"
                 >
-                  <CheckCircle2 className="size-5 text-[#0284c7] shrink-0 mt-0.5" aria-hidden="true" />
+                  <CheckCircle2 className="size-5 text-brand-sky shrink-0 mt-0.5" aria-hidden="true" />
                   <div>
                     <h3 className="font-semibold text-sm text-white">Subscription Confirmed</h3>
                     <p className="text-xs text-slate-300 mt-1 leading-relaxed">
@@ -109,13 +109,13 @@ export function NewsletterSection() {
                         required
                         aria-required="true"
                         aria-describedby={status === 'error' ? 'newsletter-error' : undefined}
-                        className="w-full border border-slate-700 bg-slate-900/90 px-4 py-3 text-sm text-white placeholder:text-slate-500 transition-colors focus:border-[#0284c7] focus:outline-none focus:ring-1 focus:ring-[#0284c7]"
+                        className="w-full border border-slate-700 bg-slate-900/90 px-4 py-3 text-sm text-white placeholder:text-slate-500 transition-colors focus:border-brand-sky focus:outline-none focus:ring-1 focus:ring-brand-sky"
                       />
                     </div>
 
                     <button
                       type="submit"
-                      className="group inline-flex items-center justify-center gap-2 bg-[#0284c7] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#0369a1] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] shrink-0"
+                      className="group inline-flex items-center justify-center gap-2 bg-brand-sky px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-sky-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky shrink-0"
                     >
                       <span>Subscribe</span>
                       <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />

@@ -1,22 +1,82 @@
-import { articles, type Article } from '@/data/articles'
+import { prisma } from '@/lib/db'
+import { articles as staticArticles, type Article } from '@/data/articles'
+import { toPublicArticle } from '@/lib/services/article.service'
+
+export type { Article }
 
 export async function getAllArticles(): Promise<Article[]> {
-  return articles
+  try {
+    const dbArticles = await prisma.article.findMany({
+      where: { status: 'PUBLISHED' },
+      include: {
+        category: true,
+        author: true,
+        articleTags: { include: { tag: true } },
+      },
+      orderBy: [{ publishedAt: 'desc' }, { createdAt: 'desc' }],
+    })
+
+    if (dbArticles.length > 0) {
+      return dbArticles.map((dbArt) => {
+        const staticMatch = staticArticles.find((s) => s.slug === dbArt.slug)
+        if (staticMatch) {
+          return {
+            ...staticMatch,
+            title: dbArt.title,
+            excerpt: dbArt.excerpt || staticMatch.excerpt,
+            seoTitle: dbArt.seoTitle || staticMatch.seoTitle,
+            seoDescription: dbArt.seoDescription || staticMatch.seoDescription,
+          }
+        }
+        return toPublicArticle(dbArt)
+      })
+    }
+  } catch (error) {
+    console.error('Failed to query articles from database, using static fallback:', error)
+  }
+
+  return staticArticles
 }
 
 export async function getLatestArticles(limit: number = 3): Promise<Article[]> {
-  // Sort by date descending
-  return [...articles]
-    .sort((a, b) => new Date(b.isoDate).getTime() - new Date(a.isoDate).getTime())
-    .slice(0, limit)
+  const all = await getAllArticles()
+  return all.slice(0, limit)
 }
 
 export async function getArticleBySlug(slug: string): Promise<Article | undefined> {
-  return articles.find((article) => article.slug === slug)
+  try {
+    const dbArt = await prisma.article.findUnique({
+      where: { slug },
+      include: {
+        category: true,
+        author: true,
+        articleTags: { include: { tag: true } },
+      },
+    })
+
+    if (dbArt && dbArt.status === 'PUBLISHED') {
+      const staticMatch = staticArticles.find((s) => s.slug === slug)
+      if (staticMatch) {
+        return {
+          ...staticMatch,
+          title: dbArt.title,
+          excerpt: dbArt.excerpt || staticMatch.excerpt,
+          seoTitle: dbArt.seoTitle || staticMatch.seoTitle,
+          seoDescription: dbArt.seoDescription || staticMatch.seoDescription,
+        }
+      }
+      return toPublicArticle(dbArt)
+    }
+  } catch (error) {
+    console.error(`Failed to query article "${slug}" from database:`, error)
+  }
+
+  return staticArticles.find((article) => article.slug === slug)
 }
 
 export async function getArticlesByCategory(categorySlug: string): Promise<Article[]> {
-  return articles.filter((article) => article.categorySlug === categorySlug)
+  const all = await getAllArticles()
+  return all.filter((article) => article.categorySlug === categorySlug)
 }
 
 export async function getRelatedArticles(
@@ -24,8 +84,8 @@ export async function getRelatedArticles(
   categorySlug: string,
   limit: number = 3
 ): Promise<Article[]> {
-  // First match same category, then fallback to other recent articles
-  const sameCategory = articles.filter(
+  const all = await getAllArticles()
+  const sameCategory = all.filter(
     (article) => article.slug !== currentSlug && article.categorySlug === categorySlug
   )
 
@@ -33,7 +93,7 @@ export async function getRelatedArticles(
     return sameCategory.slice(0, limit)
   }
 
-  const otherArticles = articles.filter(
+  const otherArticles = all.filter(
     (article) => article.slug !== currentSlug && article.categorySlug !== categorySlug
   )
 
@@ -42,9 +102,10 @@ export async function getRelatedArticles(
 
 export async function searchArticles(query: string): Promise<Article[]> {
   const normalized = query.toLowerCase().trim()
-  if (!normalized) return articles
+  const all = await getAllArticles()
+  if (!normalized) return all
 
-  return articles.filter((article) => {
+  return all.filter((article) => {
     return (
       article.title.toLowerCase().includes(normalized) ||
       article.excerpt.toLowerCase().includes(normalized) ||

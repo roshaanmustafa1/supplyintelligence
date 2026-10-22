@@ -18,7 +18,7 @@ export function ArticleQuoteCard({ quote }: ArticleQuoteCardProps) {
   return (
     <div className="my-8 rounded-2xl bg-sky-50/80 dark:bg-sky-950/25 border border-sky-100/90 dark:border-sky-900/40 p-6 sm:p-8 relative overflow-hidden shadow-2xs">
       {/* Decorative Quote Icon in Brand Blue */}
-      <div className="mb-3 text-[#0284c7] opacity-90">
+      <div className="mb-3 text-brand-sky opacity-90">
         <svg
           className="size-10 sm:size-12 fill-current"
           viewBox="0 0 24 24"
