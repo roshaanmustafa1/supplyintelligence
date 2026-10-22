@@ -32,6 +32,7 @@ const credentialsSchema = z.object({
 })
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || 'supply-intelligence-fallback-secret-2026',
   providers: [
     Credentials({
       credentials: {

@@ -1,13 +1,14 @@
 import { MetadataRoute } from 'next'
 import { prisma } from '@/lib/db'
+import { articles as staticArticles } from '@/data/articles'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://supplyintelligence.com'
 
-  let articles: Array<{ slug: string; updatedAt: Date; publishedAt: Date | null }> = []
+  let articleEntries: MetadataRoute.Sitemap = []
 
   try {
-    articles = await prisma.article.findMany({
+    const articles = await prisma.article.findMany({
       where: { status: 'PUBLISHED' },
       select: {
         slug: true,
@@ -16,16 +17,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       },
       orderBy: { publishedAt: 'desc' },
     })
+
+    if (articles.length > 0) {
+      articleEntries = articles.map((article) => ({
+        url: `${baseUrl}/blog/${article.slug}`,
+        lastModified: article.publishedAt || article.updatedAt || new Date(),
+        changeFrequency: 'weekly' as const,
+        priority: 0.8,
+      }))
+    }
   } catch (error) {
-    console.error('Failed to query articles for sitemap:', error)
+    console.warn('Database not available for sitemap, using static articles fallback.')
   }
 
-  const articleEntries = articles.map((article) => ({
-    url: `${baseUrl}/blog/${article.slug}`,
-    lastModified: article.publishedAt || article.updatedAt || new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: 0.8,
-  }))
+  // Fallback to static articles if no DB articles were found
+  if (articleEntries.length === 0) {
+    articleEntries = staticArticles.map((article) => ({
+      url: `${baseUrl}/blog/${article.slug}`,
+      lastModified: new Date(article.isoDate || Date.now()),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    }))
+  }
 
   return [
     {

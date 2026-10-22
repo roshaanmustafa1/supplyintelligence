@@ -5,19 +5,13 @@
  * Uses React's useActionState to submit credentials to Auth.js.
  * Provides loading, error, and validation states.
  */
-import { useActionState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { Eye, EyeOff, LogIn, AlertCircle, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-interface LoginState {
-  error?: string
-  success?: boolean
-}
-
-export function LoginForm() {
+function LoginFormContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get('callbackUrl') ?? '/dashboard'
@@ -148,5 +142,20 @@ export function LoginForm() {
         )}
       </button>
     </form>
+  )
+}
+
+export function LoginForm() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex flex-col items-center justify-center py-8 text-dashboard-muted-foreground">
+          <Loader2 className="size-6 animate-spin text-brand-blue" />
+          <p className="mt-2 text-sm">Loading sign-in form…</p>
+        </div>
+      }
+    >
+      <LoginFormContent />
+    </Suspense>
   )
 }

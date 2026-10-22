@@ -34,7 +34,7 @@ export async function getAllArticles(): Promise<Article[]> {
       })
     }
   } catch (error) {
-    console.error('Failed to query articles from database, using static fallback:', error)
+    console.warn('Database query failed, using static articles fallback:', error instanceof Error ? error.message : error)
   }
 
   return staticArticles
@@ -74,7 +74,7 @@ export async function getArticleBySlug(slug: string): Promise<Article | undefine
       return toPublicArticle(dbArt)
     }
   } catch (error) {
-    console.error(`Failed to query article "${slug}" from database:`, error)
+    console.warn(`Database query for article "${slug}" failed, using static fallback:`, error instanceof Error ? error.message : error)
   }
 
   return staticArticles.find((article) => article.slug === slug)
