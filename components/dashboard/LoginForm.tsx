@@ -2,25 +2,34 @@
 
 /**
  * Login form client component.
- * Uses React's useActionState to submit credentials to Auth.js.
+ * Submits credentials to Auth.js and confirms the session before navigating.
  * Provides loading, error, and validation states.
  */
-import { signIn } from 'next-auth/react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { getSession, signIn } from 'next-auth/react'
+import { useSearchParams } from 'next/navigation'
 import { useState, Suspense } from 'react'
 import { Eye, EyeOff, LogIn, AlertCircle, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
+function getLoginError(error: string, code?: string | null) {
+  if (code === 'service_unavailable' || error === 'Configuration') {
+    return 'Sign-in is unavailable. The administrator must check the production authentication and database configuration.'
+  }
+  if (error === 'CredentialsSignin') return 'Invalid email or password. Please try again.'
+  return 'Sign-in failed. Please try again or contact the administrator.'
+}
+
 function LoginFormContent() {
-  const router = useRouter()
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get('callbackUrl') ?? '/dashboard'
 
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const authError = searchParams.get('error')
+  const errorMessage = error ?? (authError ? getLoginError(authError, searchParams.get('code')) : null)
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setIsLoading(true)
     setError(null)
@@ -29,33 +38,32 @@ function LoginFormContent() {
     const email = formData.get('email') as string
     const password = formData.get('password') as string
 
-    try {
-      const result = await signIn('credentials', {
-        email,
-        password,
-        redirect: false,
+    signIn('credentials', { email, password, redirect: false, redirectTo: callbackUrl })
+      .then((result) => {
+        if (!result || result.error || !result.ok) {
+          setError(getLoginError(result?.error ?? 'Unknown', result?.code))
+          return
+        }
+        return getSession().then((session) => {
+          if (!session?.user) {
+            setError('Your sign-in session could not be saved. Allow cookies and try again. If this continues, contact the administrator.')
+            return
+          }
+          const destination = new URL(result.url ?? callbackUrl, window.location.origin)
+          window.location.assign(destination.origin === window.location.origin ? destination.href : '/dashboard')
+        })
       })
-
-      if (result?.error) {
-        setError('Invalid email or password. Please try again.')
-      } else {
-        router.push(callbackUrl)
-        router.refresh()
-      }
-    } catch {
-      setError('An unexpected error occurred. Please try again.')
-    } finally {
-      setIsLoading(false)
-    }
+      .catch(() => setError('Unable to complete sign-in. Please try again or contact the administrator.'))
+      .finally(() => setIsLoading(false))
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5" noValidate>
       {/* Error message */}
-      {error && (
-        <div className="flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-dashboard-body text-destructive">
+      {errorMessage && (
+        <div role="alert" className="flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-dashboard-body text-destructive">
           <AlertCircle className="mt-0.5 size-4 shrink-0" />
-          <span>{error}</span>
+          <span>{errorMessage}</span>
         </div>
       )}
 

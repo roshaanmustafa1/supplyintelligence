@@ -1,5 +1,5 @@
 // SupplyIntelligence Prisma Schema
-// Database: SQLite (dev) / PostgreSQL (production)
+// Database: PostgreSQL (Neon)
 // ORM: Prisma 6.x
 
 generator client {
@@ -7,12 +7,13 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 // ─── Enums ─────────────────────────────────────────────────────
-// Note: SQLite does not support native enums; stored as strings.
+// Status and role values remain strings to preserve the application contract.
 
 // ArticleStatus lifecycle:
 // IDEA → RESEARCHING → DRAFT → AI_GENERATING → NEEDS_REVIEW

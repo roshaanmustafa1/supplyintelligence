@@ -8,7 +8,7 @@
  * - Role is embedded in the JWT and available on the session
  * - All sensitive checks must also be done server-side, not just on the token
  */
-import NextAuth, { type DefaultSession } from 'next-auth'
+import NextAuth, { CredentialsSignin, type DefaultSession } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import { z } from 'zod'
 import bcrypt from 'bcryptjs'
@@ -31,8 +31,12 @@ const credentialsSchema = z.object({
   password: z.string().min(8),
 })
 
+class SignInUnavailable extends CredentialsSignin {
+  code = 'service_unavailable'
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || 'supply-intelligence-fallback-secret-2026',
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
   providers: [
     Credentials({
       credentials: {
@@ -45,6 +49,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const { email, password } = parsed.data
 
+        if (!process.env.DATABASE_URL) {
+          console.error('[auth] DATABASE_URL is missing. Configure the production database before signing in.')
+          throw new SignInUnavailable()
+        }
+
         const user = await prisma.user.findUnique({
           where: { email },
           select: {
@@ -56,6 +65,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             role: true,
             isActive: true,
           },
+        }).catch(() => {
+          console.error('[auth] User lookup failed. Check the database connection and required schema migrations.')
+          throw new SignInUnavailable()
         })
 
         if (!user || !user.isActive || !user.passwordHash) return null
@@ -67,6 +79,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         void prisma.user.update({
           where: { id: user.id },
           data: { lastLoginAt: new Date() },
+        }).catch(() => {
+          console.error('[auth] Failed to update the last login timestamp.')
         })
 
         return {

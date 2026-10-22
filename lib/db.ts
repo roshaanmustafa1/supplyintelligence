@@ -5,11 +5,6 @@
  */
 import { PrismaClient } from '@prisma/client'
 
-// Fallback to local SQLite database if DATABASE_URL is not set in environment
-if (!process.env.DATABASE_URL) {
-  process.env.DATABASE_URL = 'file:./dev.db'
-}
-
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient }
 
 export const prisma: PrismaClient =
