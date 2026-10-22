@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db'
 import type { Article as PublicArticle } from '@/data/articles'
+import { sanitizeArticleHtml } from '@/lib/article-html'
 
 export interface ArticleFilterOptions {
   page?: number
@@ -411,20 +412,9 @@ export function toPublicArticle(article: any): PublicArticle {
       bio: 'Leading analyst and subject matter expert delivering strategic intelligence across global supply chain and procurement ecosystems.',
       avatar: article.author?.avatar || undefined,
     },
-    keyTakeaways: [
-      'Empirical performance measurement bridges operational intent and boardroom financial outcomes.',
-      'Cross-functional alignment between logistics, procurement, and risk systems minimizes friction.',
-      'Continuous workflow governance ensures resilience under high-volatility global conditions.',
-    ],
-    sections: [
-      {
-        heading: 'Strategic Context & Operational Analysis',
-        content: [
-          article.excerpt || 'Strategic operations in modern supply chains require data-driven alignment.',
-          article.bodyHtml ? 'Detailed analysis rendered from system database.' : 'Comprehensive reporting on industry benchmarks.',
-        ],
-      },
-    ],
+    bodyHtml: sanitizeArticleHtml(article.bodyHtml || ''),
+    keyTakeaways: [],
+    sections: [],
     tags,
   }
 }

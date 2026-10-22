@@ -1,0 +1,9 @@
+.git/
+.next/
+.vercel/
+node_modules/
+.env*
+*.tsbuildinfo
+prisma/dev.db
+prisma/archive/
+prisma/migrations/20261022110038_initial_schema

@@ -9,8 +9,9 @@ import { Logo } from '@/components/layout/Logo'
 import { MobileNavigation } from '@/components/layout/MobileNavigation'
 import { SearchModal } from '@/components/common/SearchModal'
 import { cn } from '@/lib/utils'
+import type { SearchArticle } from '@/data/articles'
 
-export function Header() {
+export function Header({ searchArticles }: { searchArticles: SearchArticle[] }) {
   const pathname = usePathname()
   const [isSearchOpen, setIsSearchOpen] = useState(false)
 
@@ -96,6 +97,7 @@ export function Header() {
 
       {/* Global Search Modal */}
       <SearchModal
+        articles={searchArticles}
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
       />

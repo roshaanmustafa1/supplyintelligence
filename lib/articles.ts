@@ -1,84 +1,35 @@
 import { prisma } from '@/lib/db'
-import { articles as staticArticles, type Article } from '@/data/articles'
+import { cache } from 'react'
+import type { Article } from '@/data/articles'
 import { toPublicArticle } from '@/lib/services/article.service'
 
 export type { Article }
 
-export async function getAllArticles(): Promise<Article[]> {
-  if (!process.env.DATABASE_URL) return staticArticles
+const publicRelations = {
+  category: true,
+  author: { select: { name: true, role: true, avatar: true } },
+  articleTags: { include: { tag: true } },
+} as const
 
-  try {
-    const dbArticles = await prisma.article.findMany({
-      where: { status: 'PUBLISHED' },
-      include: {
-        category: true,
-        author: true,
-        articleTags: { include: { tag: true } },
-      },
-      orderBy: [{ publishedAt: 'desc' }, { createdAt: 'desc' }],
-    })
-
-    if (dbArticles.length > 0) {
-      return dbArticles.map((dbArt) => {
-        const staticMatch = staticArticles.find((s) => s.slug === dbArt.slug)
-        if (staticMatch) {
-          return {
-            ...staticMatch,
-            title: dbArt.title,
-            excerpt: dbArt.excerpt || staticMatch.excerpt,
-            seoTitle: dbArt.seoTitle || staticMatch.seoTitle,
-            seoDescription: dbArt.seoDescription || staticMatch.seoDescription,
-          }
-        }
-        return toPublicArticle(dbArt)
-      })
-    }
-  } catch (error) {
-    console.warn('Database query failed, using static articles fallback:', error instanceof Error ? error.message : error)
-  }
-
-  return staticArticles
-}
+export const getAllArticles = cache((): Promise<Article[]> =>
+  prisma.article.findMany({
+    where: { status: 'PUBLISHED' },
+    include: publicRelations,
+    orderBy: [{ publishedAt: 'desc' }, { createdAt: 'desc' }],
+  }).then((articles) => articles.map(toPublicArticle))
+)
 
 export async function getLatestArticles(limit: number = 3): Promise<Article[]> {
   const all = await getAllArticles()
   return all.slice(0, limit)
 }
 
-export async function getArticleBySlug(slug: string): Promise<Article | undefined> {
-  if (!process.env.DATABASE_URL) {
-    return staticArticles.find((article) => article.slug === slug)
-  }
-
-  try {
-    const dbArt = await prisma.article.findUnique({
-      where: { slug },
-      include: {
-        category: true,
-        author: true,
-        articleTags: { include: { tag: true } },
-      },
-    })
-
-    if (dbArt && dbArt.status === 'PUBLISHED') {
-      const staticMatch = staticArticles.find((s) => s.slug === slug)
-      if (staticMatch) {
-        return {
-          ...staticMatch,
-          title: dbArt.title,
-          excerpt: dbArt.excerpt || staticMatch.excerpt,
-          seoTitle: dbArt.seoTitle || staticMatch.seoTitle,
-          seoDescription: dbArt.seoDescription || staticMatch.seoDescription,
-        }
-      }
-      return toPublicArticle(dbArt)
-    }
-  } catch (error) {
-    console.warn(`Database query for article "${slug}" failed, using static fallback:`, error instanceof Error ? error.message : error)
-  }
-
-  return staticArticles.find((article) => article.slug === slug)
-}
+export const getArticleBySlug = cache((slug: string): Promise<Article | undefined> =>
+  prisma.article.findFirst({
+    where: { slug, status: 'PUBLISHED' },
+    include: publicRelations,
+  }).then((article) => article ? toPublicArticle(article) : undefined)
+)
 
 export async function getArticlesByCategory(categorySlug: string): Promise<Article[]> {
   const all = await getAllArticles()

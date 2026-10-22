@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getAllArticles, getArticleBySlug, getRelatedArticles } from '@/lib/articles'
+import { getArticleBySlug, getRelatedArticles } from '@/lib/articles'
 import { ArticleJsonLd } from '@/components/seo/JsonLd'
 import { ArticleHeroBanner } from '@/components/blog/ArticleHeroBanner'
 import { SingleArticleContent } from '@/components/blog/SingleArticleContent'
@@ -12,13 +12,6 @@ interface ArticlePageProps {
   params: Promise<{
     slug: string
   }>
-}
-
-export async function generateStaticParams() {
-  const articles = await getAllArticles()
-  return articles.map((article) => ({
-    slug: article.slug,
-  }))
 }
 
 export async function generateMetadata({

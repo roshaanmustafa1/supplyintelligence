@@ -69,6 +69,13 @@ export function SingleArticleContent({ article }: SingleArticleContentProps) {
         </h2>
       </div>
 
+      {article.bodyHtml !== undefined && (
+        <div
+          className="space-y-4 text-sm leading-relaxed text-slate-600 sm:text-base [&_h2]:pt-4 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-slate-900 [&_h3]:pt-3 [&_h3]:text-xl [&_h3]:font-bold [&_h3]:text-slate-900 [&_h4]:font-bold [&_p]:my-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:my-2 [&_a]:text-brand-blue [&_a]:underline [&_blockquote]:border-l-4 [&_blockquote]:border-brand-sky [&_blockquote]:pl-5 [&_blockquote]:italic [&_pre]:overflow-x-auto [&_table]:block [&_table]:overflow-x-auto [&_td]:border [&_td]:p-2 [&_th]:border [&_th]:p-2"
+          dangerouslySetInnerHTML={{ __html: article.bodyHtml }}
+        />
+      )}
+
       {/* 4. First Section Content Paragraphs */}
       {section0 && (
         <div className="space-y-4 text-sm sm:text-base leading-relaxed text-slate-600">
@@ -81,14 +88,7 @@ export function SingleArticleContent({ article }: SingleArticleContentProps) {
       )}
 
       {/* 5. Highlight Quote Card matching screenshot */}
-      <ArticleQuoteCard
-        quote={
-          section0?.quote || {
-            text: 'Navigating the complexities of volatile supply chains requires a dedicated operational advocate who understands your unique constraints to engineer resilient, high-margin execution.',
-            attribution: 'Alexander Arnold, Senior Advisory Partner',
-          }
-        }
-      />
+      {section0?.quote && <ArticleQuoteCard quote={section0.quote} />}
 
       {/* 6. Subheading & Section 1 Paragraphs */}
       {section1 && (
@@ -122,10 +122,12 @@ export function SingleArticleContent({ article }: SingleArticleContentProps) {
       )}
 
       {/* 7. Two-Column Media Showcase (Image + Video with Play Button) matching screenshot */}
-      <ArticleMediaGallery
-        imageLeft="/images/blog-discussion.jpg"
-        imageRight="/images/blog-video-thumb.jpg"
-      />
+      {article.bodyHtml === undefined && (
+        <ArticleMediaGallery
+          imageLeft="/images/blog-discussion.jpg"
+          imageRight="/images/blog-video-thumb.jpg"
+        />
+      )}
 
       {/* 8. Remaining Sections */}
       {remainingSections.map((section, idx) => (

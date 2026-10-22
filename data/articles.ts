@@ -20,6 +20,7 @@ export interface ArticleSection {
 }
 
 export interface Article {
+  bodyHtml?: string
   slug: string
   title: string
   excerpt: string
@@ -38,6 +39,8 @@ export interface Article {
   sections: ArticleSection[]
   tags: string[]
 }
+
+export type SearchArticle = Pick<Article, 'slug' | 'title' | 'excerpt' | 'category' | 'readingTime' | 'tags'>
 
 export const articles: Article[] = [
   {

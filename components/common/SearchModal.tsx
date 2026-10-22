@@ -4,15 +4,16 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Search, X, ArrowRight, FileText } from 'lucide-react'
-import { articles, type Article } from '@/data/articles'
+import type { SearchArticle } from '@/data/articles'
 import { CategoryBadge } from '@/components/blog/CategoryBadge'
 
 interface SearchModalProps {
+  articles: SearchArticle[]
   isOpen: boolean
   onClose: () => void
 }
 
-export function SearchModal({ isOpen, onClose }: SearchModalProps) {
+export function SearchModal({ articles, isOpen, onClose }: SearchModalProps) {
   const [query, setQuery] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
 
