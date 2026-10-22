@@ -5,6 +5,7 @@
  * Uses Auth.js server action for form submission.
  */
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import { LoginForm } from '@/components/dashboard/LoginForm'
 import { Logo } from '@/components/layout/Logo'
 
@@ -37,7 +38,15 @@ export default function LoginPage() {
           </div>
 
           {/* Login form — client component */}
-          <LoginForm />
+          <Suspense
+            fallback={
+              <p role="status" className="text-dashboard-body text-dashboard-muted-foreground">
+                Loading sign-in form…
+              </p>
+            }
+          >
+            <LoginForm />
+          </Suspense>
         </div>
 
         {/* Footer */}

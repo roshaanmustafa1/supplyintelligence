@@ -5,6 +5,8 @@ import { toPublicArticle } from '@/lib/services/article.service'
 export type { Article }
 
 export async function getAllArticles(): Promise<Article[]> {
+  if (!process.env.DATABASE_URL) return staticArticles
+
   try {
     const dbArticles = await prisma.article.findMany({
       where: { status: 'PUBLISHED' },
@@ -44,6 +46,10 @@ export async function getLatestArticles(limit: number = 3): Promise<Article[]> {
 }
 
 export async function getArticleBySlug(slug: string): Promise<Article | undefined> {
+  if (!process.env.DATABASE_URL) {
+    return staticArticles.find((article) => article.slug === slug)
+  }
+
   try {
     const dbArt = await prisma.article.findUnique({
       where: { slug },

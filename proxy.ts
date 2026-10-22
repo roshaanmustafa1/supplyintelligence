@@ -1,10 +1,9 @@
 /**
- * Next.js middleware for SupplyIntelligence.
+ * Next.js proxy for SupplyIntelligence.
  *
  * Protects all /dashboard routes except /dashboard/login.
  * Unauthenticated requests are redirected to the login page.
  *
- * Note: This middleware runs on the Edge runtime (no Node.js APIs).
  * Complex authorization logic should remain in Server Components/Route Handlers.
  */
 import { auth } from '@/lib/auth'
