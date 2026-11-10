@@ -151,12 +151,60 @@ export async function getArticles(options: ArticleFilterOptions = {}) {
   }
 }
 
+export const PUBLIC_USER_SELECT = {
+  id: true,
+  name: true,
+  avatar: true,
+  role: true,
+} as const
+
+export const SAFE_USER_SELECT = {
+  id: true,
+  name: true,
+  email: true,
+  avatar: true,
+  role: true,
+} as const
+
+export function sanitizeArticleResponse<T>(
+  data: T,
+  options: { isPublic?: boolean } = {}
+): T {
+  if (!data || typeof data !== 'object') return data
+  const json = JSON.parse(JSON.stringify(data))
+
+  const stripSensitiveFields = (obj: Record<string, unknown>) => {
+    if (!obj || typeof obj !== 'object') return
+    delete obj.passwordHash
+    delete obj.encryptedApiKey
+    if (options.isPublic) {
+      if (obj.author && typeof obj.author === 'object') {
+        delete (obj.author as Record<string, unknown>).email
+      }
+      if ('email' in obj && ('role' in obj || 'avatar' in obj) && !('users' in obj)) {
+        delete obj.email
+      }
+    }
+    for (const key of Object.keys(obj)) {
+      const val = obj[key]
+      if (val && typeof val === 'object') {
+        stripSensitiveFields(val as Record<string, unknown>)
+      }
+    }
+  }
+
+  stripSensitiveFields(json)
+  return json
+}
+
 export async function getArticleById(id: string) {
   return prisma.article.findUnique({
     where: { id },
     include: {
       category: true,
-      author: true,
+      author: {
+        select: SAFE_USER_SELECT,
+      },
       articleTags: {
         include: {
           tag: true,
@@ -167,7 +215,11 @@ export async function getArticleById(id: string) {
         take: 10,
       },
       approvals: {
-        include: { user: true },
+        include: {
+          user: {
+            select: SAFE_USER_SELECT,
+          },
+        },
         orderBy: { createdAt: 'desc' },
       },
     },
@@ -179,7 +231,9 @@ export async function getArticleBySlug(slug: string) {
     where: { slug },
     include: {
       category: true,
-      author: true,
+      author: {
+        select: SAFE_USER_SELECT,
+      },
       articleTags: {
         include: {
           tag: true,
@@ -382,13 +436,30 @@ export async function updateArticleStatus(id: string, status: string, userId?: s
   return updated
 }
 
+interface ArticleRecordForPublic {
+  slug: string
+  title: string
+  excerpt?: string | null
+  status?: string
+  readingTimeMinutes?: number | null
+  featuredImage?: string | null
+  featuredImageAlt?: string | null
+  seoTitle?: string | null
+  seoDescription?: string | null
+  publishedAt?: Date | string | null
+  createdAt?: Date | string
+  bodyHtml?: string | null
+  category?: { name?: string | null; slug?: string | null } | null
+  author?: { name?: string | null; role?: string | null; avatar?: string | null } | null
+  articleTags?: Array<{ tag: { name: string } }>
+}
+
 /**
  * Format a Prisma article to the PublicArticle interface expected by the public frontend.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function toPublicArticle(article: any): PublicArticle {
-  const tags = article.articleTags ? article.articleTags.map((at: any) => at.tag.name) : []
-  const dateObj = article.publishedAt ? new Date(article.publishedAt) : new Date(article.createdAt)
+export function toPublicArticle(article: ArticleRecordForPublic): PublicArticle {
+  const tags = article.articleTags ? article.articleTags.map((at: { tag: { name: string } }) => at.tag.name) : []
+  const dateObj = article.publishedAt ? new Date(article.publishedAt) : new Date(article.createdAt || Date.now())
   const dateStr = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
   const isoDateStr = dateObj.toISOString().split('T')[0]
 

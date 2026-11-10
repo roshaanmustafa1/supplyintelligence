@@ -25,6 +25,23 @@ interface AIStudioClientProps {
   categories: Array<{ id: string; name: string }>
 }
 
+interface GeneratedAIResult {
+  title?: string
+  slug?: string
+  excerpt?: string
+  bodyHtml?: string
+  seoTitle?: string
+  seoDescription?: string
+  primaryKeyword?: string
+  secondaryKeywords?: string
+  readingTimeMinutes?: number
+  wordCount?: number
+  qaScore?: number
+  factCheckSummary?: string
+  modelUsed?: string
+  tags?: string[]
+}
+
 export function AIStudioClient({ categories }: AIStudioClientProps) {
   const router = useRouter()
 
@@ -36,7 +53,7 @@ export function AIStudioClient({ categories }: AIStudioClientProps) {
   const [customInstructions, setCustomInstructions] = useState('')
 
   const [isGenerating, setIsGenerating] = useState(false)
-  const [generatedResult, setGeneratedResult] = useState<any | null>(null)
+  const [generatedResult, setGeneratedResult] = useState<GeneratedAIResult | null>(null)
   const [isSendingToDraft, setIsSendingToDraft] = useState(false)
   const [copied, setCopied] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -71,8 +88,8 @@ export function AIStudioClient({ categories }: AIStudioClientProps) {
 
       const data = await res.json()
       setGeneratedResult(data)
-    } catch (err: any) {
-      setErrorMessage(err.message || 'Error running AI generation')
+    } catch (err: unknown) {
+      setErrorMessage(err instanceof Error ? err.message : 'Error running AI generation')
     } finally {
       setIsGenerating(false)
     }
@@ -112,8 +129,8 @@ export function AIStudioClient({ categories }: AIStudioClientProps) {
 
       const created = await res.json()
       router.push(`/dashboard/articles/${created.id}`)
-    } catch (err: any) {
-      alert(err.message || 'Error saving to draft')
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : 'Error saving to draft')
     } finally {
       setIsSendingToDraft(false)
     }
@@ -225,7 +242,7 @@ export function AIStudioClient({ categories }: AIStudioClientProps) {
                 </label>
                 <select
                   value={targetLength}
-                  onChange={(e) => setTargetLength(e.target.value as any)}
+                  onChange={(e) => setTargetLength(e.target.value as 'short' | 'medium' | 'deep-dive')}
                   className="w-full rounded-xl border border-dashboard-input bg-dashboard-background px-3 py-2 text-sm text-dashboard-foreground focus:border-purple-500 focus:outline-none"
                 >
                   <option value="short">Brief (500-700 words)</option>
@@ -379,7 +396,7 @@ export function AIStudioClient({ categories }: AIStudioClientProps) {
 
               {/* Body Render */}
               <div className="prose prose-slate max-w-none dark:prose-invert text-sm sm:text-dashboard-body border-t border-dashboard-border pt-4">
-                <div dangerouslySetInnerHTML={{ __html: generatedResult.bodyHtml }} />
+                <div dangerouslySetInnerHTML={{ __html: generatedResult.bodyHtml || '' }} />
               </div>
 
               {/* SEO Tags */}

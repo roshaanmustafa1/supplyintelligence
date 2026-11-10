@@ -26,10 +26,10 @@ export async function POST(request: Request) {
 
     const category = await createCategory(body)
     return NextResponse.json(category, { status: 201 })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error creating category:', error)
     return NextResponse.json(
-      { error: error?.message || 'Failed to create category' },
+      { error: error instanceof Error ? error.message : 'Failed to create category' },
       { status: 500 }
     )
   }

@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { ArticleImage } from '@/components/blog/ArticleImage'
 import Link from 'next/link'
 import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import { type Article } from '@/data/articles'
@@ -26,11 +27,10 @@ export function IntelligenceHero({ article }: { article?: Article }) {
         </div>
         <div className="grid items-start gap-8 lg:grid-cols-[1.8fr_1fr] lg:gap-10 xl:gap-14">
           <article className="min-w-0">
-            <div className="relative aspect-[16/8] overflow-hidden bg-slate-100">
-              <Image src={article.image} alt={article.imageAlt} fill sizes="(max-width: 1023px) 100vw, 60vw" className="object-cover" />
-              <span className="absolute left-5 top-5 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-950">In focus</span>
+            <div className="relative aspect-video overflow-hidden bg-slate-100">
+              <ArticleImage src={article.image} alt={article.imageAlt} fill sizes="(max-width: 1023px) 100vw, 60vw" />
             </div>
-            <div className="relative mr-5 -mt-10 bg-white pt-6 pr-5 sm:mr-12 sm:-mt-14 sm:pt-7 sm:pr-8">
+            <div className="relative bg-white pt-6 sm:pt-7">
               <div className="mb-3 flex flex-wrap items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.14em]">
                 <span className="text-brand-sky">{article.category}</span>
                 <span className="h-3 w-px bg-slate-200" aria-hidden="true" />

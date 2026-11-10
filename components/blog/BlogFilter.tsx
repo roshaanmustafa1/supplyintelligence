@@ -245,7 +245,7 @@ export function BlogFilter({
                   fill
                   priority
                   sizes="(max-width: 1024px) 100vw, 45vw"
-                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-103"
+                  className=" transition-transform duration-500 ease-out group-hover:scale-103"
                 />
               </Link>
             </article>

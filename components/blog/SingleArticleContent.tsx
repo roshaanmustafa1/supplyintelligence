@@ -1,6 +1,6 @@
 'use client'
 
-import Image from 'next/image'
+import { ArticleImage } from '@/components/blog/ArticleImage'
 import { BookmarkCheck, CheckCircle2 } from 'lucide-react'
 import { type Article } from '@/data/articles'
 import { ArticleMetaBar } from '@/components/blog/ArticleMetaBar'
@@ -41,14 +41,12 @@ export function SingleArticleContent({ article }: SingleArticleContentProps) {
         </div>
 
         {/* Image Container */}
-        <div className="relative aspect-[16/10] sm:aspect-[16/9] max-h-[580px] w-full rounded-2xl overflow-hidden bg-slate-100 border border-slate-200/80 shadow-sm z-10">
-          <Image
+        <div className="relative w-full rounded-2xl overflow-hidden bg-slate-100 border border-slate-200/80 shadow-sm z-10">
+          <ArticleImage
             src={featuredImageSrc}
             alt={article.imageAlt || article.title}
-            fill
             priority
             sizes="(max-width: 1024px) 100vw, 1200px"
-            className="object-cover"
           />
         </div>
       </div>
@@ -71,7 +69,7 @@ export function SingleArticleContent({ article }: SingleArticleContentProps) {
 
       {article.bodyHtml !== undefined && (
         <div
-          className="space-y-4 text-sm leading-relaxed text-slate-600 sm:text-base [&_h2]:pt-4 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-slate-900 [&_h3]:pt-3 [&_h3]:text-xl [&_h3]:font-bold [&_h3]:text-slate-900 [&_h4]:font-bold [&_p]:my-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:my-2 [&_a]:text-brand-blue [&_a]:underline [&_blockquote]:border-l-4 [&_blockquote]:border-brand-sky [&_blockquote]:pl-5 [&_blockquote]:italic [&_pre]:overflow-x-auto [&_table]:block [&_table]:overflow-x-auto [&_td]:border [&_td]:p-2 [&_th]:border [&_th]:p-2"
+          className="space-y-4 text-sm leading-relaxed text-slate-600 sm:text-base [&_figure]:my-8 [&_figure]:overflow-hidden [&_figure]:rounded-xl [&_figure]:border [&_figure]:border-slate-200 [&_figure]:bg-white [&_figure>a]:block [&_figure>a]:cursor-zoom-in [&_figcaption]:border-t [&_figcaption]:border-slate-200 [&_figcaption]:px-4 [&_figcaption]:py-3 [&_figcaption]:text-sm [&_figcaption]:text-slate-600 [&_img]:mx-auto [&_img]:block [&_img]:h-auto [&_img]:w-auto [&_img]:max-w-full [&_h2]:pt-4 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-slate-900 [&_h3]:pt-3 [&_h3]:text-xl [&_h3]:font-bold [&_h3]:text-slate-900 [&_h4]:font-bold [&_p]:my-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:my-2 [&_a]:text-brand-blue [&_a]:underline [&_blockquote]:border-l-4 [&_blockquote]:border-brand-sky [&_blockquote]:pl-5 [&_blockquote]:italic [&_pre]:overflow-x-auto [&_table]:block [&_table]:overflow-x-auto [&_td]:border [&_td]:p-2 [&_th]:border [&_th]:p-2"
           dangerouslySetInnerHTML={{ __html: article.bodyHtml }}
         />
       )}

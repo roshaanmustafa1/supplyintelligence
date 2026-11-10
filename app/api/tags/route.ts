@@ -26,10 +26,10 @@ export async function POST(request: Request) {
 
     const tag = await createTag(body.name, body.slug)
     return NextResponse.json(tag, { status: 201 })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error creating tag:', error)
     return NextResponse.json(
-      { error: error?.message || 'Failed to create tag' },
+      { error: error instanceof Error ? error.message : 'Failed to create tag' },
       { status: 500 }
     )
   }

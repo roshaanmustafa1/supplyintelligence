@@ -68,8 +68,8 @@ export function CategoriesManager({ initialCategories }: CategoriesManagerProps)
       setIsCreating(false)
       setStatusMessage({ type: 'success', text: `Category "${created.name}" created.` })
       router.refresh()
-    } catch (err: any) {
-      setStatusMessage({ type: 'error', text: err.message || 'Error creating category' })
+    } catch (err: unknown) {
+      setStatusMessage({ type: 'error', text: err instanceof Error ? err.message : 'Error creating category' })
     } finally {
       setIsLoading(false)
     }

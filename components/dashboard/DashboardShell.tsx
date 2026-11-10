@@ -34,7 +34,7 @@ export function DashboardShell({ children, user }: DashboardShellProps) {
           <DashboardSidebar
             user={user}
             compact={!sidebarExpanded}
-            onToggleCompact={() => setSidebarExpanded((expanded) => !expanded)}
+            desktop
           />
         </div>
 

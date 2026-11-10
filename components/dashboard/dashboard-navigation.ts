@@ -1,5 +1,5 @@
 import {
-  LayoutDashboard, FileText, FolderTree, Tags, Image, Calendar, Sparkles,
+  LayoutDashboard, FileText, Layers, FolderTree, Tags, Image, Calendar, Sparkles,
   Bot, Cpu, Coins, BarChart3, SearchCode, Users, History, Bell, Settings,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
@@ -23,6 +23,7 @@ export const dashboardNavigation: DashboardNavSection[] = [
   ] },
   { title: 'CONTENT & EDITORIAL', tab: 'Content', items: [
     { title: 'Articles', href: '/dashboard/articles', icon: FileText },
+    { title: 'Artifacts & Templates', href: '/dashboard/artifacts', icon: Layers },
     { title: 'Categories', href: '/dashboard/categories', icon: FolderTree },
     { title: 'Tags', href: '/dashboard/tags', icon: Tags },
     { title: 'Media Library', href: '/dashboard/media', icon: Image },

@@ -16,10 +16,10 @@ export async function POST(request: Request) {
 
     const result = await generateArticle(body, auth.userId)
     return NextResponse.json(result)
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error generating AI article:', error)
     return NextResponse.json(
-      { error: error?.message || 'Failed to generate content' },
+      { error: error instanceof Error ? error.message : 'Failed to generate content' },
       { status: 500 }
     )
   }

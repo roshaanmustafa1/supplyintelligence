@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import Image from 'next/image'
+import { ArticleImage } from '@/components/blog/ArticleImage'
 import Link from 'next/link'
 import { ChevronRight, Share2, Check } from 'lucide-react'
 import { type Article } from '@/data/articles'
@@ -116,14 +116,12 @@ export function ArticleHeader({ article }: ArticleHeaderProps) {
       </div>
 
       {/* Hero Image */}
-      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl border border-border shadow-sm">
-        <Image
+      <div className="relative w-full overflow-hidden rounded-xl border border-border shadow-sm">
+        <ArticleImage
           src={article.image}
           alt={article.imageAlt || article.title}
-          fill
           priority
           sizes="(max-width: 1024px) 100vw, 900px"
-          className="object-cover"
         />
       </div>
     </header>

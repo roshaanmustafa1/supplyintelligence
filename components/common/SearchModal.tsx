@@ -15,7 +15,16 @@ interface SearchModalProps {
 
 export function SearchModal({ articles, isOpen, onClose }: SearchModalProps) {
   const [query, setQuery] = useState('')
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  // Reset query when modal closes
+  if (prevIsOpen !== isOpen) {
+    setPrevIsOpen(isOpen)
+    if (!isOpen) {
+      setQuery('')
+    }
+  }
 
   useEffect(() => {
     if (isOpen) {
@@ -23,7 +32,6 @@ export function SearchModal({ articles, isOpen, onClose }: SearchModalProps) {
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = ''
-      setQuery('')
     }
 
     return () => {

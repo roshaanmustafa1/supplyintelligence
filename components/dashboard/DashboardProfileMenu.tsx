@@ -5,7 +5,7 @@ import { Menu } from '@base-ui/react/menu'
 import { signOut } from 'next-auth/react'
 import { ChevronDown, History, LogOut, Settings, Users } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { dashboardAvatar, dashboardMenuItem } from './dashboard-styles'
+import { dashboardAvatar, dashboardHeaderControl, dashboardMenuItem } from './dashboard-styles'
 
 interface DashboardProfileMenuProps {
   user?: {
@@ -26,11 +26,11 @@ export function DashboardProfileMenu({ user }: DashboardProfileMenuProps) {
 
   return (
     <Menu.Root>
-      <Menu.Trigger className="group flex max-w-52.5 cursor-pointer items-center gap-2 rounded-full bg-dashboard-card p-1.5 pr-2.5 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-blue" aria-label="Open account menu" title={name}>
+      <Menu.Trigger className={cn(dashboardHeaderControl, 'group max-w-52.5 cursor-pointer gap-2 pr-2.5 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand-blue')} aria-label="Open account menu" title={name}>
         <span className={dashboardAvatar} aria-hidden="true">{name[0]?.toUpperCase()}</span>
         <span className="hidden min-w-0 text-left lg:block">
-          <span className="block truncate text-dashboard-caption font-semibold text-dashboard-foreground">{name}</span>
-          <span className="block max-w-32 truncate text-xs text-dashboard-muted-foreground">{user?.email || user?.role}</span>
+          <span className="block truncate text-dashboard-caption leading-4 font-semibold text-dashboard-foreground">{name}</span>
+          <span className="block max-w-32 truncate text-xs leading-4 text-dashboard-muted-foreground">{user?.email || user?.role}</span>
         </span>
         <ChevronDown className="size-3 shrink-0 text-dashboard-muted-foreground group-data-popup-open:rotate-180" />
       </Menu.Trigger>

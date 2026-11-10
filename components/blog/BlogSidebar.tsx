@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import { ArticleImage } from '@/components/blog/ArticleImage'
 import Link from 'next/link'
 import {
   Search,
@@ -126,12 +127,11 @@ export function BlogSidebar({
             <article key={post.slug} className="flex items-center gap-3.5 group">
               {/* Thumbnail */}
               <div className="relative size-14 sm:size-15 rounded-xl overflow-hidden bg-slate-100 shrink-0 border border-slate-200/70">
-                <Image
+                <ArticleImage
                   src={post.image}
                   alt={post.imageAlt || post.title}
                   fill
                   sizes="60px"
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
 

@@ -1,7 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useSyncExternalStore } from 'react'
 import { Agentation } from 'agentation'
+
+const emptySubscribe = () => () => {}
 
 /**
  * Agentation visual feedback toolbar.
@@ -9,11 +11,11 @@ import { Agentation } from 'agentation'
  * Communicates with the local Agentation MCP server on port 4747.
  */
 export function AgentationDev() {
-  const [isMounted, setIsMounted] = useState(false)
-
-  useEffect(() => {
-    setIsMounted(true)
-  }, [])
+  const isMounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  )
 
   // Explicit safety check: never render in non-development environments
   if (process.env.NODE_ENV !== 'development') {

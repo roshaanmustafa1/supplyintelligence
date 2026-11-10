@@ -147,8 +147,8 @@ export function ArticleEditor({
       } else {
         router.refresh()
       }
-    } catch (err: any) {
-      setSaveMessage({ type: 'error', text: err.message || 'Error saving article' })
+    } catch (err: unknown) {
+      setSaveMessage({ type: 'error', text: err instanceof Error ? err.message : 'Error saving article' })
     } finally {
       setIsSaving(false)
     }

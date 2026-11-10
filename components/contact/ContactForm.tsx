@@ -16,6 +16,7 @@ export function ContactForm() {
 
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
+  const [ticketId, setTicketId] = useState('')
 
   const inquiryOptions = [
     { value: 'editorial', label: 'Editorial Pitch or Article Manuscript' },
@@ -45,6 +46,7 @@ export function ContactForm() {
 
     // Simulate async submission
     setTimeout(() => {
+      setTicketId(String(Math.floor(100000 + Math.random() * 900000)))
       setStatus('success')
     }, 700)
   }
@@ -59,6 +61,7 @@ export function ContactForm() {
       subject: '',
       message: '',
     })
+    setTicketId('')
     setStatus('idle')
   }
 
@@ -76,7 +79,7 @@ export function ContactForm() {
         </p>
 
         <div className="inline-block p-4 rounded-xl bg-white border border-slate-200 text-xs text-slate-500 mb-6">
-          <p className="font-semibold text-slate-700">Ticket Reference: #SI-{Math.floor(100000 + Math.random() * 900000)}</p>
+          <p className="font-semibold text-slate-700">Ticket Reference: #SI-{ticketId || '104829'}</p>
           <p className="mt-0.5">Estimated response time: Within 1 business day</p>
         </div>
 

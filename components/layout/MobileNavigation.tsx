@@ -14,11 +14,13 @@ interface MobileNavigationProps {
 export function MobileNavigation({ onOpenSearch }: MobileNavigationProps) {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
+  const [prevPathname, setPrevPathname] = useState(pathname)
 
   // Close on route change
-  useEffect(() => {
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname)
     setIsOpen(false)
-  }, [pathname])
+  }
 
   // Prevent body scroll when open
   useEffect(() => {
@@ -46,6 +48,7 @@ export function MobileNavigation({ onOpenSearch }: MobileNavigationProps) {
   const navLinks = [
     { label: 'Home', href: '/' },
     { label: 'Articles', href: '/blog' },
+    { label: 'Artifacts & Templates', href: '/artifacts' },
     { label: 'Topics', href: '/topics' },
     { label: 'About', href: '/about' },
     { label: 'Contact', href: '/contact' },
@@ -78,9 +81,12 @@ export function MobileNavigation({ onOpenSearch }: MobileNavigationProps) {
         role="dialog"
         aria-modal="true"
         aria-label="Mobile Navigation"
+        aria-hidden={!isOpen}
         className={cn(
-          'fixed inset-y-0 right-0 z-50 flex w-full max-w-xs flex-col border-l border-border bg-card p-6 shadow-2xl transition-transform duration-300 ease-in-out',
-          isOpen ? 'translate-x-0' : 'translate-x-full'
+          'fixed inset-y-0 right-0 z-50 flex w-full max-w-xs flex-col border-l border-border bg-card p-6 shadow-2xl transition-all duration-300 ease-in-out',
+          isOpen
+            ? 'translate-x-0 opacity-100 visible'
+            : 'translate-x-full opacity-0 invisible pointer-events-none'
         )}
       >
         {/* Header inside drawer */}

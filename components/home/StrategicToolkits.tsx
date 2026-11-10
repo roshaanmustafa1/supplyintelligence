@@ -25,7 +25,7 @@ const toolkits: ToolkitItem[] = [
       'Evaluate your procurement organization across category strategy, tail-spend automation, contract lifecycle governance, and working capital optimization.',
     features: ['4-Stage Maturity Rubric', 'KPI Benchmarking Model', 'Executive Assessment Sheet'],
     icon: Layers,
-    linkHref: '/blog/connecting-supply-chain-workflows-measurable-results',
+    linkHref: '/blog/from-process-performance-why-green-dashboard-can-mean-raza-van6f',
   },
   {
     id: 'supplier-resilience',
@@ -37,7 +37,7 @@ const toolkits: ToolkitItem[] = [
       'Identify critical Tier-2 and Tier-3 single-point vulnerabilities, calculate financial exposure per transit node, and establish proactive supplier mitigation buffers.',
     features: ['24-Point Risk Index', 'Corridor Chokepoint Map', 'Contingency Allocation Model'],
     icon: ShieldCheck,
-    linkHref: '/blog/the-power-of-flow-designing-supply-chain-workflows',
+    linkHref: '/blog/power-flow-designing-supply-chain-workflows-better-raza-8lo7f',
   },
   {
     id: 'ai-roadmap',
@@ -49,7 +49,7 @@ const toolkits: ToolkitItem[] = [
       'Step-by-step technical blueprint for deploying conversational purchase intake, autonomous rate-card audits, and multi-agent contract clause verification.',
     features: ['Architecture Stack Diagrams', 'ROI Calculation Sprints', 'Data Hygiene Guardrails'],
     icon: Sparkles,
-    linkHref: '/blog/ai-in-procurement-practical-applications-real-value',
+    linkHref: '/blog/ai-enabled-procurement-critical-infrastructure-mustafa-pmp-mcips-qwdyf',
   },
 ]
 
@@ -72,10 +72,10 @@ export function StrategicToolkits() {
           </div>
 
           <Link
-            href="/blog"
+            href="/artifacts"
             className="group inline-flex items-center gap-1 text-sm font-semibold text-brand-sky hover:text-slate-950 shrink-0"
           >
-            <span>All Toolkits & Guides</span>
+            <span>All Toolkits & Templates</span>
             <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />
           </Link>
         </div>

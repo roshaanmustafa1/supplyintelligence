@@ -48,8 +48,8 @@ export function TagsManager({ initialTags }: TagsManagerProps) {
       setNewTagName('')
       setStatusMessage({ type: 'success', text: `Tag "${created.name}" created.` })
       router.refresh()
-    } catch (err: any) {
-      setStatusMessage({ type: 'error', text: err.message || 'Error creating tag' })
+    } catch (err: unknown) {
+      setStatusMessage({ type: 'error', text: err instanceof Error ? err.message : 'Error creating tag' })
     } finally {
       setIsLoading(false)
     }

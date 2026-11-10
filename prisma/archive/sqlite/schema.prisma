@@ -8,7 +8,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url      = "file:../../dev.db"
 }
 
 // ─── Enums ─────────────────────────────────────────────────────
@@ -42,6 +42,7 @@ model User {
   notifications    Notification[]
   aiJobs           AIJob[]
   sessions         Session[]
+  resources        Resource[]      @relation("ResourceAuthor")
 
   @@map("users")
 }
@@ -623,4 +624,141 @@ model Redirect {
   createdAt   DateTime @default(now())
 
   @@map("redirects")
+}
+
+// ─── Artifacts & Templates (Phase 1) ────────────────────────────────
+
+model Resource {
+  id             String    @id @default(cuid())
+  title          String
+  slug           String    @unique
+  description    String?
+  // ResourceType: TEMPLATE | ARTIFACT | INTERACTIVE_TOOL | CALCULATOR
+  resourceType   String
+  // Status: DRAFT | REVIEW | PUBLISHED | ARCHIVED
+  status         String    @default("DRAFT")
+  thumbnail      String?
+  // SEO
+  seoTitle       String?
+  seoDescription String?
+  isFeatured     Boolean   @default(false)
+  featuredOrder  Int?
+  downloadCount  Int       @default(0)
+  viewCount      Int       @default(0)
+  // Authorship
+  authorId       String?
+  author         User?     @relation("ResourceAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  publishedAt    DateTime?
+
+  // Relations
+  categories      ResourceCategoryAssignment[]
+  versions        ResourceVersion[]
+  files           ResourceFile[]
+  toolDefinitions ToolDefinition[]
+  events          ResourceEvent[]
+
+  @@index([status, publishedAt])
+  @@index([resourceType, status])
+  @@index([isFeatured])
+  @@map("resources")
+}
+
+model ResourceCategory {
+  id           String   @id @default(cuid())
+  name         String
+  slug         String   @unique
+  description  String?
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  resources    ResourceCategoryAssignment[]
+
+  @@index([displayOrder])
+  @@map("resource_categories")
+}
+
+model ResourceCategoryAssignment {
+  resourceId String
+  categoryId String
+  assignedAt DateTime @default(now())
+
+  resource   Resource         @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  category   ResourceCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([resourceId, categoryId])
+  @@index([categoryId])
+  @@map("resource_category_assignments")
+}
+
+model ResourceVersion {
+  id          String    @id @default(cuid())
+  resourceId  String
+  version     String
+  changelog   String?
+  isCurrent   Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  publishedAt DateTime?
+
+  resource    Resource       @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  files       ResourceFile[]
+
+  @@unique([resourceId, version])
+  @@index([resourceId, isCurrent])
+  @@map("resource_versions")
+}
+
+model ResourceFile {
+  id               String   @id @default(cuid())
+  resourceId       String
+  versionId        String?
+  originalFilename String
+  storageKey       String   @unique
+  mimeType         String
+  fileSize         Int
+  checksum         String
+  isPrimary        Boolean  @default(true)
+  createdAt        DateTime @default(now())
+
+  resource         Resource         @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  version          ResourceVersion? @relation(fields: [versionId], references: [id], onDelete: SetNull)
+
+  @@index([resourceId])
+  @@index([versionId])
+  @@map("resource_files")
+}
+
+model ToolDefinition {
+  id            String   @id @default(cuid())
+  resourceId    String
+  toolKey       String   @unique
+  configuration String
+  schemaVersion String   @default("1.0.0")
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  resource      Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+
+  @@index([resourceId])
+  @@map("tool_definitions")
+}
+
+model ResourceEvent {
+  id         String   @id @default(cuid())
+  resourceId String
+  // EventType: VIEW | DOWNLOAD | TOOL_RUN
+  eventType  String
+  // ActorType: ANONYMOUS | USER
+  actorType  String   @default("ANONYMOUS")
+  actorId    String?
+  metadata   String?
+  createdAt  DateTime @default(now())
+
+  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+
+  @@index([resourceId, eventType, createdAt])
+  @@map("resource_events")
 }

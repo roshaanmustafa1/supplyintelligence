@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import { ArticleImage } from '@/components/blog/ArticleImage'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { type Article } from '@/data/articles'
@@ -24,14 +24,13 @@ export function ArticleCard({
         className
       )}
     >
-      <Link href={`/blog/${article.slug}`} className="block relative aspect-[16/10] w-full overflow-hidden bg-slate-100">
-        <Image
+      <Link href={`/blog/${article.slug}`} className="block relative aspect-video w-full overflow-hidden bg-slate-100">
+        <ArticleImage
           src={article.image}
           alt={article.imageAlt || article.title}
           fill
           priority={priorityImage}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="object-cover transition-transform duration-300 ease-out group-hover:scale-103"
         />
       </Link>
 
