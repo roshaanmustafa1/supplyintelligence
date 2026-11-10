@@ -530,10 +530,11 @@ export function ArtifactsManager({
       {/* Global Status Message Toast */}
       {statusMessage && (
         <div
-          className={`flex items-center justify-between rounded-xl p-3.5 text-sm shadow-xs ${statusMessage.type === 'success'
+          className={`flex items-center justify-between rounded-xl p-3.5 text-sm shadow-xs ${
+            statusMessage.type === 'success'
               ? 'border border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
               : 'border border-rose-500/30 bg-rose-500/10 text-rose-700 dark:text-rose-400'
-            }`}
+          }`}
         >
           <div className="flex items-center gap-2">
             {statusMessage.type === 'success' ? (

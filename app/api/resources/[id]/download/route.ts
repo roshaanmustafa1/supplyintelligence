@@ -70,7 +70,7 @@ export async function GET(request: Request, { params }: RouteProps) {
     void recordResourceEvent(resource.id, 'DOWNLOAD', {
       fileId: targetFile.id,
       filename: targetFile.originalFilename,
-    }).catch(() => { })
+    }).catch(() => {})
 
     // Sanitize filename for Content-Disposition header
     const sanitizedFilename = targetFile.originalFilename.replace(/["\r\n\\]/g, '_')

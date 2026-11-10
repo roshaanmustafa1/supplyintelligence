@@ -175,26 +175,26 @@ export function toPublicResource(resource: ResourceRecordForPublic): PublicResou
     })),
     currentVersion: currentVersion
       ? {
-        version: currentVersion.version,
-        changelog: currentVersion.changelog ?? null,
-        publishedAt: currentVersion.publishedAt ?? null,
-      }
+          version: currentVersion.version,
+          changelog: currentVersion.changelog ?? null,
+          publishedAt: currentVersion.publishedAt ?? null,
+        }
       : null,
     primaryFile: primaryFile
       ? {
-        id: primaryFile.id,
-        originalFilename: primaryFile.originalFilename,
-        mimeType: primaryFile.mimeType,
-        fileSize: primaryFile.fileSize,
-        checksum: primaryFile.checksum,
-      }
+          id: primaryFile.id,
+          originalFilename: primaryFile.originalFilename,
+          mimeType: primaryFile.mimeType,
+          fileSize: primaryFile.fileSize,
+          checksum: primaryFile.checksum,
+        }
       : null,
     author: resource.author
       ? {
-        id: resource.author.id,
-        name: resource.author.name ?? null,
-        avatar: resource.author.avatar ?? null,
-      }
+          id: resource.author.id,
+          name: resource.author.name ?? null,
+          avatar: resource.author.avatar ?? null,
+        }
       : null,
   }
 }
@@ -859,12 +859,12 @@ export async function recordResourceEvent(
     await prisma.resource.update({
       where: { id: resourceId },
       data: { downloadCount: { increment: 1 } },
-    }).catch(() => { })
+    }).catch(() => {})
   } else if (eventType === 'VIEW') {
     await prisma.resource.update({
       where: { id: resourceId },
       data: { viewCount: { increment: 1 } },
-    }).catch(() => { })
+    }).catch(() => {})
   }
 
   return event

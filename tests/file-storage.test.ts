@@ -200,7 +200,7 @@ test('LocalStorageProvider: upload, retrieve, exists, and delete cycle', async (
   } finally {
     // Cleanup test directory
     if (fsSync.existsSync(testStorageDir)) {
-      await fs.rm(testStorageDir, { recursive: true, force: true }).catch(() => { })
+      await fs.rm(testStorageDir, { recursive: true, force: true }).catch(() => {})
     }
   }
 })

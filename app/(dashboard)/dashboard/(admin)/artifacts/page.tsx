@@ -88,11 +88,11 @@ export default async function ArtifactsAdminPage({ searchParams }: ArtifactsAdmi
     })),
     author: r.author
       ? {
-        id: r.author.id,
-        name: r.author.name,
-        email: r.author.email,
-        role: r.author.role,
-      }
+          id: r.author.id,
+          name: r.author.name,
+          email: r.author.email,
+          role: r.author.role,
+        }
       : null,
   }))
 
