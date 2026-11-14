@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Send, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react'
 
 interface PublicReply {
@@ -36,6 +37,7 @@ function Avatar({ name }: { name: string }) {
 }
 
 export function ArticleComments({ slug, comments }: ArticleCommentsProps) {
+  const router = useRouter()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
@@ -62,6 +64,7 @@ export function ArticleComments({ slug, comments }: ArticleCommentsProps) {
       }
       setIsSubmitted(true)
       setMessage('')
+      router.refresh()
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Could not submit your comment.')
     } finally {
@@ -128,7 +131,7 @@ export function ArticleComments({ slug, comments }: ArticleCommentsProps) {
           <div className="mb-6">
             <h4 className="text-base sm:text-lg font-bold text-slate-900">Join the discussion</h4>
             <p className="text-xs sm:text-sm text-slate-500 mt-1">
-              Your email address will not be published. Comments appear after review.
+              Your email address will not be published.
             </p>
           </div>
 
@@ -138,7 +141,7 @@ export function ArticleComments({ slug, comments }: ArticleCommentsProps) {
               className="mb-6 rounded-xl bg-emerald-50 border border-emerald-200 p-4 flex items-center gap-3 text-emerald-800 text-sm font-medium"
             >
               <CheckCircle2 className="size-5 text-emerald-600 shrink-0" />
-              <span>Thank you! Your comment has been submitted and will appear once it is approved.</span>
+              <span>Thank you! Your comment has been posted.</span>
             </div>
           )}
 

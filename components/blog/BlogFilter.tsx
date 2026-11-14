@@ -171,7 +171,7 @@ export function BlogFilter({
       {/* Empty State */}
       {filteredArticles.length === 0 ? (
         <div className="border border-slate-200 bg-editorial-card p-12 text-center">
-          <h3 className="font-serif text-xl font-semibold text-slate-950 mb-2">
+          <h3 className="text-xl font-semibold text-slate-950 mb-2">
             No articles found matching this selection.
           </h3>
           <p className="text-sm text-slate-600 max-w-md mx-auto">
@@ -205,7 +205,7 @@ export function BlogFilter({
                     </button>
                   </div>
 
-                  <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold leading-tight tracking-tight text-slate-950 group-hover:text-brand-sky transition-colors mb-4">
+                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold leading-tight tracking-tight text-slate-950 group-hover:text-brand-sky transition-colors mb-4">
                     <Link href={`/blog/${leadArticle.slug}`}>
                       {leadArticle.title}
                     </Link>

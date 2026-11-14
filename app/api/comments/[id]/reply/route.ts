@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { checkRole } from '@/lib/authorization'
 import { prisma } from '@/lib/db'
-import { createStaffReply } from '@/lib/services/comment.service'
+import { createStaffReply, getCommentArticleSlug } from '@/lib/services/comment.service'
 
 interface RouteProps {
   params: Promise<{ id: string }>
@@ -30,6 +31,8 @@ export async function POST(request: Request, { params }: RouteProps) {
       body: text,
     })
     if (!reply) return NextResponse.json({ error: 'Comment not found' }, { status: 404 })
+    const slug = await getCommentArticleSlug(id)
+    if (slug) revalidatePath(`/blog/${slug}`)
     return NextResponse.json(reply, { status: 201 })
   } catch (error) {
     console.error('Error replying to comment:', error)

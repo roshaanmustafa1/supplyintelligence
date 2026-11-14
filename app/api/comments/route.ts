@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { prisma } from '@/lib/db'
 import { COMMENT_LIMITS, createPublicComment } from '@/lib/services/comment.service'
 
-// Public: submit a comment on a published article. Saved as PENDING until a moderator approves it.
+// Public: submit a comment on a published article. Published immediately; moderators can hold or remove it from the dashboard.
 export async function POST(request: Request) {
   try {
     const body = await request.json()
@@ -36,6 +37,7 @@ export async function POST(request: Request) {
     }
 
     await createPublicComment({ articleId: article.id, authorName: name, authorEmail: email, body: text })
+    revalidatePath(`/blog/${slug}`)
     return NextResponse.json({ success: true }, { status: 201 })
   } catch (error) {
     console.error('Error submitting comment:', error)

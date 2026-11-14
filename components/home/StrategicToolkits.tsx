@@ -63,7 +63,7 @@ export function StrategicToolkits() {
             <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-brand-sky">
               Practitioner Toolkits & Frameworks
             </p>
-            <h2 className="font-serif text-3xl font-semibold tracking-tight text-slate-950">
+            <h2 className="text-3xl font-semibold tracking-tight text-slate-950">
               Operational Blueprints for Supply Leaders
             </h2>
             <p className="mt-1 text-sm text-slate-600 max-w-2xl leading-relaxed">
@@ -107,7 +107,7 @@ export function StrategicToolkits() {
                   </div>
 
                   {/* Title */}
-                  <h3 className="font-serif text-xl font-semibold text-slate-950 leading-snug group-hover:text-brand-sky transition-colors mb-3">
+                  <h3 className="text-xl font-semibold text-slate-950 leading-snug group-hover:text-brand-sky transition-colors mb-3">
                     <Link href={toolkit.linkHref}>
                       {toolkit.title}
                     </Link>

@@ -15,7 +15,7 @@ export function LatestArticles({ articles }: LatestArticlesProps) {
         <div className="flex items-end justify-between mb-7 pb-4 border-b border-slate-200">
           <div>
             <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-brand-sky">From the journal</p>
-            <h2 className="font-serif text-3xl font-semibold tracking-tight text-slate-950">
+            <h2 className="text-3xl font-semibold tracking-tight text-slate-950">
               Latest Articles
             </h2>
           </div>

@@ -124,7 +124,7 @@ export function SupplyChainMetrics() {
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-8 pb-4 border-b border-slate-200 gap-4">
           <div>
 
-            <h2 className="font-serif text-3xl font-semibold tracking-tight text-slate-950">
+            <h2 className="text-3xl font-semibold tracking-tight text-slate-950">
               Global Supply Chain Pulse
             </h2>
             <p className="mt-1 text-sm text-slate-600 max-w-2xl leading-relaxed">
@@ -172,7 +172,7 @@ export function SupplyChainMetrics() {
                   </div>
 
                   {/* Value */}
-                  <div className="font-serif text-3xl sm:text-4xl font-semibold text-slate-950 tracking-tight leading-none mb-2">
+                  <div className="text-3xl sm:text-4xl font-semibold text-slate-950 tracking-tight leading-none mb-2">
                     {item.value}
                   </div>
 

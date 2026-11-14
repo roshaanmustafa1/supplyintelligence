@@ -22,7 +22,7 @@ export function ArticleHeroBanner({
 
       <div className="relative w-full px-6 sm:px-10 lg:px-16 xl:px-24 text-left space-y-4">
         {/* Main Article Title */}
-        <h1 className="font-serif sm:font-sans text-3xl sm:text-4xl lg:text-5xl xl:text-[52px] font-bold tracking-tight text-white leading-[1.18] max-w-5xl">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-[52px] font-bold tracking-tight text-white leading-[1.18] max-w-5xl">
           {title}
         </h1>
 

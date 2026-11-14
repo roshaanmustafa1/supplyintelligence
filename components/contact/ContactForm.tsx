@@ -71,7 +71,7 @@ export function ContactForm() {
         <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-brand-sky text-white shadow-md mb-4">
           <CheckCircle2 className="size-8" />
         </div>
-        <h3 className="font-serif text-2xl font-bold text-slate-900 mb-2">
+        <h3 className="text-2xl font-bold text-slate-900 mb-2">
           Inquiry Successfully Dispatched
         </h3>
         <p className="text-sm text-slate-600 max-w-md mx-auto leading-relaxed mb-6">

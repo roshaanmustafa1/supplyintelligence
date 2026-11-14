@@ -54,7 +54,7 @@ export function NewsletterSection() {
                 </p>
               </div>
 
-              <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-[-0.025em] text-white leading-tight">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-[-0.025em] text-white leading-tight">
                 Empirical trade, freight, and procurement telemetry delivered weekly.
               </h2>
 

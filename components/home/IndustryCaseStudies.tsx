@@ -55,7 +55,7 @@ export function IndustryCaseStudies() {
             <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-brand-sky">
               Field Reports & Operational Perspectives
             </p>
-            <h2 className="font-serif text-3xl font-semibold tracking-tight text-slate-950">
+            <h2 className="text-3xl font-semibold tracking-tight text-slate-950">
               Infrastructure & Logistics Spotlights
             </h2>
             <p className="mt-1 text-sm text-slate-600 max-w-2xl leading-relaxed">
@@ -103,7 +103,7 @@ export function IndustryCaseStudies() {
                     {study.category}
                   </div>
 
-                  <h3 className="font-serif text-lg sm:text-xl font-semibold leading-snug tracking-tight text-slate-950 group-hover:text-brand-sky transition-colors mb-2.5 line-clamp-2">
+                  <h3 className="text-lg sm:text-xl font-semibold leading-snug tracking-tight text-slate-950 group-hover:text-brand-sky transition-colors mb-2.5 line-clamp-2">
                     <Link href={`/blog/${study.slug}`}>
                       {study.title}
                     </Link>

@@ -13,7 +13,7 @@ export function ExecutiveDeepDive() {
             <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-brand-sky">
               Special Report & Strategic Briefing
             </p>
-            <h2 className="font-serif text-3xl font-semibold tracking-tight text-slate-950">
+            <h2 className="text-3xl font-semibold tracking-tight text-slate-950">
               The Executive Deep Dive
             </h2>
             <p className="mt-1 text-sm text-slate-600 max-w-2xl leading-relaxed">
@@ -41,7 +41,7 @@ export function ExecutiveDeepDive() {
                 </span>
               </div>
 
-              <h3 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-[-0.03em] text-slate-950 leading-[1.14] mb-4">
+              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-[-0.03em] text-slate-950 leading-[1.14] mb-4">
                 The 2025 Global Nearshoring & Supplier Risk Playbook
               </h3>
 
@@ -54,7 +54,7 @@ export function ExecutiveDeepDive() {
               {/* 3 Value Metrics Strip */}
               <div className="grid grid-cols-3 divide-x divide-slate-200 border-y border-slate-200 py-4 my-6 max-w-xl">
                 <div className="pr-4">
-                  <div className="font-serif text-2xl sm:text-3xl font-semibold text-brand-sky tracking-tight">
+                  <div className="text-2xl sm:text-3xl font-semibold text-brand-sky tracking-tight">
                     -38%
                   </div>
                   <div className="text-[11px] font-semibold text-slate-600 mt-1 uppercase tracking-wider">
@@ -62,7 +62,7 @@ export function ExecutiveDeepDive() {
                   </div>
                 </div>
                 <div className="px-4">
-                  <div className="font-serif text-2xl sm:text-3xl font-semibold text-slate-950 tracking-tight">
+                  <div className="text-2xl sm:text-3xl font-semibold text-slate-950 tracking-tight">
                     $18.5M
                   </div>
                   <div className="text-[11px] font-semibold text-slate-600 mt-1 uppercase tracking-wider">
@@ -70,7 +70,7 @@ export function ExecutiveDeepDive() {
                   </div>
                 </div>
                 <div className="pl-4">
-                  <div className="font-serif text-2xl sm:text-3xl font-semibold text-slate-950 tracking-tight">
+                  <div className="text-2xl sm:text-3xl font-semibold text-slate-950 tracking-tight">
                     99.2%
                   </div>
                   <div className="text-[11px] font-semibold text-slate-600 mt-1 uppercase tracking-wider">

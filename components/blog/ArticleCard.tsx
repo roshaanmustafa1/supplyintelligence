@@ -44,7 +44,7 @@ export function ArticleCard({
           </Link>
         </div>
 
-        <h3 className="font-serif text-xl font-semibold leading-tight tracking-tight text-slate-950 transition-colors group-hover:text-brand-sky mb-3 line-clamp-2">
+        <h3 className="text-xl font-semibold leading-tight tracking-tight text-slate-950 transition-colors group-hover:text-brand-sky mb-3 line-clamp-2">
           <Link
             href={`/blog/${article.slug}`}
             className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-sky rounded-xs"

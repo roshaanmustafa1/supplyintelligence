@@ -102,7 +102,7 @@ export default function ContactPage() {
               <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-brand-sky block mb-1">
                 Direct Dispatch
               </span>
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-slate-950">
+              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-950">
                 Send an Inquiry to Our Desks
               </h2>
               <p className="text-xs sm:text-sm text-slate-600 mt-1">
@@ -117,7 +117,7 @@ export default function ContactPage() {
           <aside className="lg:col-span-4 space-y-6" aria-label="Contact Information">
             {/* Direct Desks Card */}
             <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-7 shadow-xs space-y-4">
-              <h3 className="font-serif text-lg font-bold text-slate-950 border-b border-slate-200 pb-3">
+              <h3 className="text-lg font-bold text-slate-950 border-b border-slate-200 pb-3">
                 Direct Editorial Desks
               </h3>
 
@@ -177,7 +177,7 @@ export default function ContactPage() {
 
             {/* Bureau Offices Card */}
             <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-7 shadow-xs space-y-4">
-              <h3 className="font-serif text-lg font-bold text-slate-950 border-b border-slate-200 pb-3">
+              <h3 className="text-lg font-bold text-slate-950 border-b border-slate-200 pb-3">
                 Global Bureau Locations
               </h3>
 
@@ -217,7 +217,7 @@ export default function ContactPage() {
             <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-brand-sky block mb-1">
               Submission Guidelines & FAQ
             </span>
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-slate-950">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-950">
               Frequently Asked Questions
             </h2>
             <p className="text-sm text-slate-600 mt-1 leading-relaxed">
@@ -232,7 +232,7 @@ export default function ContactPage() {
                 className="p-6 rounded-xl border border-slate-200 bg-slate-50/60 flex flex-col justify-between"
               >
                 <div>
-                  <h3 className="font-serif text-base font-bold text-slate-950 mb-2 flex items-start gap-2">
+                  <h3 className="text-base font-bold text-slate-950 mb-2 flex items-start gap-2">
                     <HelpCircle className="size-4 text-brand-sky shrink-0 mt-0.5" />
                     <span>{faq.question}</span>
                   </h3>

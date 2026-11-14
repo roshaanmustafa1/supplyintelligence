@@ -44,7 +44,7 @@ export default async function BlogIndexPage({ searchParams }: BlogPageProps) {
                 <p className="mb-2.5 text-[11px] font-bold uppercase tracking-[0.18em] text-sky-400">
                   Supply Intelligence Journal Archive
                 </p>
-                <h1 className="font-serif text-3xl sm:text-4xl lg:text-[3.25rem] font-semibold leading-[1.08] tracking-[-0.035em] text-white">
+                <h1 className="text-3xl sm:text-4xl lg:text-[3.25rem] font-semibold leading-[1.08] tracking-[-0.035em] text-white">
                   Articles, Intelligence & Strategic Frameworks
                 </h1>
                 <p className="mt-4 text-base sm:text-lg leading-relaxed text-slate-300 max-w-2xl">

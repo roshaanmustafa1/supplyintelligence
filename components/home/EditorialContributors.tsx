@@ -66,7 +66,7 @@ export function EditorialContributors() {
             <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-brand-sky">
               Editorial Board & Contributing Fellows
             </p>
-            <h2 className="font-serif text-3xl font-semibold tracking-tight text-slate-950">
+            <h2 className="text-3xl font-semibold tracking-tight text-slate-950">
               Led by Operational Practitioners
             </h2>
             <p className="mt-1 text-sm text-slate-600 max-w-2xl leading-relaxed">
@@ -90,7 +90,7 @@ export function EditorialContributors() {
               <div>
                 {/* Header: Monogram & Domain Tag */}
                 <div className="flex items-center justify-between mb-5">
-                  <div className="flex size-11 items-center justify-center border border-slate-200 bg-editorial-surface text-slate-950 font-serif text-sm font-semibold tracking-wider group-hover:border-brand-sky group-hover:text-brand-sky transition-colors">
+                  <div className="flex size-11 items-center justify-center border border-slate-200 bg-editorial-surface text-slate-950 text-sm font-semibold tracking-wider group-hover:border-brand-sky group-hover:text-brand-sky transition-colors">
                     {person.initials}
                   </div>
                   <span className="text-[10px] font-bold uppercase tracking-[0.14em] px-2 py-0.5 bg-editorial-sky-surface text-brand-sky border border-editorial-sky-border">
@@ -99,7 +99,7 @@ export function EditorialContributors() {
                 </div>
 
                 {/* Name */}
-                <h3 className="font-serif text-lg font-semibold text-slate-950 group-hover:text-brand-sky transition-colors mb-1">
+                <h3 className="text-lg font-semibold text-slate-950 group-hover:text-brand-sky transition-colors mb-1">
                   {person.name}
                 </h3>
 

@@ -33,7 +33,7 @@ export function TopicsSection({ topics }: TopicsSectionProps) {
             <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.16em] text-brand-sky">
               Research Taxonomies
             </p>
-            <h2 className="font-serif text-2xl font-semibold tracking-tight text-slate-950">
+            <h2 className="text-2xl font-semibold tracking-tight text-slate-950">
               Explore by Topic
             </h2>
           </div>

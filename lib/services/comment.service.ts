@@ -42,7 +42,8 @@ export async function createPublicComment(input: {
       authorName: input.authorName.trim().slice(0, COMMENT_LIMITS.name),
       authorEmail: input.authorEmail.trim().toLowerCase().slice(0, COMMENT_LIMITS.email),
       body: input.body.trim().slice(0, COMMENT_LIMITS.body),
-      status: 'PENDING',
+      // Comments go live immediately; moderators can hold, mark as spam, or delete them afterwards.
+      status: 'APPROVED',
     },
     select: { id: true },
   })
@@ -80,6 +81,15 @@ export async function getCommentCounts(articleId?: string) {
 
 export async function setCommentStatus(id: string, status: CommentStatus) {
   return prisma.comment.update({ where: { id }, data: { status } })
+}
+
+/** Slug of the article a comment belongs to (used to refresh the public page). */
+export async function getCommentArticleSlug(id: string) {
+  const comment = await prisma.comment.findUnique({
+    where: { id },
+    select: { article: { select: { slug: true } } },
+  })
+  return comment?.article.slug ?? null
 }
 
 export async function deleteComment(id: string) {

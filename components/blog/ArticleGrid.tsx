@@ -16,7 +16,7 @@ export function ArticleGrid({
   if (articles.length === 0) {
     return (
       <div className="border border-slate-200 bg-editorial-card p-12 text-center">
-        <p className="font-serif text-xl font-semibold text-slate-950">
+        <p className="text-xl font-semibold text-slate-950">
           No articles found matching this selection.
         </p>
         <p className="mt-2 text-sm text-slate-600">

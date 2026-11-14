@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { MessageSquare, Check, ShieldAlert, Trash2, CornerDownRight, Loader2, CheckCircle2, AlertCircle } from 'lucide-react'
+import { MessageSquare, Check, Pause, ShieldAlert, Trash2, CornerDownRight, Loader2, CheckCircle2, AlertCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface ReplyItem {
@@ -34,10 +34,12 @@ interface CommentsManagerProps {
 
 const tabs = [
   { label: 'All', value: 'ALL' },
-  { label: 'Pending', value: 'PENDING' },
-  { label: 'Approved', value: 'APPROVED' },
+  { label: 'Live', value: 'APPROVED' },
+  { label: 'On Hold', value: 'PENDING' },
   { label: 'Spam', value: 'SPAM' },
 ]
+
+const statusLabels: Record<string, string> = { PENDING: 'On hold', APPROVED: 'Live', SPAM: 'Spam' }
 
 const statusStyles: Record<string, string> = {
   PENDING: 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
@@ -86,7 +88,7 @@ export function CommentsManager({ initialComments, counts, activeStatus, article
         .map((x) => (x.id === c.id ? { ...x, status } : x))
         .filter((x) => activeStatus === 'ALL' || x.status === activeStatus)
     )
-    setStatusMessage({ type: 'success', text: `Comment by ${c.authorName} marked ${status.toLowerCase()}.` })
+    setStatusMessage({ type: 'success', text: `Comment by ${c.authorName} is now ${(statusLabels[status] ?? status).toLowerCase()}.` })
     router.refresh()
   }
 
@@ -130,7 +132,7 @@ export function CommentsManager({ initialComments, counts, activeStatus, article
         </div>
         <h1 className="font-heading text-2xl font-bold tracking-tight text-dashboard-foreground">Comments</h1>
         <p className="text-sm text-dashboard-muted-foreground">
-          Review, approve, reply to, or remove reader comments. Only approved comments appear on the site.
+          Reader comments go live immediately. Put any comment on hold, mark it as spam, reply to it, or delete it. Only live comments appear on the site.
         </p>
         {articleFilter && (
           <p className="mt-2 text-sm text-dashboard-foreground">
@@ -188,7 +190,7 @@ export function CommentsManager({ initialComments, counts, activeStatus, article
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="font-semibold text-dashboard-foreground">{c.authorName}</span>
                     <span className="text-dashboard-caption text-dashboard-muted-foreground">{c.authorEmail}</span>
-                    <span className={cn('rounded-md px-2 py-0.5 text-xs font-semibold', statusStyles[c.status])}>{c.status}</span>
+                    <span className={cn('rounded-md px-2 py-0.5 text-xs font-semibold', statusStyles[c.status])}>{statusLabels[c.status] ?? c.status}</span>
                   </div>
                   <p className="mt-0.5 text-dashboard-caption text-dashboard-muted-foreground">
                     {formatDate(c.createdAt)} · on{' '}
@@ -207,7 +209,17 @@ export function CommentsManager({ initialComments, counts, activeStatus, article
                       onClick={() => changeStatus(c, 'APPROVED')}
                       className="flex items-center gap-1 rounded-lg border border-emerald-500/30 px-2.5 py-1 text-dashboard-caption font-semibold text-emerald-600 hover:bg-emerald-500/10 disabled:opacity-50 dark:text-emerald-400"
                     >
-                      <Check className="size-3.5" /> Approve
+                      <Check className="size-3.5" /> {c.status === 'SPAM' ? 'Restore' : 'Publish'}
+                    </button>
+                  )}
+                  {c.status !== 'PENDING' && (
+                    <button
+                      type="button"
+                      disabled={busyId === c.id}
+                      onClick={() => changeStatus(c, 'PENDING')}
+                      className="flex items-center gap-1 rounded-lg border border-sky-500/30 px-2.5 py-1 text-dashboard-caption font-semibold text-sky-600 hover:bg-sky-500/10 disabled:opacity-50 dark:text-sky-400"
+                    >
+                      <Pause className="size-3.5" /> Hold
                     </button>
                   )}
                   {c.status !== 'SPAM' && (

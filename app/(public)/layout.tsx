@@ -14,7 +14,7 @@ export default async function PublicLayout({
 }>) {
   const searchArticles = await getSearchArticles()
   return (
-    <>
+    <div className="contents font-heading">
       <SkipToContent />
       <OrganizationJsonLd />
       <WebSiteJsonLd />
@@ -22,6 +22,6 @@ export default async function PublicLayout({
       <div className="flex-1">{children}</div>
       <Footer />
       {process.env.NODE_ENV === 'development' && <AgentationDev />}
-    </>
+    </div>
   )
 }

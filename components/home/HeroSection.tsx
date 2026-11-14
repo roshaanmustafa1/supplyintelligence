@@ -12,7 +12,7 @@ export function HeroSection() {
             <p className="mb-5 text-[11px] font-bold uppercase tracking-[0.18em] text-brand-sky">
               Supply Intelligence Journal
             </p>
-            <h1 className="max-w-xl font-serif text-4xl font-semibold leading-[1.06] tracking-[-0.035em] text-slate-950 sm:text-5xl lg:text-[3.65rem]">
+            <h1 className="max-w-xl text-4xl font-semibold leading-[1.06] tracking-[-0.035em] text-slate-950 sm:text-5xl lg:text-[3.65rem]">
               Practical insights for better supply chain decisions.
             </h1>
             <p className="mt-6 max-w-lg text-base leading-relaxed text-slate-600">
