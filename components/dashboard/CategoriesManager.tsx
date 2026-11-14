@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { FolderTree, Plus, Search, Trash2, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react'
+import { FolderTree, Plus, Search, Trash2, Pencil, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react'
 
 interface CategoryItem {
   id: string
@@ -72,6 +72,61 @@ export function CategoriesManager({ initialCategories }: CategoriesManagerProps)
       setStatusMessage({ type: 'error', text: err instanceof Error ? err.message : 'Error creating category' })
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editName, setEditName] = useState('')
+  const [editSlug, setEditSlug] = useState('')
+  const [editDescription, setEditDescription] = useState('')
+
+  function startEdit(cat: CategoryItem) {
+    setEditingId(cat.id)
+    setEditName(cat.name)
+    setEditSlug(cat.slug)
+    setEditDescription(cat.description ?? '')
+  }
+
+  async function handleUpdate(e: React.FormEvent) {
+    e.preventDefault()
+    if (!editingId || !editName.trim() || !editSlug.trim()) return
+    setIsLoading(true)
+    setStatusMessage(null)
+    try {
+      const res = await fetch(`/api/categories/${editingId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: editName, slug: editSlug, description: editDescription }),
+      })
+      if (!res.ok) {
+        const err = await res.json()
+        throw new Error(err.error || 'Failed to update category')
+      }
+      const updated = await res.json()
+      setCategories((prev) => prev.map((c) => (c.id === editingId ? { ...c, ...updated } : c)))
+      setEditingId(null)
+      setStatusMessage({ type: 'success', text: `Category "${updated.name}" updated.` })
+      router.refresh()
+    } catch (err: unknown) {
+      setStatusMessage({ type: 'error', text: err instanceof Error ? err.message : 'Error updating category' })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  async function handleDelete(cat: CategoryItem) {
+    const count = cat._count?.articles ?? 0
+    const warning = count > 0 ? ` ${count} article(s) will become uncategorized.` : ''
+    if (!window.confirm(`Delete category "${cat.name}"?${warning} This cannot be undone.`)) return
+    setStatusMessage(null)
+    try {
+      const res = await fetch(`/api/categories/${cat.id}`, { method: 'DELETE' })
+      if (!res.ok) throw new Error('Failed to delete category')
+      setCategories((prev) => prev.filter((c) => c.id !== cat.id))
+      setStatusMessage({ type: 'success', text: `Category "${cat.name}" deleted.` })
+      router.refresh()
+    } catch (err: unknown) {
+      setStatusMessage({ type: 'error', text: err instanceof Error ? err.message : 'Error deleting category' })
     }
   }
 
@@ -206,6 +261,50 @@ export function CategoriesManager({ initialCategories }: CategoriesManagerProps)
             key={cat.id}
             className="flex flex-col justify-between rounded-2xl border border-dashboard-border bg-dashboard-card p-5 shadow-sm transition-all hover:border-brand-blue/40 hover:shadow-md"
           >
+            {editingId === cat.id ? (
+              <form onSubmit={handleUpdate} className="space-y-3">
+                <input
+                  type="text"
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  required
+                  aria-label="Category name"
+                  className="w-full rounded-xl border border-dashboard-input bg-dashboard-background px-3 py-2 text-sm text-dashboard-foreground focus:border-brand-blue focus:outline-none"
+                />
+                <input
+                  type="text"
+                  value={editSlug}
+                  onChange={(e) => setEditSlug(e.target.value)}
+                  required
+                  aria-label="Category slug"
+                  className="w-full rounded-xl border border-dashboard-input bg-dashboard-background px-3 py-2 font-mono text-sm text-dashboard-foreground focus:border-brand-blue focus:outline-none"
+                />
+                <textarea
+                  value={editDescription}
+                  onChange={(e) => setEditDescription(e.target.value)}
+                  rows={2}
+                  aria-label="Category description"
+                  className="w-full rounded-xl border border-dashboard-input bg-dashboard-background p-3 text-sm text-dashboard-foreground focus:border-brand-blue focus:outline-none"
+                />
+                <div className="flex justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setEditingId(null)}
+                    className="rounded-xl border border-dashboard-border px-3 py-1.5 text-sm font-medium text-dashboard-foreground hover:bg-dashboard-accent"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="flex items-center gap-1.5 rounded-xl bg-brand-blue px-3.5 py-1.5 text-sm font-semibold text-white hover:bg-brand-blue/90 disabled:opacity-50"
+                  >
+                    {isLoading && <Loader2 className="size-3 animate-spin" />}
+                    <span>Save</span>
+                  </button>
+                </div>
+              </form>
+            ) : (
             <div>
               <div className="flex items-start justify-between gap-2">
                 <div className="flex size-9 items-center justify-center rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400">
@@ -226,12 +325,31 @@ export function CategoriesManager({ initialCategories }: CategoriesManagerProps)
                 </p>
               )}
             </div>
+            )}
 
             <div className="mt-4 flex items-center justify-between border-t border-dashboard-border pt-3 text-dashboard-caption">
               <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium">
                 <span className="size-1.5 rounded-full bg-emerald-500"></span>
                 Active
               </span>
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => startEdit(cat)}
+                  aria-label={`Edit ${cat.name}`}
+                  className="rounded-lg p-1.5 text-dashboard-muted-foreground hover:bg-dashboard-accent hover:text-brand-blue"
+                >
+                  <Pencil className="size-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(cat)}
+                  aria-label={`Delete ${cat.name}`}
+                  className="rounded-lg p-1.5 text-dashboard-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                >
+                  <Trash2 className="size-3.5" />
+                </button>
+              </div>
               <a
                 href={`/blog?category=${cat.slug}`}
                 target="_blank"

@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
+  MessageSquare,
   ArrowLeft,
   Save,
   CheckCircle2,
@@ -18,8 +19,11 @@ import {
   Loader2,
   Code,
   FileText,
+  Upload,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { RichTextEditor } from '@/components/dashboard/RichTextEditor'
+import { ArticlePreviewModal } from '@/components/dashboard/ArticlePreviewModal'
 
 interface CategoryItem {
   id: string
@@ -37,6 +41,7 @@ interface ArticleEditorProps {
     status: string
     contentType: string
     categoryId?: string | null
+    categoryIds?: string[]
     featuredImage?: string | null
     featuredImageAlt?: string | null
     seoTitle?: string | null
@@ -62,7 +67,45 @@ export function ArticleEditor({
   const [slug, setSlug] = useState(initialData?.slug || '')
   const [excerpt, setExcerpt] = useState(initialData?.excerpt || '')
   const [bodyHtml, setBodyHtml] = useState(initialData?.bodyHtml || '')
-  const [categoryId, setCategoryId] = useState(initialData?.categoryId || categories[0]?.id || '')
+  // Ordered selection: the first category is the article's primary category.
+  const [categoryIds, setCategoryIds] = useState<string[]>(() => {
+    if (initialData?.categoryIds && initialData.categoryIds.length > 0) {
+      const primary = initialData.categoryId
+      return primary && initialData.categoryIds.includes(primary)
+        ? [primary, ...initialData.categoryIds.filter((id) => id !== primary)]
+        : initialData.categoryIds
+    }
+    const fallback = initialData?.categoryId || (initialData ? '' : categories[0]?.id) || ''
+    return fallback ? [fallback] : []
+  })
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  function toggleCategory(id: string) {
+    setCategoryIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]))
+  }
+
+  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+    setIsUploading(true)
+    setUploadError(null)
+    try {
+      const body = new FormData()
+      body.append('file', file)
+      const res = await fetch('/api/uploads/image', { method: 'POST', body })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Upload failed')
+      setFeaturedImage(data.url)
+    } catch (err: unknown) {
+      setUploadError(err instanceof Error ? err.message : 'Upload failed')
+    } finally {
+      setIsUploading(false)
+    }
+  }
   const [status, setStatus] = useState(initialData?.status || 'DRAFT')
   const [contentType, setContentType] = useState(initialData?.contentType || 'ANALYSIS')
   const [featuredImage, setFeaturedImage] = useState(initialData?.featuredImage || '/images/hero-container-ship.jpg')
@@ -74,7 +117,7 @@ export function ArticleEditor({
   const [tagsInput, setTagsInput] = useState(initialData?.tags?.join(', ') || 'Supply Chain, Strategy')
   const [readingTime, setReadingTime] = useState(initialData?.readingTimeMinutes || 6)
 
-  const [viewMode, setViewMode] = useState<'edit' | 'preview'>('edit')
+  const [viewMode, setViewMode] = useState<'edit' | 'html' | 'preview'>('edit')
   const [isSaving, setIsSaving] = useState(false)
   const [saveMessage, setSaveMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
@@ -108,7 +151,8 @@ export function ArticleEditor({
       slug: slug || title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
       excerpt,
       bodyHtml,
-      categoryId: categoryId || null,
+      categoryId: categoryIds[0] ?? null,
+      categoryIds,
       status: targetStatus,
       contentType,
       featuredImage,
@@ -156,6 +200,22 @@ export function ArticleEditor({
 
   return (
     <div className="space-y-6 pb-16">
+      <ArticlePreviewModal
+        open={isPreviewOpen}
+        onClose={() => setIsPreviewOpen(false)}
+        title={title}
+        excerpt={excerpt}
+        bodyHtml={bodyHtml}
+        featuredImage={featuredImage}
+        featuredImageAlt={featuredImageAlt}
+        categoryNames={categoryIds
+          .map((id) => categories.find((c) => c.id === id)?.name)
+          .filter((n): n is string => Boolean(n))}
+        tags={tagsInput.split(',').map((t) => t.trim()).filter(Boolean)}
+        readingTime={readingTime}
+        status={status}
+      />
+
       {/* Top Action Header */}
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div className="flex items-center gap-3">
@@ -178,6 +238,23 @@ export function ArticleEditor({
         </div>
 
         <div className="flex items-center gap-2.5">
+          <button
+            type="button"
+            onClick={() => setIsPreviewOpen(true)}
+            className="flex items-center gap-1.5 rounded-xl border border-dashboard-border bg-dashboard-card px-3.5 py-2 text-sm font-semibold text-dashboard-foreground transition-colors hover:bg-dashboard-accent"
+          >
+            <Eye className="size-3.5" />
+            <span>Preview</span>
+          </button>
+          {initialData?.id && (
+            <Link
+              href={`/dashboard/comments?articleId=${initialData.id}`}
+              className="flex items-center gap-1.5 rounded-xl border border-dashboard-border bg-dashboard-card px-3.5 py-2 text-sm font-semibold text-dashboard-foreground transition-colors hover:bg-dashboard-accent"
+            >
+              <MessageSquare className="size-3.5" />
+              <span>Comments</span>
+            </Link>
+          )}
           <button
             type="button"
             onClick={() => handleSave('DRAFT')}
@@ -324,8 +401,21 @@ export function ArticleEditor({
                       : 'text-dashboard-muted-foreground hover:text-dashboard-foreground'
                   )}
                 >
+                  <FileText className="size-3" />
+                  <span>Editor</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewMode('html')}
+                  className={cn(
+                    'flex items-center gap-1.5 rounded-md px-2.5 py-1 font-medium transition-colors',
+                    viewMode === 'html'
+                      ? 'bg-dashboard-card text-dashboard-foreground shadow-xs'
+                      : 'text-dashboard-muted-foreground hover:text-dashboard-foreground'
+                  )}
+                >
                   <Code className="size-3" />
-                  <span>HTML / Markup</span>
+                  <span>HTML</span>
                 </button>
                 <button
                   type="button"
@@ -344,6 +434,8 @@ export function ArticleEditor({
             </div>
 
             {viewMode === 'edit' ? (
+              <RichTextEditor value={bodyHtml} onChange={setBodyHtml} />
+            ) : viewMode === 'html' ? (
               <div>
                 <textarea
                   value={bodyHtml}
@@ -362,7 +454,7 @@ export function ArticleEditor({
                   <div dangerouslySetInnerHTML={{ __html: bodyHtml }} />
                 ) : (
                   <p className="text-dashboard-muted-foreground italic">
-                    No content to preview yet. Switch to Edit mode and compose your article.
+                    No content to preview yet. Switch to the Editor tab and compose your article.
                   </p>
                 )}
               </div>
@@ -490,20 +582,44 @@ export function ArticleEditor({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-dashboard-muted-foreground mb-1">
-                Primary Category
-              </label>
-              <select
-                value={categoryId}
-                onChange={(e) => setCategoryId(e.target.value)}
-                className="w-full rounded-xl border border-dashboard-input bg-dashboard-background px-3 py-2 text-sm text-dashboard-foreground focus:border-brand-blue focus:outline-none"
-              >
-                {categories.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
+              <span className="block text-sm font-medium text-dashboard-muted-foreground mb-1">
+                Categories (select one or more)
+              </span>
+              <div className="max-h-48 space-y-1 overflow-y-auto rounded-xl border border-dashboard-input bg-dashboard-background p-2">
+                {categories.map((c) => {
+                  const checked = categoryIds.includes(c.id)
+                  const isPrimary = categoryIds[0] === c.id
+                  return (
+                    <div key={c.id} className="flex items-center justify-between gap-2 rounded-lg px-2 py-1.5 hover:bg-dashboard-accent">
+                      <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 text-sm text-dashboard-foreground">
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={() => toggleCategory(c.id)}
+                          className="size-4 rounded border-dashboard-input accent-brand-blue"
+                        />
+                        <span className="truncate">{c.name}</span>
+                      </label>
+                      {isPrimary ? (
+                        <span className="shrink-0 rounded bg-brand-blue/10 px-1.5 py-0.5 text-xs font-semibold text-brand-blue">Primary</span>
+                      ) : (
+                        checked && (
+                          <button
+                            type="button"
+                            onClick={() => setCategoryIds((prev) => [c.id, ...prev.filter((x) => x !== c.id)])}
+                            className="shrink-0 text-xs font-medium text-dashboard-muted-foreground hover:text-brand-blue"
+                          >
+                            Make primary
+                          </button>
+                        )
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+              <p className="mt-1 text-dashboard-caption text-dashboard-muted-foreground">
+                The primary category is used for the article&apos;s main label and URL grouping.
+              </p>
             </div>
 
             <div>
@@ -530,6 +646,14 @@ export function ArticleEditor({
               <label className="block text-sm font-medium text-dashboard-muted-foreground mb-1">
                 Image URL or Path
               </label>
+              {featuredImage && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={featuredImage}
+                  alt={featuredImageAlt || 'Featured image preview'}
+                  className="mb-2 aspect-[16/9] w-full rounded-xl border border-dashboard-border object-cover"
+                />
+              )}
               <input
                 type="text"
                 value={featuredImage}
@@ -537,6 +661,25 @@ export function ArticleEditor({
                 placeholder="/images/hero-container-ship.jpg"
                 className="w-full rounded-xl border border-dashboard-input bg-dashboard-background px-3 py-2 text-sm text-dashboard-foreground focus:border-brand-blue focus:outline-none"
               />
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/gif,image/webp"
+                onChange={handleImageUpload}
+                className="hidden"
+                aria-label="Upload featured image"
+              />
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isUploading}
+                className="mt-2 flex items-center gap-1.5 rounded-xl border border-dashboard-border bg-dashboard-card px-3 py-2 text-sm font-semibold text-dashboard-foreground transition-colors hover:bg-dashboard-accent disabled:opacity-50"
+              >
+                {isUploading ? <Loader2 className="size-3.5 animate-spin" /> : <Upload className="size-3.5" />}
+                <span>{isUploading ? 'Uploading...' : 'Upload from your computer'}</span>
+              </button>
+              {uploadError && <p className="mt-1 text-dashboard-caption text-destructive">{uploadError}</p>}
+              <p className="mt-1 text-dashboard-caption text-dashboard-muted-foreground">JPG, PNG, GIF or WebP, up to 5 MB.</p>
             </div>
 
             <div>

@@ -33,11 +33,13 @@ export default async function ArticlesListPage({ searchParams }: ArticlesPagePro
 
   return (
     <ArticlesManager
+      key={`${status ?? 'ALL'}-${page}`}
       initialArticles={articles}
       total={total}
       currentPage={page}
       totalPages={totalPages}
       categories={categories.map((c) => ({ id: c.id, name: c.name }))}
+      activeStatus={status || 'ALL'}
     />
   )
 }

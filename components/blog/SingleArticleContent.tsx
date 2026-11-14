@@ -7,13 +7,15 @@ import { ArticleMetaBar } from '@/components/blog/ArticleMetaBar'
 import { ArticleQuoteCard } from '@/components/blog/ArticleQuoteCard'
 import { ArticleMediaGallery } from '@/components/blog/ArticleMediaGallery'
 import { ArticleTagsShare } from '@/components/blog/ArticleTagsShare'
-import { ArticleComments } from '@/components/blog/ArticleComments'
+import { ArticleComments, type PublicComment } from '@/components/blog/ArticleComments'
 
 interface SingleArticleContentProps {
   article: Article
+  comments: PublicComment[] | null
+  commentsCount: number
 }
 
-export function SingleArticleContent({ article }: SingleArticleContentProps) {
+export function SingleArticleContent({ article, comments, commentsCount }: SingleArticleContentProps) {
   const section0 = article.sections[0]
   const section1 = article.sections[1]
   const remainingSections = article.sections.slice(2)
@@ -57,7 +59,7 @@ export function SingleArticleContent({ article }: SingleArticleContentProps) {
         date={article.date}
         category={article.category}
         categorySlug={article.categorySlug}
-        commentsCount={2}
+        commentsCount={commentsCount}
       />
 
       {/* 3. Main Article Heading */}
@@ -183,7 +185,7 @@ export function SingleArticleContent({ article }: SingleArticleContentProps) {
       />
 
       {/* 10. Comments Section & Leave A Comment Form matching screenshot */}
-      <ArticleComments />
+      {comments && <ArticleComments slug={article.slug} comments={comments} />}
     </article>
   )
 }

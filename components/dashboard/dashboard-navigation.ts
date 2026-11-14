@@ -1,6 +1,6 @@
 import {
-  LayoutDashboard, FileText, Layers, FolderTree, Tags, Image, Calendar, Sparkles,
-  Bot, Cpu, Coins, BarChart3, SearchCode, Users, History, Bell, Settings,
+  LayoutDashboard, FileText, Layers, FolderTree, Tags, Image, Sparkles,
+  Bot, Cpu, MessageSquare, BarChart3, SearchCode, Users, History, Settings,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -26,14 +26,13 @@ export const dashboardNavigation: DashboardNavSection[] = [
     { title: 'Artifacts & Templates', href: '/dashboard/artifacts', icon: Layers },
     { title: 'Categories', href: '/dashboard/categories', icon: FolderTree },
     { title: 'Tags', href: '/dashboard/tags', icon: Tags },
+    { title: 'Comments', href: '/dashboard/comments', icon: MessageSquare },
     { title: 'Media Library', href: '/dashboard/media', icon: Image },
-    { title: 'Editorial Calendar', href: '/dashboard/calendar', icon: Calendar },
   ] },
   { title: 'AI & AUTOMATION', tab: 'AI & Automation', items: [
     { title: 'AI Content Studio', href: '/dashboard/ai-studio', icon: Sparkles, badge: 'AI STUDIO' },
     { title: 'Autonomous Agents', href: '/dashboard/ai-agents', icon: Bot, badge: '7 READY' },
     { title: 'Automation Rules', href: '/dashboard/automation', icon: Cpu },
-    { title: 'AI Usage & Costs', href: '/dashboard/ai-usage', icon: Coins },
   ] },
   { title: 'PERFORMANCE & SEO', tab: 'Performance', items: [
     { title: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
@@ -42,7 +41,6 @@ export const dashboardNavigation: DashboardNavSection[] = [
   { title: 'SYSTEM & GOVERNANCE', tab: 'System', items: [
     { title: 'User Management', href: '/dashboard/users', icon: Users },
     { title: 'Activity & Audit', href: '/dashboard/activity', icon: History },
-    { title: 'Notifications', href: '/dashboard/notifications', icon: Bell },
     { title: 'Settings', href: '/dashboard/settings', icon: Settings },
   ] },
 ]

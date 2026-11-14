@@ -24,6 +24,8 @@ export interface CreateArticleInput {
   status?: string
   contentType?: string
   categoryId?: string
+  /** All selected categories; the first one becomes the primary categoryId. */
+  categoryIds?: string[]
   featuredImage?: string
   featuredImageAlt?: string
   seoTitle?: string
@@ -202,6 +204,7 @@ export async function getArticleById(id: string) {
     where: { id },
     include: {
       category: true,
+      categoryLinks: { select: { categoryId: true } },
       author: {
         select: SAFE_USER_SELECT,
       },
@@ -243,8 +246,19 @@ export async function getArticleBySlug(slug: string) {
   })
 }
 
+async function syncArticleCategories(articleId: string, categoryIds: string[]) {
+  const unique = [...new Set(categoryIds.filter(Boolean))]
+  await prisma.$transaction([
+    prisma.articleCategory.deleteMany({ where: { articleId } }),
+    ...(unique.length > 0
+      ? [prisma.articleCategory.createMany({ data: unique.map((categoryId) => ({ articleId, categoryId })) })]
+      : []),
+  ])
+}
+
 export async function createArticle(input: CreateArticleInput) {
-  const { tags, ...data } = input
+  const { tags, categoryIds, ...data } = input
+  if (categoryIds) data.categoryId = categoryIds[0] ?? undefined
   const slug = (input.slug || input.title)
     .trim()
     .toLowerCase()
@@ -258,6 +272,8 @@ export async function createArticle(input: CreateArticleInput) {
       publishedAt: input.status === 'PUBLISHED' ? new Date() : undefined,
     },
   })
+
+  if (categoryIds) await syncArticleCategories(article.id, categoryIds)
 
   // Attach tags if provided
   if (tags && tags.length > 0) {
@@ -305,7 +321,8 @@ export async function createArticle(input: CreateArticleInput) {
 }
 
 export async function updateArticle(input: UpdateArticleInput, editorUserId?: string) {
-  const { id, tags, ...data } = input
+  const { id, tags, categoryIds, ...data } = input
+  if (categoryIds) data.categoryId = categoryIds[0] ?? null
 
   const existing = await prisma.article.findUnique({
     where: { id },
@@ -329,6 +346,8 @@ export async function updateArticle(input: UpdateArticleInput, editorUserId?: st
     where: { id },
     data,
   })
+
+  if (categoryIds) await syncArticleCategories(id, categoryIds)
 
   // Update tags if passed
   if (tags) {

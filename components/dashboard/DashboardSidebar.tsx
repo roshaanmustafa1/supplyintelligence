@@ -2,8 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { signOut } from 'next-auth/react'
-import { LogOut, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { dashboardNavigation, isDashboardRouteActive } from './dashboard-navigation'
 import { dashboardAvatar, dashboardSidebarItem } from './dashboard-styles'
@@ -66,13 +65,6 @@ export function DashboardSidebar({ user, compact = false, desktop = false, onClo
           </div>
         ))}
       </nav>
-
-      <div className="flex h-11.5 shrink-0 flex-col rounded-xl border border-dashboard-border bg-dashboard-card p-0.75">
-        <button type="button" onClick={() => signOut({ callbackUrl: '/dashboard/login' })} title="Sign Out" aria-label="Sign Out" className={cn(dashboardSidebarItem, 'text-dashboard-muted-foreground hover:bg-red-500/10 hover:text-red-600 dark:hover:text-red-400')}>
-          <LogOut className="size-[17px] shrink-0" />
-          <span className={cn('min-w-0 flex-1 text-left whitespace-nowrap transition-opacity duration-300 ease-linear', visibilityClass)} aria-hidden={compact}>Sign Out</span>
-        </button>
-      </div>
         <div className="h-15.5 shrink-0 overflow-hidden border-t border-dashboard-border py-3">
           <div className="flex h-9 items-center gap-2.5">
             <span className={cn(dashboardAvatar, 'size-9')} aria-hidden="true">{user?.name?.[0]?.toUpperCase() || 'A'}</span>

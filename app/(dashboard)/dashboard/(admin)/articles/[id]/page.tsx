@@ -33,6 +33,7 @@ export default async function EditArticlePage({ params }: EditArticlePageProps) 
         status: article.status,
         contentType: article.contentType,
         categoryId: article.categoryId,
+        categoryIds: article.categoryLinks.map((l) => l.categoryId),
         featuredImage: article.featuredImage,
         featuredImageAlt: article.featuredImageAlt,
         seoTitle: article.seoTitle,

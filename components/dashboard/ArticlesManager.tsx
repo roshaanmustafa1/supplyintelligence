@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
@@ -26,6 +27,8 @@ interface ArticleItem {
   id: string
   title: string
   slug: string
+  featuredImage?: string | null
+  featuredImageAlt?: string | null
   status: string
   publishedAt: Date | null
   createdAt: Date
@@ -48,6 +51,7 @@ interface ArticlesManagerProps {
   currentPage: number
   totalPages: number
   categories: Array<{ id: string; name: string }>
+  activeStatus: string
 }
 
 const statusTabs = [
@@ -64,19 +68,19 @@ export function ArticlesManager({
   currentPage,
   totalPages,
   categories,
+  activeStatus,
 }: ArticlesManagerProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
 
   const [articles, setArticles] = useState<ArticleItem[]>(initialArticles)
-  const [activeTab, setActiveTab] = useState('ALL')
+  const activeTab = activeStatus
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('')
   const [deletingId, setDeletingId] = useState<string | null>(null)
 
   // Filter local view based on tab, category, and search
   const filteredArticles = articles.filter((art) => {
-    if (activeTab !== 'ALL' && art.status !== activeTab) return false
     if (selectedCategory && art.category?.id !== selectedCategory) return false
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase()
@@ -179,9 +183,10 @@ export function ArticlesManager({
       {/* Tabs */}
       <div className="flex overflow-x-auto border-b border-dashboard-border">
         {statusTabs.map((tab) => (
-          <button
+          <Link
             key={tab.value}
-            onClick={() => setActiveTab(tab.value)}
+            href={tab.value === 'ALL' ? '/dashboard/articles' : `/dashboard/articles?status=${tab.value}`}
+            aria-current={activeTab === tab.value ? 'page' : undefined}
             className={cn(
               'px-4 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px whitespace-nowrap',
               activeTab === tab.value
@@ -190,7 +195,7 @@ export function ArticlesManager({
             )}
           >
             {tab.label}
-          </button>
+          </Link>
         ))}
       </div>
 
@@ -264,8 +269,18 @@ export function ArticlesManager({
                     >
                       <td className="px-5 py-3.5">
                         <div className="flex items-start gap-3">
-                          <div className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg bg-dashboard-accent text-dashboard-muted-foreground">
-                            <FileText className="size-4" />
+                          <div className="relative mt-0.5 flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-dashboard-accent text-dashboard-muted-foreground">
+                            {article.featuredImage ? (
+                              <Image
+                                src={article.featuredImage}
+                                alt={article.featuredImageAlt || article.title}
+                                fill
+                                sizes="40px"
+                                className="object-cover"
+                              />
+                            ) : (
+                              <FileText className="size-4" />
+                            )}
                           </div>
                           <div className="min-w-0">
                             <Link

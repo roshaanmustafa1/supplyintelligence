@@ -90,11 +90,21 @@ export interface PublicResourceDTO {
     fileSize: number
     checksum: string
   } | null
+  files: PublicResourceFileDTO[]
   author: {
     id: string
     name: string | null
     avatar: string | null
   } | null
+}
+
+export interface PublicResourceFileDTO {
+  id: string
+  originalFilename: string
+  mimeType: string
+  fileSize: number
+  checksum: string
+  isPrimary: boolean
 }
 
 export interface ResourceRecordForPublic {
@@ -189,6 +199,14 @@ export function toPublicResource(resource: ResourceRecordForPublic): PublicResou
           checksum: primaryFile.checksum,
         }
       : null,
+    files: (resource.files ?? []).map((file) => ({
+      id: file.id,
+      originalFilename: file.originalFilename,
+      mimeType: file.mimeType,
+      fileSize: file.fileSize,
+      checksum: file.checksum,
+      isPrimary: file.id === primaryFile?.id,
+    })),
     author: resource.author
       ? {
           id: resource.author.id,

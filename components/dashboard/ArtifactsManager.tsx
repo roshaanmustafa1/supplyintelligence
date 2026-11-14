@@ -8,6 +8,7 @@ import {
   Plus,
   Edit3,
   Upload,
+  Eye,
   Archive,
   CheckCircle2,
   AlertCircle,
@@ -22,6 +23,7 @@ import {
   ChevronRight,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { FilePreviewPane } from '@/components/artifacts/FilePreviewPane'
 import { formatBytes, formatResourceDate, getFileFormatInfo } from '@/lib/resource-utils'
 import type { ResourceType, ResourceStatus } from '@/lib/services/resource.service'
 
@@ -159,6 +161,8 @@ export function ArtifactsManager({
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [editingResource, setEditingResource] = useState<AdminResourceItem | null>(null)
   const [uploadingForResource, setUploadingForResource] = useState<AdminResourceItem | null>(null)
+  const [previewingResource, setPreviewingResource] = useState<AdminResourceItem | null>(null)
+  const [previewFileId, setPreviewFileId] = useState<string | null>(null)
 
   // Creation form state
   const [createTitle, setCreateTitle] = useState('')
@@ -685,6 +689,22 @@ export function ArtifactsManager({
                       {/* Actions */}
                       <td className="px-5 py-4 whitespace-nowrap text-right">
                         <div className="flex items-center justify-end gap-1">
+                          {/* Preview attached files (read-only) */}
+                          {item.files && item.files.length > 0 && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setPreviewingResource(item)
+                                setPreviewFileId(primaryFile?.id ?? null)
+                              }}
+                              title="Preview attached files"
+                              aria-label={`Preview files of ${item.title}`}
+                              className="p-1.5 text-dashboard-muted-foreground hover:text-brand-blue hover:bg-dashboard-accent rounded-lg transition-colors"
+                            >
+                              <Eye className="size-4" />
+                            </button>
+                          )}
+
                           {/* Upload File */}
                           {isOwner && (
                             <button
@@ -1209,6 +1229,89 @@ export function ArtifactsManager({
           </div>
         </div>
       )}
+
+      {/* FILE PREVIEW MODAL (read-only) */}
+      {previewingResource &&
+        (() => {
+          const files = previewingResource.files ?? []
+          const activeFile =
+            files.find((f) => f.id === previewFileId) ??
+            files.find((f) => f.isPrimary) ??
+            files[0]
+          const closePreview = () => {
+            setPreviewingResource(null)
+            setPreviewFileId(null)
+          }
+          return (
+            <div
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs"
+              role="dialog"
+              aria-modal="true"
+              aria-label={`Preview of ${previewingResource.title}`}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') closePreview()
+              }}
+            >
+              <div className="flex max-h-[92vh] w-full max-w-4xl flex-col gap-4 rounded-2xl border border-dashboard-border bg-dashboard-card p-6 shadow-xl">
+                <div className="flex items-center justify-between border-b border-dashboard-border pb-3">
+                  <div className="min-w-0">
+                    <h3 className="font-heading text-lg font-bold text-dashboard-foreground">
+                      File Preview
+                    </h3>
+                    <p className="truncate text-xs text-dashboard-muted-foreground">
+                      {previewingResource.title} · read-only
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={closePreview}
+                    aria-label="Close preview"
+                    autoFocus
+                    className="text-dashboard-muted-foreground hover:text-dashboard-foreground"
+                  >
+                    <X className="size-5" />
+                  </button>
+                </div>
+
+                {files.length > 1 && (
+                  <div role="tablist" aria-label="Attached files" className="flex flex-wrap gap-2">
+                    {files.map((file) => (
+                      <button
+                        key={file.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={file.id === activeFile?.id}
+                        onClick={() => setPreviewFileId(file.id)}
+                        className={cn(
+                          'max-w-full truncate rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors',
+                          file.id === activeFile?.id
+                            ? 'border-brand-blue bg-brand-blue text-white'
+                            : 'border-dashboard-border text-dashboard-foreground hover:bg-dashboard-accent'
+                        )}
+                      >
+                        {file.originalFilename}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                <div className="min-h-0 flex-1 overflow-auto">
+                  {activeFile ? (
+                    <FilePreviewPane
+                      key={activeFile.id}
+                      previewUrl={`/api/admin/resources/${previewingResource.id}/preview?fileId=${encodeURIComponent(activeFile.id)}`}
+                      title={previewingResource.title}
+                      mimeType={activeFile.mimeType}
+                      filename={activeFile.originalFilename}
+                    />
+                  ) : (
+                    <p className="text-sm text-dashboard-muted-foreground">No file attached.</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          )
+        })()}
 
       {/* UPLOAD FILE MODAL */}
       {uploadingForResource && (

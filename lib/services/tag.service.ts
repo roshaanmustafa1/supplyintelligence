@@ -39,3 +39,12 @@ export async function deleteTag(id: string) {
     where: { id },
   })
 }
+
+export async function updateTag(id: string, name: string, customSlug?: string) {
+  const trimmed = name.trim()
+  const slug = (customSlug || trimmed).toLowerCase().replace(/[^a-z0-9]+/g, '-')
+  return prisma.tag.update({
+    where: { id },
+    data: { name: trimmed, slug },
+  })
+}

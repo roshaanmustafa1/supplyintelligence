@@ -10,7 +10,6 @@ export function Footer() {
     { label: 'Articles', href: '/blog' },
     { label: 'Artifacts & Templates', href: '/artifacts' },
     { label: 'Topics', href: '/topics' },
-    { label: 'About', href: '/about' },
     { label: 'Contact', href: '/contact' },
   ]
 

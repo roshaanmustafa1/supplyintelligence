@@ -13,7 +13,7 @@ export function sanitizeArticleHtml(html: string): string {
       th: ['colspan', 'rowspan'],
       td: ['colspan', 'rowspan'],
     },
-    exclusiveFilter: (frame) => frame.tag === 'img' && !/^\/images\/articles\/[a-z0-9-]+\.(jpg|png|webp|gif)$/.test(frame.attribs.src || ''),
+    exclusiveFilter: (frame) => frame.tag === 'img' && !/^\/(images\/articles\/[a-z0-9-]+|uploads\/articles\/[a-f0-9-]{36})\.(jpg|png|webp|gif)$/.test(frame.attribs.src || ''),
     allowedSchemes: ['http', 'https', 'mailto'],
     allowProtocolRelative: false,
   })

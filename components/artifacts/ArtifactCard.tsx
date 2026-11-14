@@ -12,8 +12,10 @@ import {
   CheckCircle2,
   ArrowRight,
   Loader2,
+  Eye,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { ArtifactPreviewModal } from '@/components/artifacts/ArtifactPreviewModal'
 import { formatBytes, formatResourceDate, getFileFormatInfo } from '@/lib/resource-utils'
 import type { PublicResourceDTO } from '@/lib/services/resource.service'
 
@@ -24,6 +26,7 @@ interface ArtifactCardProps {
 export function ArtifactCard({ resource }: ArtifactCardProps) {
   const [isDownloading, setIsDownloading] = useState(false)
   const [downloadError, setDownloadError] = useState<string | null>(null)
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false)
 
   const primaryFile = resource.primaryFile
   const formatInfo = getFileFormatInfo(primaryFile?.mimeType, primaryFile?.originalFilename)
@@ -163,26 +166,46 @@ export function ArtifactCard({ resource }: ArtifactCardProps) {
           <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
         </Link>
 
-        <button
-          type="button"
-          onClick={handleDownload}
-          disabled={isDownloading}
-          aria-label={`Download ${resource.title}`}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-brand-sky disabled:opacity-50"
-        >
-          {isDownloading ? (
-            <>
-              <Loader2 className="size-3.5 animate-spin" />
-              <span>Downloading...</span>
-            </>
-          ) : (
-            <>
-              <Download className="size-3.5" />
-              <span>Download</span>
-            </>
+        <div className="flex items-center gap-2">
+          {resource.files.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setIsPreviewOpen(true)}
+              aria-label={`Preview ${resource.title}`}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-xs transition-colors hover:bg-slate-50"
+            >
+              <Eye className="size-3.5" />
+              <span>Preview</span>
+            </button>
           )}
-        </button>
+          <button
+            type="button"
+            onClick={handleDownload}
+            disabled={isDownloading}
+            aria-label={`Download ${resource.title}`}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-brand-sky disabled:opacity-50"
+          >
+            {isDownloading ? (
+              <>
+                <Loader2 className="size-3.5 animate-spin" />
+                <span>Downloading...</span>
+              </>
+            ) : (
+              <>
+                <Download className="size-3.5" />
+                <span>Download</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
+
+      {isPreviewOpen && (
+        <ArtifactPreviewModal
+          resource={resource}
+          onClose={() => setIsPreviewOpen(false)}
+        />
+      )}
     </div>
   )
 }

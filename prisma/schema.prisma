@@ -90,6 +90,8 @@ model Category {
   updatedAt   DateTime   @updatedAt
 
   articles    Article[]
+  // All articles assigned to this category (an article may have several)
+  articleLinks ArticleCategory[]
 
   @@map("categories")
 }
@@ -179,12 +181,55 @@ model Article {
   // Publication events
   publicationEvents PublicationEvent[]
 
+  // Reader comments
+  comments    Comment[]
+
+  // Additional categories (categoryId stays the primary one)
+  categoryLinks ArticleCategory[]
+
   @@index([slug])
   @@index([status])
   @@index([authorId])
   @@index([categoryId])
   @@index([publishedAt])
   @@map("articles")
+}
+
+// Many-to-many: an article can belong to several categories.
+// Article.categoryId remains the primary (first) category.
+model ArticleCategory {
+  articleId  String
+  categoryId String
+  article    Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([articleId, categoryId])
+  @@index([categoryId])
+  @@map("article_categories")
+}
+
+// Reader comments. Moderated: new comments start as PENDING.
+model Comment {
+  id          String    @id @default(cuid())
+  articleId   String
+  article     Article   @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  // Reply threading (one level): staff replies point at the comment they answer
+  parentId    String?
+  parent      Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies     Comment[] @relation("CommentReplies")
+  authorName  String
+  authorEmail String
+  body        String
+  // Status: PENDING | APPROVED | SPAM
+  status      String    @default("PENDING")
+  isStaff     Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([articleId, status])
+  @@index([status, createdAt])
+  @@index([parentId])
+  @@map("comments")
 }
 
 model ArticleVersion {

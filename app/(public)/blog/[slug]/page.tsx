@@ -6,6 +6,8 @@ import { ArticleHeroBanner } from '@/components/blog/ArticleHeroBanner'
 import { SingleArticleContent } from '@/components/blog/SingleArticleContent'
 import { BlogSidebar } from '@/components/blog/BlogSidebar'
 import { RelatedArticles } from '@/components/blog/RelatedArticles'
+import { prisma } from '@/lib/db'
+import { listApprovedComments } from '@/lib/services/comment.service'
 import { NewsletterSection } from '@/components/home/NewsletterSection'
 
 interface ArticlePageProps {
@@ -69,6 +71,13 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   const relatedArticles = await getRelatedArticles(article.slug, article.categorySlug, 4)
 
+  // Comments only exist for articles stored in the database.
+  const dbArticle = await prisma.article
+    .findUnique({ where: { slug: article.slug }, select: { id: true } })
+    .catch(() => null)
+  const comments = dbArticle ? await listApprovedComments(dbArticle.id) : []
+  const commentsCount = comments.reduce((n, c) => n + 1 + c.replies.length, 0)
+
   return (
     <>
       <ArticleJsonLd article={article} />
@@ -86,7 +95,15 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 xl:gap-10 items-start">
             {/* Left Column (Article content, media gallery, quote, tags, comments) */}
             <div className="lg:col-span-8">
-              <SingleArticleContent article={article} />
+              <SingleArticleContent
+                article={article}
+                comments={dbArticle ? comments.map((c) => ({
+                  ...c,
+                  createdAt: c.createdAt.toISOString(),
+                  replies: c.replies.map((r) => ({ ...r, createdAt: r.createdAt.toISOString() })),
+                })) : null}
+                commentsCount={commentsCount}
+              />
             </div>
 
             {/* Right Column (Sidebar widgets: search, category, recent posts, author, tags) */}
