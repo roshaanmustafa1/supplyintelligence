@@ -45,17 +45,17 @@ export default async function TopicsPage() {
             {topics.map((topic) => (
               <TopicCard key={topic.id} topic={topic} articleCount={articleCounts[topic.slug] || 0} />
             ))}
-            <div className="flex flex-col items-start justify-center rounded-xl border border-sky-100 bg-sky-50 p-6 sm:p-8">
-              <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.16em] text-brand-sky">Connect the dots</p>
-              <h3 className="max-w-xs text-2xl font-semibold leading-snug tracking-tight text-slate-950">
+            <div className="flex flex-col items-start justify-center rounded-2xl bg-linear-to-br from-sky-950 via-slate-900 to-slate-950 p-6 shadow-lg shadow-slate-950/20 sm:p-8">
+              <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.16em] text-sky-300">Connect the dots</p>
+              <h3 className="max-w-xs text-2xl font-semibold leading-snug tracking-tight text-white">
                 A broader view.<br />Better decisions.
               </h3>
-              <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-600">
+              <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-400">
                 The best ideas cross disciplines. Discover the latest thinking from across the journal.
               </p>
               <Link
                 href="/blog"
-                className="mt-6 inline-flex items-center gap-2 bg-brand-sky px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky focus-visible:ring-offset-2"
+                className="mt-6 inline-flex items-center gap-2 rounded-xl bg-brand-sky px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
               >
                 View all articles
                 <ArrowRight className="size-4" aria-hidden="true" />

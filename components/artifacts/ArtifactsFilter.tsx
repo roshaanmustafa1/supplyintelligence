@@ -51,6 +51,13 @@ const FORMAT_OPTIONS = [
   { label: 'PDF (.pdf)', value: 'pdf', icon: FileType },
 ]
 
+const FORMAT_ICON_TINT: Record<string, string> = {
+  ALL: 'text-slate-400',
+  xlsx: 'text-emerald-400',
+  docx: 'text-sky-400',
+  pdf: 'text-rose-400',
+}
+
 export function ArtifactsFilter({
   initialResources,
   categories,
@@ -142,17 +149,18 @@ export function ArtifactsFilter({
   return (
     <div className="space-y-8">
       {/* Search and Filters Header */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-xs space-y-5">
+      <div className="space-y-5 rounded-2xl border border-slate-800 bg-linear-to-b from-slate-900 to-slate-950 p-5 shadow-lg shadow-slate-950/20 sm:p-6">
         {/* Top Row: Search Input + Category Dropdown */}
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-          <form onSubmit={handleSearchSubmit} className="relative flex-1 max-w-2xl">
-            <Search className="absolute left-3.5 top-3 size-4.5 text-slate-400" />
+          <form onSubmit={handleSearchSubmit} role="search" className="relative max-w-2xl flex-1">
+            <Search className="pointer-events-none absolute left-3.5 top-3 size-4.5 text-slate-500" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search templates by title, description, or keyword..."
-              className="w-full rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 pl-10.5 pr-10 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-sky focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-sky"
+              aria-label="Search resources"
+              className="w-full rounded-xl border border-white/10 bg-white/5 py-2.5 pl-10.5 pr-10 text-sm text-white placeholder:text-slate-500 transition-colors hover:border-white/20 focus:border-sky-400 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-sky-400"
             />
             {searchQuery && (
               <button
@@ -162,7 +170,7 @@ export function ArtifactsFilter({
                   updateUrlParams({ q: '' })
                 }}
                 aria-label="Clear search"
-                className="absolute right-3 top-3 text-slate-400 hover:text-slate-600"
+                className="absolute right-3 top-3 text-slate-500 transition-colors hover:text-white"
               >
                 <X className="size-4" />
               </button>
@@ -171,12 +179,12 @@ export function ArtifactsFilter({
 
           {/* Category Dropdown */}
           <div className="flex items-center gap-2">
-            <Filter className="size-4 text-slate-500 shrink-0" />
+            <Filter className="size-4 shrink-0 text-slate-500" />
             <select
               value={selectedCategory}
               onChange={(e) => handleCategoryChange(e.target.value)}
               aria-label="Filter by category"
-              className="rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm font-medium text-slate-700 hover:border-slate-300 focus:border-brand-sky focus:outline-none focus:ring-1 focus:ring-brand-sky"
+              className="rounded-xl border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm font-medium text-slate-200 transition-colors hover:border-white/20 focus:border-sky-400 focus:outline-none focus:ring-1 focus:ring-sky-400 [&>option]:bg-slate-900 [&>option]:text-slate-100"
             >
               <option value="ALL">All Categories ({categories.length})</option>
               {categories.map((cat) => (
@@ -188,10 +196,14 @@ export function ArtifactsFilter({
           </div>
         </div>
 
-        {/* Second Row: Type Tabs & Format Chips */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-slate-100 pt-4">
-          {/* Resource Type Pills */}
-          <div className="flex flex-wrap items-center gap-1.5" role="tablist" aria-label="Resource Types">
+        {/* Second Row: Type segmented control & Format chips */}
+        <div className="flex flex-col justify-between gap-4 border-t border-white/10 pt-4 sm:flex-row sm:items-center">
+          {/* Resource Type segmented control */}
+          <div
+            className="inline-flex flex-wrap items-center gap-1 self-start rounded-xl border border-white/10 bg-white/5 p-1"
+            role="tablist"
+            aria-label="Resource Types"
+          >
             {TYPE_TABS.map((tab) => (
               <button
                 key={tab.value}
@@ -200,10 +212,10 @@ export function ArtifactsFilter({
                 aria-selected={selectedType === tab.value}
                 onClick={() => handleTypeSelect(tab.value)}
                 className={cn(
-                  'rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky',
+                  'rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400',
                   selectedType === tab.value
-                    ? 'bg-slate-900 text-white shadow-xs'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900'
+                    ? 'bg-brand-sky text-white shadow-xs'
+                    : 'text-slate-400 hover:bg-white/10 hover:text-white'
                 )}
               >
                 {tab.label}
@@ -211,9 +223,9 @@ export function ArtifactsFilter({
             ))}
           </div>
 
-          {/* File Format Buttons */}
-          <div className="flex flex-wrap items-center gap-1.5" aria-label="File Formats">
-            <span className="text-xs font-medium text-slate-400 mr-1 hidden sm:inline">Format:</span>
+          {/* File Format chips */}
+          <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="File Formats">
+            <span className="mr-1 hidden text-xs font-medium text-slate-500 sm:inline">Format:</span>
             {FORMAT_OPTIONS.map((fmt) => {
               const Icon = fmt.icon
               const isSelected = selectedFormat === fmt.value
@@ -221,15 +233,16 @@ export function ArtifactsFilter({
                 <button
                   key={fmt.value}
                   type="button"
+                  aria-pressed={isSelected}
                   onClick={() => handleFormatSelect(fmt.value)}
                   className={cn(
-                    'inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky',
+                    'inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400',
                     isSelected
-                      ? 'border-brand-sky bg-brand-sky/10 text-brand-sky font-semibold'
-                      : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:text-slate-900'
+                      ? 'border-sky-400/60 bg-sky-400/15 font-semibold text-sky-300'
+                      : 'border-white/10 bg-white/5 text-slate-300 hover:border-white/25 hover:bg-white/10 hover:text-white'
                   )}
                 >
-                  <Icon className="size-3.5" />
+                  <Icon className={cn('size-3.5', !isSelected && FORMAT_ICON_TINT[fmt.value])} />
                   <span>{fmt.label}</span>
                 </button>
               )
@@ -239,7 +252,7 @@ export function ArtifactsFilter({
               <button
                 type="button"
                 onClick={handleResetFilters}
-                className="inline-flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-rose-600 transition-colors ml-2"
+                className="ml-2 inline-flex items-center gap-1 text-xs font-semibold text-slate-400 transition-colors hover:text-rose-400"
               >
                 <RotateCcw className="size-3" />
                 <span>Reset</span>

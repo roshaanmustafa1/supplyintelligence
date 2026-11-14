@@ -189,36 +189,36 @@ export function BlogFilter({
         <>
           {/* Featured Lead Editorial Story (Shown on All Articles view) */}
           {leadArticle && (
-            <article className="group border border-slate-200 bg-editorial-surface grid grid-cols-1 lg:grid-cols-[1.15fr_.85fr] overflow-hidden transition-colors duration-200 hover:border-slate-400">
+            <article className="group grid grid-cols-1 overflow-hidden rounded-2xl bg-linear-to-br from-slate-900 to-slate-950 shadow-lg shadow-slate-950/20 transition-all duration-300 hover:shadow-2xl hover:shadow-sky-950/40 lg:grid-cols-[1.15fr_.85fr]">
               <div className="p-7 sm:p-10 lg:p-12 flex flex-col justify-between">
                 <div>
                   <div className="flex flex-wrap items-center gap-2.5 mb-3.5">
-                    <span className="text-[10px] font-bold uppercase tracking-[0.16em] bg-editorial-sky-surface text-brand-sky px-2.5 py-1 border border-editorial-sky-border">
+                    <span className="rounded-full border border-sky-400/30 bg-sky-400/15 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-sky-300">
                       Featured Lead Story
                     </span>
                     <button
                       type="button"
                       onClick={() => handleTopicClick(leadArticle.categorySlug)}
-                      className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand-sky hover:text-slate-950 transition-colors"
+                      className="text-[11px] font-bold uppercase tracking-[0.14em] text-sky-300 transition-colors hover:text-white"
                     >
                       {leadArticle.category}
                     </button>
                   </div>
 
-                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold leading-tight tracking-tight text-slate-950 group-hover:text-brand-sky transition-colors mb-4">
+                  <h2 className="mb-4 text-2xl font-semibold leading-tight tracking-tight text-white transition-colors group-hover:text-sky-300 sm:text-3xl lg:text-4xl">
                     <Link href={`/blog/${leadArticle.slug}`}>
                       {leadArticle.title}
                     </Link>
                   </h2>
 
-                  <p className="text-sm sm:text-base leading-relaxed text-slate-600 line-clamp-3 mb-6 max-w-xl">
+                  <p className="mb-6 max-w-xl text-sm leading-relaxed text-slate-400 line-clamp-3 sm:text-base">
                     {leadArticle.excerpt}
                   </p>
                 </div>
 
-                <div className="pt-4 border-t border-slate-200 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-500">
+                <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-4 text-xs text-slate-500">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-slate-900">{leadArticle.author.name}</span>
+                    <span className="font-semibold text-slate-200">{leadArticle.author.name}</span>
                     <span className="text-slate-300">&bull;</span>
                     <span>{leadArticle.date}</span>
                     <span className="text-slate-300">&bull;</span>
@@ -227,7 +227,7 @@ export function BlogFilter({
 
                   <Link
                     href={`/blog/${leadArticle.slug}`}
-                    className="group/link inline-flex items-center gap-2 bg-brand-sky px-5 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-slate-950"
+                    className="group/link inline-flex items-center gap-2 rounded-xl bg-brand-sky px-5 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-white hover:text-slate-950"
                   >
                     <span>Read Lead Story</span>
                     <ArrowRight className="size-3.5 transition-transform group-hover/link:translate-x-1" />
@@ -237,7 +237,7 @@ export function BlogFilter({
 
               <Link
                 href={`/blog/${leadArticle.slug}`}
-                className="relative min-h-[300px] sm:min-h-[380px] lg:min-h-full border-t lg:border-t-0 lg:border-l border-slate-200 overflow-hidden bg-slate-100 block"
+                className="relative block min-h-[300px] overflow-hidden border-t border-white/10 bg-slate-800 sm:min-h-[380px] lg:min-h-full lg:border-l lg:border-t-0"
               >
                 <Image
                   src={leadArticle.image}
@@ -245,7 +245,7 @@ export function BlogFilter({
                   fill
                   priority
                   sizes="(max-width: 1024px) 100vw, 45vw"
-                  className=" transition-transform duration-500 ease-out group-hover:scale-103"
+                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-103"
                 />
               </Link>
             </article>

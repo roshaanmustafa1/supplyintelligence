@@ -23,6 +23,7 @@ import {
   ChevronRight,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { ResourceThumbnail } from '@/components/artifacts/ResourceThumbnail'
 import {
   DataTable,
   type DataTableBulkAction,
@@ -620,14 +621,29 @@ export function ArtifactsManager({
           void formatInfo; void categoryName; void isOwner; void primaryFile
           return (
             <>
-              <div className="flex flex-col">
-                          <span className="font-semibold text-dashboard-foreground line-clamp-1" title={item.title}>
-                            {item.title}
-                          </span>
-                          <span className="text-xs text-dashboard-muted-foreground font-mono">
-                            /artifacts/{item.slug}
-                          </span>
-                        </div>
+              <div className="flex items-start gap-3">
+                <ResourceThumbnail
+                  resourceId={item.id}
+                  title={item.title}
+                  file={primaryFile}
+                  onOpen={
+                    primaryFile
+                      ? () => {
+                          setPreviewingResource(item)
+                          setPreviewFileId(primaryFile.id)
+                        }
+                      : undefined
+                  }
+                />
+                <div className="flex min-w-0 flex-col">
+                  <span className="font-semibold text-dashboard-foreground line-clamp-2" title={item.title}>
+                    {item.title}
+                  </span>
+                  <span className="text-xs text-dashboard-muted-foreground font-mono truncate">
+                    /artifacts/{item.slug}
+                  </span>
+                </div>
+              </div>
             </>
           )
         },
