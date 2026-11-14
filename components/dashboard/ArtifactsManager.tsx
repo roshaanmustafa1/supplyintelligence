@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useRef, useState, useTransition } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
@@ -23,6 +23,12 @@ import {
   ChevronRight,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import {
+  DataTable,
+  type DataTableBulkAction,
+  type DataTableColumn,
+  type DataTableFilter,
+} from '@/components/dashboard/DataTable'
 import { FilePreviewPane } from '@/components/artifacts/FilePreviewPane'
 import { formatBytes, formatResourceDate, getFileFormatInfo } from '@/lib/resource-utils'
 import type { ResourceType, ResourceStatus } from '@/lib/services/resource.service'
@@ -188,6 +194,11 @@ export function ArtifactsManager({
 
   // Upload file state
   const [selectedUploadFile, setSelectedUploadFile] = useState<File | null>(null)
+  const createFileInputRef = useRef<HTMLInputElement>(null)
+  const editFileInputRef = useRef<HTMLInputElement>(null)
+  const [createFile, setCreateFile] = useState<File | null>(null)
+  const [editFile, setEditFile] = useState<File | null>(null)
+  const [formFileError, setFormFileError] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
 
@@ -215,6 +226,38 @@ export function ArtifactsManager({
 
   // Filtered view from server records
   const filteredResources = resources
+
+  const ALLOWED_UPLOAD = /\.(xlsx|docx|pdf)$/i
+  const MAX_UPLOAD_BYTES = 25 * 1024 * 1024
+
+  /** Client-side pre-check; the server still validates type, signature and size. */
+  const validateUploadFile = (file: File) => {
+    if (!ALLOWED_UPLOAD.test(file.name)) return 'Only .xlsx, .docx or .pdf files are allowed.'
+    if (file.size > MAX_UPLOAD_BYTES) return 'File is too large (max 25MB).'
+    return null
+  }
+
+  const uploadPrimaryFile = async (resourceId: string, file: File) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('isPrimary', 'true')
+    const res = await fetch(`/api/admin/resources/${resourceId}/files`, { method: 'POST', body: formData })
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}))
+      throw new Error(err.error || 'File upload failed. Ensure format is .xlsx, .docx, or .pdf (max 25MB).')
+    }
+    return res.json()
+  }
+
+  const refreshResource = async (resourceId: string) => {
+    const res = await fetch(`/api/admin/resources/${resourceId}`)
+    if (res.ok) {
+      const data = await res.json()
+      setResources((prev) => prev.map((r) => (r.id === data.id ? data : r)))
+      return data as AdminResourceItem
+    }
+    return null
+  }
 
   // Create submission
   const handleCreateSubmit = async (e: React.FormEvent) => {
@@ -252,10 +295,31 @@ export function ArtifactsManager({
       setCreateSlug('')
       setCreateDescription('')
       setCreateCategoryIds([])
-      setStatusMessage({ type: 'success', text: `Resource "${created.title}" created successfully as DRAFT.` })
+      const fileToUpload = createFile
+      setCreateFile(null)
+      setFormFileError(null)
 
-      // Open file upload prompt automatically
-      setUploadingForResource(created)
+      if (fileToUpload) {
+        try {
+          const uploaded = await uploadPrimaryFile(created.id, fileToUpload)
+          await refreshResource(created.id)
+          setStatusMessage({
+            type: 'success',
+            text: `Resource "${created.title}" created as DRAFT with file "${uploaded.originalFilename}" (${formatBytes(uploaded.fileSize)}) attached.`,
+          })
+        } catch (uploadErr: unknown) {
+          // The resource exists; let the user retry the upload from the upload dialog.
+          setStatusMessage({
+            type: 'error',
+            text: `Resource "${created.title}" was created, but the file upload failed: ${uploadErr instanceof Error ? uploadErr.message : 'Upload failed'}`,
+          })
+          setUploadingForResource(created)
+        }
+      } else {
+        setStatusMessage({ type: 'success', text: `Resource "${created.title}" created successfully as DRAFT.` })
+        // No file chosen: open the upload prompt so one can still be attached
+        setUploadingForResource(created)
+      }
       startTransition(() => {
         router.refresh()
       })
@@ -277,6 +341,8 @@ export function ArtifactsManager({
     setEditSeoTitle(item.seoTitle || '')
     setEditSeoDescription(item.seoDescription || '')
     setEditIsFeatured(Boolean(item.isFeatured))
+    setEditFile(null)
+    setFormFileError(null)
   }
 
   // Edit submission
@@ -311,7 +377,27 @@ export function ArtifactsManager({
       const updated = await res.json()
       setResources((prev) => prev.map((r) => (r.id === updated.id ? updated : r)))
       setEditingResource(null)
-      setStatusMessage({ type: 'success', text: `Resource "${updated.title}" updated successfully.` })
+
+      const fileToUpload = editFile
+      setEditFile(null)
+      setFormFileError(null)
+      if (fileToUpload) {
+        try {
+          const uploaded = await uploadPrimaryFile(updated.id, fileToUpload)
+          await refreshResource(updated.id)
+          setStatusMessage({
+            type: 'success',
+            text: `Resource "${updated.title}" updated and file "${uploaded.originalFilename}" (${formatBytes(uploaded.fileSize)}) attached.`,
+          })
+        } catch (uploadErr: unknown) {
+          setStatusMessage({
+            type: 'error',
+            text: `Resource "${updated.title}" was updated, but the file upload failed: ${uploadErr instanceof Error ? uploadErr.message : 'Upload failed'}`,
+          })
+        }
+      } else {
+        setStatusMessage({ type: 'success', text: `Resource "${updated.title}" updated successfully.` })
+      }
       startTransition(() => {
         router.refresh()
       })
@@ -499,140 +585,42 @@ export function ArtifactsManager({
     }
   }
 
-  return (
-    <div className="space-y-6 pb-16">
-      {/* Top Header Strip */}
-      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
-          <h1 className="font-heading text-2xl font-bold tracking-tight text-dashboard-foreground">
-            Artifacts & Templates Library
-          </h1>
-          <p className="text-sm text-dashboard-muted-foreground">
-            Upload, version, inspect, and publish practitioner spreadsheets, frameworks, and decision tools.
-            {total > 0 && ` (${total} total records${totalPages > 1 ? ` · Page ${currentPage} of ${totalPages}` : ''})`}
-          </p>
-        </div>
+  async function bulkArchive(rows: AdminResourceItem[]) {
+    const results = await Promise.allSettled(
+      rows.map((r) =>
+        fetch(`/api/admin/resources/${r.id}`, { method: 'DELETE' }).then((res) => {
+          if (!res.ok) throw new Error('failed')
+        })
+      )
+    )
+    const okIds = new Set(rows.filter((_, i) => results[i].status === 'fulfilled').map((r) => r.id))
+    setResources((prev) => prev.map((r) => (okIds.has(r.id) ? { ...r, status: 'ARCHIVED' } : r)))
+    setStatusMessage(
+      okIds.size === rows.length
+        ? { type: 'success', text: `${okIds.size} resource(s) archived.` }
+        : { type: 'error', text: `${okIds.size} of ${rows.length} resources archived; the rest failed.` }
+    )
+    startTransition(() => {
+      router.refresh()
+    })
+  }
 
-        <div className="flex items-center gap-2.5">
-          {isPending && (
-            <div className="flex items-center gap-1.5 text-xs text-brand-blue mr-2">
-              <Loader2 className="size-3.5 animate-spin" />
-              <span>Syncing...</span>
-            </div>
-          )}
-          <button
-            type="button"
-            onClick={() => setIsCreateOpen(true)}
-            className="flex items-center gap-1.5 rounded-xl bg-brand-blue px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-blue/90"
-          >
-            <Plus className="size-4" />
-            <span>Create Resource</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Global Status Message Toast */}
-      {statusMessage && (
-        <div
-          className={`flex items-center justify-between rounded-xl p-3.5 text-sm shadow-xs ${
-            statusMessage.type === 'success'
-              ? 'border border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
-              : 'border border-rose-500/30 bg-rose-500/10 text-rose-700 dark:text-rose-400'
-          }`}
-        >
-          <div className="flex items-center gap-2">
-            {statusMessage.type === 'success' ? (
-              <CheckCircle2 className="size-4.5 shrink-0 text-emerald-600" />
-            ) : (
-              <AlertCircle className="size-4.5 shrink-0 text-rose-600" />
-            )}
-            <span>{statusMessage.text}</span>
-          </div>
-          <button
-            type="button"
-            onClick={() => setStatusMessage(null)}
-            className="text-slate-400 hover:text-slate-600"
-          >
-            <X className="size-4" />
-          </button>
-        </div>
-      )}
-
-      {/* Filter Tabs */}
-      <div className="flex overflow-x-auto border-b border-dashboard-border">
-        {statusTabs.map((tab) => (
-          <button
-            key={tab.value}
-            onClick={() => handleTabChange(tab.value)}
-            className={cn(
-              'px-4 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px whitespace-nowrap',
-              activeTab === tab.value
-                ? 'border-brand-blue text-brand-blue font-semibold'
-                : 'border-transparent text-dashboard-muted-foreground hover:text-dashboard-foreground'
-            )}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Filter and Search Bar */}
-      <form onSubmit={handleSearchSubmit} className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-2.5 size-4 text-dashboard-muted-foreground" />
-          <input
-            type="text"
-            placeholder="Search resources by title, slug, or keywords (press Enter)..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-xl border border-dashboard-input bg-dashboard-card py-2 pl-9 pr-3 text-sm text-dashboard-foreground placeholder:text-dashboard-muted-foreground focus:border-brand-blue focus:outline-none focus:ring-1 focus:ring-brand-blue"
-          />
-        </div>
-
-        <div className="flex items-center gap-2">
-          <select
-            value={selectedCategory}
-            onChange={(e) => handleCategoryChange(e.target.value)}
-            className="rounded-xl border border-dashboard-input bg-dashboard-card px-3 py-2 text-sm text-dashboard-foreground focus:border-brand-blue focus:outline-none"
-          >
-            <option value="">All Categories</option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      </form>
-
-      {/* Management Table */}
-      <div className="overflow-hidden rounded-2xl border border-dashboard-border bg-dashboard-card shadow-xs">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-dashboard-foreground">
-            <thead className="border-b border-dashboard-border bg-dashboard-muted/20 text-xs font-semibold text-dashboard-muted-foreground uppercase tracking-wider">
-              <tr>
-                <th className="px-5 py-3.5">Resource</th>
-                <th className="px-4 py-3.5">Category</th>
-                <th className="px-4 py-3.5">Primary Asset</th>
-                <th className="px-4 py-3.5">Status</th>
-                <th className="px-4 py-3.5">Version</th>
-                <th className="px-4 py-3.5">Updated</th>
-                <th className="px-5 py-3.5 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-dashboard-border">
-              {filteredResources.length > 0 ? (
-                filteredResources.map((item) => {
-                  const primaryFile = item.files?.find((f) => f.isPrimary) || item.files?.[0]
-                  const formatInfo = getFileFormatInfo(primaryFile?.mimeType, primaryFile?.originalFilename)
-                  const categoryName = item.categories[0]?.category.name || 'Unassigned'
-                  const isOwner = canEditResource(item)
-
-                  return (
-                    <tr key={item.id} className="hover:bg-dashboard-accent/30 transition-colors">
-                      {/* Title & Slug */}
-                      <td className="px-5 py-4 max-w-xs">
-                        <div className="flex flex-col">
+  const tableColumns: DataTableColumn<AdminResourceItem>[] = [
+    {
+      id: 'title',
+      header: 'Resource',
+      alwaysVisible: true,
+      cellClassName: 'max-w-xs',
+      sortValue: (r) => r.title,
+      cell: (item: AdminResourceItem) => {
+          const primaryFile = item.files?.find((f) => f.isPrimary) || item.files?.[0]
+          const formatInfo = getFileFormatInfo(primaryFile?.mimeType, primaryFile?.originalFilename)
+          const categoryName = item.categories[0]?.category.name || 'Unassigned'
+          const isOwner = canEditResource(item)
+          void formatInfo; void categoryName; void isOwner; void primaryFile
+          return (
+            <>
+              <div className="flex flex-col">
                           <span className="font-semibold text-dashboard-foreground line-clamp-1" title={item.title}>
                             {item.title}
                           </span>
@@ -640,18 +628,51 @@ export function ArtifactsManager({
                             /artifacts/{item.slug}
                           </span>
                         </div>
-                      </td>
-
-                      {/* Category */}
-                      <td className="px-4 py-4 whitespace-nowrap">
-                        <span className="inline-flex rounded-md bg-dashboard-muted/40 px-2 py-0.5 text-xs text-dashboard-muted-foreground font-medium">
+            </>
+          )
+        },
+    },
+    {
+      id: 'type',
+      header: 'Type',
+      defaultHidden: true,
+      sortValue: (r) => r.resourceType,
+      cell: (r) => <span className="text-xs font-medium text-dashboard-muted-foreground">{r.resourceType}</span>,
+    },
+    {
+      id: 'category',
+      header: 'Category',
+      cellClassName: 'whitespace-nowrap',
+      sortValue: (r) => r.categories[0]?.category.name || 'Unassigned',
+      cell: (item: AdminResourceItem) => {
+          const primaryFile = item.files?.find((f) => f.isPrimary) || item.files?.[0]
+          const formatInfo = getFileFormatInfo(primaryFile?.mimeType, primaryFile?.originalFilename)
+          const categoryName = item.categories[0]?.category.name || 'Unassigned'
+          const isOwner = canEditResource(item)
+          void formatInfo; void categoryName; void isOwner; void primaryFile
+          return (
+            <>
+              <span className="inline-flex rounded-md bg-dashboard-muted/40 px-2 py-0.5 text-xs text-dashboard-muted-foreground font-medium">
                           {categoryName}
                         </span>
-                      </td>
-
-                      {/* Primary Asset */}
-                      <td className="px-4 py-4 whitespace-nowrap">
-                        {primaryFile ? (
+            </>
+          )
+        },
+    },
+    {
+      id: 'asset',
+      header: 'Primary Asset',
+      cellClassName: 'whitespace-nowrap',
+      sortValue: (r) => (r.files?.find((f) => f.isPrimary) || r.files?.[0])?.originalFilename,
+      cell: (item: AdminResourceItem) => {
+          const primaryFile = item.files?.find((f) => f.isPrimary) || item.files?.[0]
+          const formatInfo = getFileFormatInfo(primaryFile?.mimeType, primaryFile?.originalFilename)
+          const categoryName = item.categories[0]?.category.name || 'Unassigned'
+          const isOwner = canEditResource(item)
+          void formatInfo; void categoryName; void isOwner; void primaryFile
+          return (
+            <>
+              {primaryFile ? (
                           <div className="flex items-center gap-1.5 text-xs font-medium text-dashboard-foreground">
                             <span className={cn('inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-bold uppercase', formatInfo.colorBadgeClass)}>
                               {formatInfo.extension.replace('.', '')}
@@ -669,26 +690,93 @@ export function ArtifactsManager({
                             No file attached
                           </span>
                         )}
-                      </td>
-
-                      {/* Status */}
-                      <td className="px-4 py-4 whitespace-nowrap">
-                        {getStatusBadge(item.status)}
-                      </td>
-
-                      {/* Version */}
-                      <td className="px-4 py-4 whitespace-nowrap text-xs text-dashboard-muted-foreground font-mono">
-                        v{item.versions?.[0]?.version || '1.0.0'}
-                      </td>
-
-                      {/* Updated Date */}
-                      <td className="px-4 py-4 whitespace-nowrap text-xs text-dashboard-muted-foreground">
-                        {formatResourceDate(item.updatedAt)}
-                      </td>
-
-                      {/* Actions */}
-                      <td className="px-5 py-4 whitespace-nowrap text-right">
-                        <div className="flex items-center justify-end gap-1">
+            </>
+          )
+        },
+    },
+    {
+      id: 'status',
+      header: 'Status',
+      cellClassName: 'whitespace-nowrap',
+      sortValue: (r) => r.status,
+      cell: (item: AdminResourceItem) => {
+          const primaryFile = item.files?.find((f) => f.isPrimary) || item.files?.[0]
+          const formatInfo = getFileFormatInfo(primaryFile?.mimeType, primaryFile?.originalFilename)
+          const categoryName = item.categories[0]?.category.name || 'Unassigned'
+          const isOwner = canEditResource(item)
+          void formatInfo; void categoryName; void isOwner; void primaryFile
+          return (
+            <>
+              {getStatusBadge(item.status)}
+            </>
+          )
+        },
+    },
+    {
+      id: 'version',
+      header: 'Version',
+      cellClassName: 'whitespace-nowrap',
+      sortValue: (r) => r.versions?.[0]?.version || '1.0.0',
+      cell: (item: AdminResourceItem) => {
+          const primaryFile = item.files?.find((f) => f.isPrimary) || item.files?.[0]
+          const formatInfo = getFileFormatInfo(primaryFile?.mimeType, primaryFile?.originalFilename)
+          const categoryName = item.categories[0]?.category.name || 'Unassigned'
+          const isOwner = canEditResource(item)
+          void formatInfo; void categoryName; void isOwner; void primaryFile
+          return (
+            <>
+              v{item.versions?.[0]?.version || '1.0.0'}
+            </>
+          )
+        },
+    },
+    {
+      id: 'downloads',
+      header: 'Downloads',
+      defaultHidden: true,
+      sortValue: (r) => r.downloadCount,
+      cell: (r) => <span className="text-xs text-dashboard-muted-foreground">{r.downloadCount}</span>,
+    },
+    {
+      id: 'views',
+      header: 'Views',
+      defaultHidden: true,
+      sortValue: (r) => r.viewCount,
+      cell: (r) => <span className="text-xs text-dashboard-muted-foreground">{r.viewCount}</span>,
+    },
+    {
+      id: 'updated',
+      header: 'Updated',
+      cellClassName: 'whitespace-nowrap',
+      sortValue: (r) => new Date(r.updatedAt).getTime(),
+      cell: (item: AdminResourceItem) => {
+          const primaryFile = item.files?.find((f) => f.isPrimary) || item.files?.[0]
+          const formatInfo = getFileFormatInfo(primaryFile?.mimeType, primaryFile?.originalFilename)
+          const categoryName = item.categories[0]?.category.name || 'Unassigned'
+          const isOwner = canEditResource(item)
+          void formatInfo; void categoryName; void isOwner; void primaryFile
+          return (
+            <>
+              {formatResourceDate(item.updatedAt)}
+            </>
+          )
+        },
+    },
+    {
+      id: 'actions',
+      header: 'Actions',
+      align: 'right',
+      alwaysVisible: true,
+      cellClassName: 'whitespace-nowrap',
+      cell: (item: AdminResourceItem) => {
+          const primaryFile = item.files?.find((f) => f.isPrimary) || item.files?.[0]
+          const formatInfo = getFileFormatInfo(primaryFile?.mimeType, primaryFile?.originalFilename)
+          const categoryName = item.categories[0]?.category.name || 'Unassigned'
+          const isOwner = canEditResource(item)
+          void formatInfo; void categoryName; void isOwner; void primaryFile
+          return (
+            <>
+              <div className="flex items-center justify-end gap-1">
                           {/* Preview attached files (read-only) */}
                           {item.files && item.files.length > 0 && (
                             <button
@@ -839,21 +927,165 @@ export function ArtifactsManager({
                             </button>
                           )}
                         </div>
-                      </td>
-                    </tr>
-                  )
-                })
-              ) : (
-                <tr>
-                  <td colSpan={7} className="px-5 py-12 text-center text-sm text-dashboard-muted-foreground">
-                    No resources match your active filters. Click &ldquo;Create Resource&rdquo; to add one.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+            </>
+          )
+        },
+    },
+  ]
+
+  const tableFilters: DataTableFilter<AdminResourceItem>[] = [
+    {
+      id: 'type',
+      label: 'All Types',
+      options: [
+        { label: 'Template', value: 'TEMPLATE' },
+        { label: 'Artifact', value: 'ARTIFACT' },
+        { label: 'Interactive tool', value: 'INTERACTIVE_TOOL' },
+        { label: 'Calculator', value: 'CALCULATOR' },
+      ],
+      predicate: (r, v) => r.resourceType === v,
+    },
+    {
+      id: 'file',
+      label: 'Any File State',
+      options: [
+        { label: 'Has file attached', value: 'yes' },
+        { label: 'No file attached', value: 'no' },
+      ],
+      predicate: (r, v) => (v === 'yes' ? (r.files?.length ?? 0) > 0 : (r.files?.length ?? 0) === 0),
+    },
+  ]
+
+  const tableBulkActions: DataTableBulkAction<AdminResourceItem>[] = [
+    {
+      id: 'archive',
+      label: 'Archive',
+      icon: <Archive className="size-3.5" />,
+      destructive: true,
+      confirm: (rows) => `Archive ${rows.length} selected resource(s)? They will be removed from public listings.`,
+      onRun: bulkArchive,
+    },
+  ]
+
+  return (
+    <div className="space-y-6 pb-16">
+      {/* Top Header Strip */}
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div>
+          <h1 className="font-heading text-2xl font-bold tracking-tight text-dashboard-foreground">
+            Artifacts & Templates Library
+          </h1>
+          <p className="text-sm text-dashboard-muted-foreground">
+            Upload, version, inspect, and publish practitioner spreadsheets, frameworks, and decision tools.
+            {total > 0 && ` (${total} total records${totalPages > 1 ? ` · Page ${currentPage} of ${totalPages}` : ''})`}
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2.5">
+          {isPending && (
+            <div className="flex items-center gap-1.5 text-xs text-brand-blue mr-2">
+              <Loader2 className="size-3.5 animate-spin" />
+              <span>Syncing...</span>
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={() => { setCreateFile(null); setFormFileError(null); setIsCreateOpen(true) }}
+            className="flex items-center gap-1.5 rounded-xl bg-brand-blue px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-blue/90"
+          >
+            <Plus className="size-4" />
+            <span>Create Resource</span>
+          </button>
         </div>
       </div>
+
+      {/* Global Status Message Toast */}
+      {statusMessage && (
+        <div
+          className={`flex items-center justify-between rounded-xl p-3.5 text-sm shadow-xs ${
+            statusMessage.type === 'success'
+              ? 'border border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
+              : 'border border-rose-500/30 bg-rose-500/10 text-rose-700 dark:text-rose-400'
+          }`}
+        >
+          <div className="flex items-center gap-2">
+            {statusMessage.type === 'success' ? (
+              <CheckCircle2 className="size-4.5 shrink-0 text-emerald-600" />
+            ) : (
+              <AlertCircle className="size-4.5 shrink-0 text-rose-600" />
+            )}
+            <span>{statusMessage.text}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setStatusMessage(null)}
+            className="text-slate-400 hover:text-slate-600"
+          >
+            <X className="size-4" />
+          </button>
+        </div>
+      )}
+
+      {/* Filter Tabs */}
+      <div className="flex overflow-x-auto border-b border-dashboard-border">
+        {statusTabs.map((tab) => (
+          <button
+            key={tab.value}
+            onClick={() => handleTabChange(tab.value)}
+            className={cn(
+              'px-4 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px whitespace-nowrap',
+              activeTab === tab.value
+                ? 'border-brand-blue text-brand-blue font-semibold'
+                : 'border-transparent text-dashboard-muted-foreground hover:text-dashboard-foreground'
+            )}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Filter and Search Bar */}
+      <form onSubmit={handleSearchSubmit} className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative flex-1 max-w-md">
+          <Search className="absolute left-3 top-2.5 size-4 text-dashboard-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Search resources by title, slug, or keywords (press Enter)..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full rounded-xl border border-dashboard-input bg-dashboard-card py-2 pl-9 pr-3 text-sm text-dashboard-foreground placeholder:text-dashboard-muted-foreground focus:border-brand-blue focus:outline-none focus:ring-1 focus:ring-brand-blue"
+          />
+        </div>
+
+        <div className="flex items-center gap-2">
+          <select
+            value={selectedCategory}
+            onChange={(e) => handleCategoryChange(e.target.value)}
+            className="rounded-xl border border-dashboard-input bg-dashboard-card px-3 py-2 text-sm text-dashboard-foreground focus:border-brand-blue focus:outline-none"
+          >
+            <option value="">All Categories</option>
+            {categories.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      </form>
+
+      {/* Management Table */}
+      <DataTable
+        data={filteredResources}
+        columns={tableColumns}
+        getRowId={(r) => r.id}
+        filters={tableFilters}
+        bulkActions={tableBulkActions}
+        isRowSelectable={(r) => isSuperAdminOrAdmin && r.status !== 'ARCHIVED'}
+        defaultSort={{ columnId: 'updated', direction: 'desc' }}
+        hidePagination
+        noun="resources"
+        emptyMessage="No resources match your active filters. Click &ldquo;Create Resource&rdquo; to add one."
+      />
 
       {/* Pagination Controls */}
       {totalPages > 1 && (
@@ -919,7 +1151,7 @@ export function ArtifactsManager({
               </div>
               <button
                 type="button"
-                onClick={() => setIsCreateOpen(false)}
+                onClick={() => { setIsCreateOpen(false); setCreateFile(null); setFormFileError(null) }}
                 className="text-dashboard-muted-foreground hover:text-dashboard-foreground"
               >
                 <X className="size-5" />
@@ -1049,6 +1281,66 @@ export function ArtifactsManager({
                 </label>
               </div>
 
+              <div>
+                <span className="block text-xs font-semibold text-dashboard-foreground mb-1">
+                  Attached file{createFile ? '' : ' (optional)'}
+                </span>
+                
+                <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-dashboard-border bg-dashboard-muted/10 p-5 text-center">
+                  <button
+                    type="button"
+                    onClick={() => createFileInputRef.current?.click()}
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-brand-blue px-4 py-2 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-brand-blue/90"
+                  >
+                    <Upload className="size-3.5" />
+                    <span>{createFile ? 'Choose a different file' : 'Upload File'}</span>
+                  </button>
+                  <p className="mt-2 text-[11px] text-dashboard-muted-foreground">
+                    Excel (.xlsx), Word (.docx) or PDF (.pdf), up to 25MB
+                  </p>
+                  <input
+                    ref={createFileInputRef}
+                    type="file"
+                    aria-label="Choose file to upload"
+                    accept=".xlsx,.docx,.pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf"
+                    onChange={(e) => {
+                      const picked = e.target.files?.[0]
+                      e.target.value = ''
+                      if (!picked) return
+                      const problem = validateUploadFile(picked)
+                      setFormFileError(problem)
+                      setCreateFile(problem ? null : picked)
+                    }}
+                    className="hidden"
+                  />
+                </div>
+                {formFileError && (
+                  <p className="mt-1.5 flex items-center gap-1 text-[11px] font-medium text-destructive">
+                    <AlertCircle className="size-3.5" />
+                    {formFileError}
+                  </p>
+                )}
+                {createFile && (
+                  <div className="mt-2 flex items-center justify-between rounded-xl border border-dashboard-border bg-dashboard-card p-3">
+                    <div className="flex min-w-0 items-center gap-2.5">
+                      <HardDrive className="size-4 shrink-0 text-brand-blue" />
+                      <div className="truncate">
+                        <p className="truncate text-xs font-semibold text-dashboard-foreground">{createFile.name}</p>
+                        <p className="text-[11px] text-dashboard-muted-foreground">{formatBytes(createFile.size)}</p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setCreateFile(null)}
+                      aria-label="Remove selected file"
+                      className="text-dashboard-muted-foreground hover:text-destructive"
+                    >
+                      <X className="size-4" />
+                    </button>
+                  </div>
+                )}
+              </div>
+
               <div className="flex items-center justify-end gap-3 border-t border-dashboard-border pt-4">
                 <button
                   type="button"
@@ -1063,7 +1355,7 @@ export function ArtifactsManager({
                   className="inline-flex items-center gap-1.5 rounded-xl bg-brand-blue px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-brand-blue/90 disabled:opacity-50"
                 >
                   {isSubmittingCreate && <Loader2 className="size-3.5 animate-spin" />}
-                  <span>Create & Proceed to Upload</span>
+                  <span>{createFile ? 'Create & Upload File' : 'Create Resource'}</span>
                 </button>
               </div>
             </form>
@@ -1206,6 +1498,75 @@ export function ArtifactsManager({
                 <label htmlFor="editFeaturedToggle" className="text-xs font-medium text-dashboard-foreground cursor-pointer">
                   Featured resource
                 </label>
+              </div>
+
+              <div>
+                <span className="block text-xs font-semibold text-dashboard-foreground mb-1">
+                  Attached file{editFile ? '' : ' (optional)'}
+                </span>
+                {(() => {
+                  const current = editingResource.files?.find((f) => f.isPrimary) || editingResource.files?.[0]
+                  return current ? (
+                    <p className="mb-2 text-[11px] text-dashboard-muted-foreground">
+                      Current file: <span className="font-medium text-dashboard-foreground">{current.originalFilename}</span> ({formatBytes(current.fileSize)}). Choosing a new file replaces it as the primary asset.
+                    </p>
+                  ) : (
+                    <p className="mb-2 text-[11px] text-amber-600">No file attached yet.</p>
+                  )
+                })()}
+                <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-dashboard-border bg-dashboard-muted/10 p-5 text-center">
+                  <button
+                    type="button"
+                    onClick={() => editFileInputRef.current?.click()}
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-brand-blue px-4 py-2 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-brand-blue/90"
+                  >
+                    <Upload className="size-3.5" />
+                    <span>{editFile ? 'Choose a different file' : 'Upload File'}</span>
+                  </button>
+                  <p className="mt-2 text-[11px] text-dashboard-muted-foreground">
+                    Excel (.xlsx), Word (.docx) or PDF (.pdf), up to 25MB
+                  </p>
+                  <input
+                    ref={editFileInputRef}
+                    type="file"
+                    aria-label="Choose file to upload"
+                    accept=".xlsx,.docx,.pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf"
+                    onChange={(e) => {
+                      const picked = e.target.files?.[0]
+                      e.target.value = ''
+                      if (!picked) return
+                      const problem = validateUploadFile(picked)
+                      setFormFileError(problem)
+                      setEditFile(problem ? null : picked)
+                    }}
+                    className="hidden"
+                  />
+                </div>
+                {formFileError && (
+                  <p className="mt-1.5 flex items-center gap-1 text-[11px] font-medium text-destructive">
+                    <AlertCircle className="size-3.5" />
+                    {formFileError}
+                  </p>
+                )}
+                {editFile && (
+                  <div className="mt-2 flex items-center justify-between rounded-xl border border-dashboard-border bg-dashboard-card p-3">
+                    <div className="flex min-w-0 items-center gap-2.5">
+                      <HardDrive className="size-4 shrink-0 text-brand-blue" />
+                      <div className="truncate">
+                        <p className="truncate text-xs font-semibold text-dashboard-foreground">{editFile.name}</p>
+                        <p className="text-[11px] text-dashboard-muted-foreground">{formatBytes(editFile.size)}</p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setEditFile(null)}
+                      aria-label="Remove selected file"
+                      className="text-dashboard-muted-foreground hover:text-destructive"
+                    >
+                      <X className="size-4" />
+                    </button>
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center justify-end gap-3 border-t border-dashboard-border pt-4">

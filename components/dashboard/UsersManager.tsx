@@ -2,7 +2,13 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Users, Shield, Plus, Loader2, CheckCircle2, AlertCircle } from 'lucide-react'
+import { Users, Shield, Plus, Loader2, CheckCircle2, AlertCircle, UserCheck, UserX } from 'lucide-react'
+import {
+  DataTable,
+  type DataTableBulkAction,
+  type DataTableColumn,
+  type DataTableFilter,
+} from '@/components/dashboard/DataTable'
 
 interface UserItem {
   id: string
@@ -95,6 +101,172 @@ export function UsersManager({ initialUsers, currentUserId, currentRole }: Users
     if (!next && !window.confirm(`Disable ${u.email}? They will no longer be able to sign in.`)) return
     patchUser(u, { isActive: next }, `${u.email} ${next ? 'enabled' : 'disabled'}.`)
   }
+
+  async function bulkSetActive(rows: UserItem[], isActive: boolean) {
+    const results = await Promise.allSettled(
+      rows.map((u) =>
+        fetch(`/api/users/${u.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ isActive }),
+        }).then(async (r) => {
+          if (!r.ok) throw new Error('failed')
+          return r.json()
+        })
+      )
+    )
+    const updated = new Map<string, UserItem>()
+    results.forEach((r, i) => {
+      if (r.status === 'fulfilled') updated.set(rows[i].id, { ...r.value, createdAt: rows[i].createdAt })
+    })
+    setUsers((prev) => prev.map((u) => updated.get(u.id) ?? u))
+    setStatusMessage(
+      updated.size === rows.length
+        ? { type: 'success', text: `${updated.size} user(s) ${isActive ? 'enabled' : 'disabled'}.` }
+        : { type: 'error', text: `${updated.size} of ${rows.length} users updated; the rest failed.` }
+    )
+    router.refresh()
+  }
+
+  const columns: DataTableColumn<UserItem>[] = [
+    {
+      id: 'profile',
+      header: 'User Profile',
+      alwaysVisible: true,
+      sortValue: (u) => u.name || u.email,
+      cell: (u) => (
+        <div className="flex items-center gap-3">
+          <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand-blue/20 text-sm font-bold text-brand-blue">
+            {(u.name || u.email)[0].toUpperCase()}
+          </div>
+          <div>
+            <p className="font-semibold text-dashboard-foreground">
+              {u.name || 'Staff User'}
+              {u.id === currentUserId && (
+                <span className="ml-2 text-dashboard-caption font-normal text-dashboard-muted-foreground">(you)</span>
+              )}
+            </p>
+            <p className="text-dashboard-caption text-dashboard-muted-foreground">{u.email}</p>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: 'role',
+      header: 'Role',
+      sortValue: (u) => ROLES.indexOf(u.role),
+      cell: (u) =>
+        canManage(u) ? (
+          <select
+            value={u.role}
+            disabled={busyId === u.id}
+            onChange={(e) => patchUser(u, { role: e.target.value }, `${u.email} is now ${e.target.value}.`)}
+            aria-label={`Role for ${u.email}`}
+            className="rounded-lg border border-dashboard-input bg-dashboard-background px-2 py-1 text-sm font-semibold text-brand-blue focus:border-brand-blue focus:outline-none"
+          >
+            {assignableRoles.map((r) => (
+              <option key={r} value={r}>
+                {r}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <span className="inline-flex items-center gap-1 rounded-md bg-brand-blue/10 px-2 py-0.5 text-sm font-semibold text-brand-blue">
+            <Shield className="size-3" />
+            {u.role}
+          </span>
+        ),
+    },
+    {
+      id: 'status',
+      header: 'Status',
+      sortValue: (u) => (u.isActive ? 'Active' : 'Disabled'),
+      cell: (u) => (
+        <span
+          className={`inline-flex items-center gap-1 text-sm font-medium ${
+            u.isActive ? 'text-emerald-600 dark:text-emerald-400' : 'text-destructive'
+          }`}
+        >
+          <span className={`size-1.5 rounded-full ${u.isActive ? 'bg-emerald-500' : 'bg-destructive'}`}></span>
+          {u.isActive ? 'Active' : 'Disabled'}
+        </span>
+      ),
+    },
+    {
+      id: 'articles',
+      header: 'Articles Authored',
+      sortValue: (u) => u._count.articles,
+      cell: (u) => <span className="font-semibold text-dashboard-muted-foreground">{u._count.articles}</span>,
+    },
+    {
+      id: 'joined',
+      header: 'Joined Date',
+      sortValue: (u) => new Date(u.createdAt).getTime(),
+      cell: (u) => (
+        <span className="text-dashboard-muted-foreground">
+          {new Date(u.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+        </span>
+      ),
+    },
+    {
+      id: 'actions',
+      header: 'Actions',
+      align: 'right',
+      alwaysVisible: true,
+      cell: (u) =>
+        canManage(u) ? (
+          <button
+            type="button"
+            disabled={busyId === u.id}
+            onClick={() => toggleActive(u)}
+            className={`rounded-lg border px-3 py-1 text-dashboard-caption font-semibold disabled:opacity-50 ${
+              u.isActive
+                ? 'border-destructive/30 text-destructive hover:bg-destructive/10'
+                : 'border-emerald-500/30 text-emerald-600 hover:bg-emerald-500/10 dark:text-emerald-400'
+            }`}
+          >
+            {u.isActive ? 'Disable' : 'Enable'}
+          </button>
+        ) : (
+          <span className="text-dashboard-caption text-dashboard-muted-foreground">—</span>
+        ),
+    },
+  ]
+
+  const filters: DataTableFilter<UserItem>[] = [
+    {
+      id: 'role',
+      label: 'All Roles',
+      options: ROLES.map((r) => ({ label: r, value: r })),
+      predicate: (u, value) => u.role === value,
+    },
+    {
+      id: 'status',
+      label: 'Any Status',
+      options: [
+        { label: 'Active', value: 'active' },
+        { label: 'Disabled', value: 'disabled' },
+      ],
+      predicate: (u, value) => (value === 'active' ? u.isActive : !u.isActive),
+    },
+  ]
+
+  const bulkActions: DataTableBulkAction<UserItem>[] = [
+    {
+      id: 'enable',
+      label: 'Enable',
+      icon: <UserCheck className="size-3.5" />,
+      onRun: (rows) => bulkSetActive(rows, true),
+    },
+    {
+      id: 'disable',
+      label: 'Disable',
+      icon: <UserX className="size-3.5" />,
+      destructive: true,
+      confirm: (rows) => `Disable ${rows.length} selected user(s)? They will no longer be able to sign in.`,
+      onRun: (rows) => bulkSetActive(rows, false),
+    },
+  ]
 
   return (
     <div className="space-y-6 pb-16">
@@ -194,103 +366,19 @@ export function UsersManager({ initialUsers, currentUserId, currentRole }: Users
         </form>
       )}
 
-      <div className="overflow-hidden rounded-2xl border border-dashboard-border bg-dashboard-card shadow-sm">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead>
-              <tr className="border-b border-dashboard-border bg-dashboard-muted/40 text-dashboard-muted-foreground">
-                <th className="px-5 py-3.5 font-medium">User Profile</th>
-                <th className="px-4 py-3.5 font-medium">Role</th>
-                <th className="px-4 py-3.5 font-medium">Status</th>
-                <th className="px-4 py-3.5 font-medium">Articles Authored</th>
-                <th className="px-4 py-3.5 font-medium">Joined Date</th>
-                <th className="px-5 py-3.5 text-right font-medium">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-dashboard-border">
-              {users.map((u) => (
-                <tr key={u.id} className="hover:bg-dashboard-accent/40">
-                  <td className="px-5 py-3.5">
-                    <div className="flex items-center gap-3">
-                      <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand-blue/20 text-sm font-bold text-brand-blue">
-                        {(u.name || u.email)[0].toUpperCase()}
-                      </div>
-                      <div>
-                        <p className="font-semibold text-dashboard-foreground">
-                          {u.name || 'Staff User'}
-                          {u.id === currentUserId && (
-                            <span className="ml-2 text-dashboard-caption font-normal text-dashboard-muted-foreground">(you)</span>
-                          )}
-                        </p>
-                        <p className="text-dashboard-caption text-dashboard-muted-foreground">{u.email}</p>
-                      </div>
-                    </div>
-                  </td>
-
-                  <td className="px-4 py-3.5">
-                    {canManage(u) ? (
-                      <select
-                        value={u.role}
-                        disabled={busyId === u.id}
-                        onChange={(e) => patchUser(u, { role: e.target.value }, `${u.email} is now ${e.target.value}.`)}
-                        aria-label={`Role for ${u.email}`}
-                        className="rounded-lg border border-dashboard-input bg-dashboard-background px-2 py-1 text-sm font-semibold text-brand-blue focus:border-brand-blue focus:outline-none"
-                      >
-                        {assignableRoles.map((r) => (
-                          <option key={r} value={r}>
-                            {r}
-                          </option>
-                        ))}
-                      </select>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 rounded-md bg-brand-blue/10 px-2 py-0.5 text-sm font-semibold text-brand-blue">
-                        <Shield className="size-3" />
-                        {u.role}
-                      </span>
-                    )}
-                  </td>
-
-                  <td className="px-4 py-3.5">
-                    <span
-                      className={`inline-flex items-center gap-1 text-sm font-medium ${
-                        u.isActive ? 'text-emerald-600 dark:text-emerald-400' : 'text-destructive'
-                      }`}
-                    >
-                      <span className={`size-1.5 rounded-full ${u.isActive ? 'bg-emerald-500' : 'bg-destructive'}`}></span>
-                      {u.isActive ? 'Active' : 'Disabled'}
-                    </span>
-                  </td>
-
-                  <td className="px-4 py-3.5 font-semibold text-dashboard-muted-foreground">{u._count.articles}</td>
-
-                  <td className="px-4 py-3.5 text-dashboard-muted-foreground">
-                    {new Date(u.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                  </td>
-
-                  <td className="px-5 py-3.5 text-right">
-                    {canManage(u) ? (
-                      <button
-                        type="button"
-                        disabled={busyId === u.id}
-                        onClick={() => toggleActive(u)}
-                        className={`rounded-lg border px-3 py-1 text-dashboard-caption font-semibold disabled:opacity-50 ${
-                          u.isActive
-                            ? 'border-destructive/30 text-destructive hover:bg-destructive/10'
-                            : 'border-emerald-500/30 text-emerald-600 hover:bg-emerald-500/10 dark:text-emerald-400'
-                        }`}
-                      >
-                        {u.isActive ? 'Disable' : 'Enable'}
-                      </button>
-                    ) : (
-                      <span className="text-dashboard-caption text-dashboard-muted-foreground">—</span>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <DataTable
+        data={users}
+        columns={columns}
+        getRowId={(u) => u.id}
+        searchText={(u) => `${u.name ?? ''} ${u.email}`}
+        searchPlaceholder="Search users by name or email..."
+        filters={filters}
+        bulkActions={bulkActions}
+        isRowSelectable={canManage}
+        defaultSort={{ columnId: 'joined', direction: 'desc' }}
+        noun="users"
+        emptyMessage="No users match your filters."
+      />
     </div>
   )
 }

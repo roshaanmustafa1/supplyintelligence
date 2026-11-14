@@ -22,3 +22,23 @@
     @apply font-heading;
   }
 }
+
+/*
+ * Dropdowns: replace the browser arrow (which sits flush against the right edge)
+ * with an inset chevron and reserve room for it. Unlayered on purpose so it wins over
+ * per-component padding utilities such as px-3. Multi-selects keep their native look.
+ */
+select:not([multiple]) {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem 1rem;
+  padding-right: 2.5rem;
+  text-overflow: ellipsis;
+}
+
+select:not([multiple]):disabled {
+  opacity: 0.6;
+}

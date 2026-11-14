@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/db'
-import { SearchCode, CheckCircle2, AlertCircle, ArrowUpRight, Globe, ShieldCheck } from 'lucide-react'
-import Link from 'next/link'
+import { SearchCode, ArrowUpRight, Globe, ShieldCheck } from 'lucide-react'
+import { SeoAuditTable } from '@/components/dashboard/SeoAuditTable'
 
 export const dynamic = 'force-dynamic'
 
@@ -74,57 +74,11 @@ export default async function SEOPage() {
       </div>
 
       {/* Audit Checklist Table */}
-      <div className="rounded-2xl border border-dashboard-border bg-dashboard-card p-6 shadow-sm space-y-4">
-        <h3 className="font-heading text-dashboard-body font-semibold text-dashboard-foreground border-b border-dashboard-border pb-3">
+      <div className="space-y-3">
+        <h3 className="font-heading text-dashboard-body font-semibold text-dashboard-foreground">
           Published Articles Audit
         </h3>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead>
-              <tr className="border-b border-dashboard-border text-dashboard-muted-foreground">
-                <th className="py-2.5 font-medium">Article</th>
-                <th className="py-2.5 font-medium">Primary Keyword</th>
-                <th className="py-2.5 font-medium">Meta Description</th>
-                <th className="py-2.5 font-medium">SERP Status</th>
-                <th className="py-2.5 text-right font-medium">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-dashboard-border">
-              {articles.map((art) => (
-                <tr key={art.id} className="hover:bg-dashboard-accent/40">
-                  <td className="py-3 pr-4 font-semibold text-dashboard-foreground max-w-xs truncate">
-                    {art.title}
-                  </td>
-                  <td className="py-3 pr-4 text-dashboard-muted-foreground">
-                    {art.primaryKeyword || (
-                      <span className="text-amber-500 italic">None set</span>
-                    )}
-                  </td>
-                  <td className="py-3 pr-4 text-dashboard-muted-foreground max-w-xs truncate">
-                    {art.seoDescription || (
-                      <span className="text-rose-500 italic">Missing description</span>
-                    )}
-                  </td>
-                  <td className="py-3 pr-4">
-                    <span className="inline-flex items-center gap-1 rounded bg-emerald-500/10 px-2 py-0.5 text-dashboard-caption font-semibold text-emerald-600 dark:text-emerald-400">
-                      <CheckCircle2 className="size-3" />
-                      Indexed
-                    </span>
-                  </td>
-                  <td className="py-3 text-right">
-                    <Link
-                      href={`/dashboard/articles/${art.id}`}
-                      className="font-semibold text-brand-blue hover:underline"
-                    >
-                      Edit SEO &rarr;
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <SeoAuditTable articles={articles.map((a) => ({ id: a.id, title: a.title, primaryKeyword: a.primaryKeyword, seoDescription: a.seoDescription }))} />
       </div>
     </div>
   )
