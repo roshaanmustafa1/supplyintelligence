@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { createPortal } from "react-dom"
 import { X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { FilePreviewPane } from "@/components/artifacts/FilePreviewPane"
@@ -24,9 +25,20 @@ export function ArtifactPreviewModal({
     files.find((f) => f.isPrimary) ??
     files[0]
 
-  return (
+  // Lock page scroll while the dialog is open.
+  useEffect(() => {
+    const previous = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    return () => {
+      document.body.style.overflow = previous
+    }
+  }, [])
+
+  // Portal to <body>: the card that opens this dialog is transformed on hover and
+  // has overflow-hidden, which would otherwise trap and clip a fixed-position dialog.
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs"
       role="dialog"
       aria-modal="true"
       aria-label={`Preview of ${resource.title}`}
@@ -104,6 +116,7 @@ export function ArtifactPreviewModal({
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }

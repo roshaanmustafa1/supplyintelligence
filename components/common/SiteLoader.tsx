@@ -4,9 +4,11 @@ import { useEffect, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { MonogramLoader } from "@/components/common/MonogramLoader"
 
-const SPEED = 0.6
-// Base hold (5s) covers the monogram assembly plus the wordmark reveal, scaled to the speed.
-const MIN_VISIBLE_MS = 5000 / SPEED
+// The full sequence (monogram assembly + wordmark reveal) takes about 4.7s at speed 1.
+const SPEED = 1.4
+const MIN_VISIBLE_MS = 4700 / SPEED
+// Never hold the screen longer than this, even if the page is still loading.
+const MAX_VISIBLE_MS = 4000
 
 export function SiteLoader() {
   const [visible, setVisible] = useState(true)
@@ -21,6 +23,7 @@ export function SiteLoader() {
       minElapsed = true
       finish()
     }, MIN_VISIBLE_MS)
+    const maxTimer = window.setTimeout(() => setVisible(false), MAX_VISIBLE_MS)
     const onLoad = () => {
       loaded = true
       finish()
@@ -29,6 +32,7 @@ export function SiteLoader() {
     else finish()
     return () => {
       window.clearTimeout(timer)
+      window.clearTimeout(maxTimer)
       window.removeEventListener("load", onLoad)
     }
   }, [])
