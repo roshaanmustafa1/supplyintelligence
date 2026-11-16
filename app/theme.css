@@ -186,14 +186,15 @@
 }
 
 /* Monogram preloader: brand tokens and motion. --monogram-speed is a duration multiplier (1 = base timing). */
-@theme {
+@theme inline {
     --color-monogram-navy: #04254e;
     --color-monogram-blue: #145da0;
     --color-monogram-cyan: #249be0;
 
     --animate-monogram-assemble: monogram-assemble calc(1.25s * var(--monogram-speed, 1)) cubic-bezier(0.16, 1, 0.3, 1) calc(var(--monogram-delay, 0s) * var(--monogram-speed, 1)) both;
+    --animate-monogram-reveal: monogram-assemble calc(1.8s * var(--monogram-speed, 1)) cubic-bezier(0.22, 1, 0.36, 1) calc(var(--monogram-delay, 0s) * var(--monogram-speed, 1)) both;
     --animate-monogram-float: monogram-float calc(2.2s * var(--monogram-speed, 1)) ease-in-out calc(1.9s * var(--monogram-speed, 1)) infinite;
-    --animate-monogram-progress: monogram-progress calc(2.45s * var(--monogram-speed, 1)) cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    --animate-monogram-progress: monogram-progress calc(5s * var(--monogram-speed, 1)) cubic-bezier(0.25, 1, 0.5, 1) forwards;
 
     @keyframes monogram-assemble {
         from {

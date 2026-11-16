@@ -5,8 +5,8 @@ import { AnimatePresence, motion } from "framer-motion"
 import { MonogramLoader } from "@/components/common/MonogramLoader"
 
 const SPEED = 0.6
-// Base hold (2.6s) scaled to the playback speed so the full assembly always plays.
-const MIN_VISIBLE_MS = 2600 / SPEED
+// Base hold (5s) covers the monogram assembly plus the wordmark reveal, scaled to the speed.
+const MIN_VISIBLE_MS = 5000 / SPEED
 
 export function SiteLoader() {
   const [visible, setVisible] = useState(true)
