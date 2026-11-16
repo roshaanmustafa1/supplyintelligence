@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
+import { Reveal } from '@/components/common/Reveal'
 import { Container } from '@/components/common/Container'
 
 export function TopicsHero() {
@@ -7,7 +8,7 @@ export function TopicsHero() {
     <section className="border-b border-slate-800 bg-editorial-navy py-12 text-white sm:py-16 lg:py-20">
       <Container size="full">
         <div className="grid items-end gap-8 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
-          <div>
+          <Reveal amount={0.01}>
             <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.2em] text-sky-400">
               Explore the journal
             </p>
@@ -15,8 +16,8 @@ export function TopicsHero() {
               Find your next<br />
               <span className="text-sky-400">perspective.</span>
             </h1>
-          </div>
-          <div className="max-w-lg lg:pb-1">
+          </Reveal>
+          <Reveal amount={0.01} delay={0.2} className="max-w-lg lg:pb-1">
             <p className="text-base leading-relaxed text-slate-300 sm:text-lg">
               From sourcing decisions to global supply networks. Explore practical insights across the disciplines shaping your work.
             </p>
@@ -27,7 +28,7 @@ export function TopicsHero() {
               Browse all articles
               <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
             </Link>
-          </div>
+          </Reveal>
         </div>
       </Container>
     </section>

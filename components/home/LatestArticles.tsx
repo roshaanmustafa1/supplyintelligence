@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { type Article } from '@/data/articles'
 import { Container } from '@/components/common/Container'
+import { Stagger, StaggerItem } from '@/components/common/Reveal'
 import { ArticleCard } from '@/components/blog/ArticleCard'
 
 interface LatestArticlesProps {
@@ -28,15 +29,13 @@ export function LatestArticles({ articles }: LatestArticlesProps) {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Stagger className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {articles.map((article, index) => (
-            <ArticleCard
-              key={article.slug}
-              article={article}
-              priorityImage={index === 0}
-            />
+            <StaggerItem key={article.slug} className="grid">
+              <ArticleCard article={article} priorityImage={index === 0} />
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       </Container>
     </section>
   )

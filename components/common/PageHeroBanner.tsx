@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ChevronRight, Home } from 'lucide-react'
 import { ReactNode } from 'react'
+import { Stagger, StaggerItem } from '@/components/common/Reveal'
 
 interface BreadcrumbItem {
   label: string
@@ -31,7 +32,8 @@ export function PageHeroBanner({
         className="pointer-events-none absolute inset-0 bg-hero-glow opacity-15"
       />
 
-      <div className="relative w-full px-6 sm:px-10 lg:px-16 xl:px-24 text-left">
+      <Stagger amount={0.01} stagger={0.22} className="relative w-full px-6 sm:px-10 lg:px-16 xl:px-24 text-left">
+        <StaggerItem>
         {/* Left-Aligned Breadcrumbs */}
         <nav
           aria-label="Breadcrumbs"
@@ -70,7 +72,9 @@ export function PageHeroBanner({
             })}
           </ol>
         </nav>
+        </StaggerItem>
 
+        <StaggerItem>
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 pt-1">
           <div className="max-w-4xl space-y-3">
             {eyebrow && (
@@ -93,8 +97,14 @@ export function PageHeroBanner({
           {badge && <div className="shrink-0">{badge}</div>}
         </div>
 
-        {children && <div className="mt-8 pt-6 border-t border-slate-800/80">{children}</div>}
-      </div>
+        </StaggerItem>
+
+        {children && (
+          <StaggerItem>
+            <div className="mt-8 pt-6 border-t border-slate-800/80">{children}</div>
+          </StaggerItem>
+        )}
+      </Stagger>
     </section>
   )
 }

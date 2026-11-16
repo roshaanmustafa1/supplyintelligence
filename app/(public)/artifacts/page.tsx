@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { prisma } from '@/lib/db'
 import { listPublicResources, type ResourceType } from '@/lib/services/resource.service'
+import { Reveal } from '@/components/common/Reveal'
 import { Container } from '@/components/common/Container'
 import { PageHeroBanner } from '@/components/common/PageHeroBanner'
 import { ArtifactsFilter } from '@/components/artifacts/ArtifactsFilter'
@@ -71,6 +72,7 @@ export default async function ArtifactsPage({ searchParams }: ArtifactsPageProps
       {/* Main Resource Filter & Grid Section */}
       <section className="py-10 sm:py-14 border-b border-slate-200">
         <Container size="full">
+          <Reveal amount={0.05}>
           <ArtifactsFilter
             initialResources={resourcesResult.data}
             categories={categories}
@@ -82,6 +84,7 @@ export default async function ArtifactsPage({ searchParams }: ArtifactsPageProps
             initialFormat={params.format || 'ALL'}
             initialCategory={params.category || 'ALL'}
           />
+          </Reveal>
         </Container>
       </section>
 

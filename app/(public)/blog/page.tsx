@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { getAllArticles } from '@/lib/articles'
 import { getAllTopics } from '@/lib/topics'
+import { Reveal, Stagger, StaggerItem } from '@/components/common/Reveal'
 import { Container } from '@/components/common/Container'
 import { BlogFilter } from '@/components/blog/BlogFilter'
 import { NewsletterSection } from '@/components/home/NewsletterSection'
@@ -39,31 +40,33 @@ export default async function BlogIndexPage({ searchParams }: BlogPageProps) {
         {/* Editorial Archive Header Banner */}
         <section className="border-b border-slate-800 bg-editorial-navy py-12 sm:py-16">
           <Container size="full">
-            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 pb-2">
-              <div className="max-w-3xl">
-                <p className="mb-2.5 text-[11px] font-bold uppercase tracking-[0.18em] text-sky-400">
+            <Stagger amount={0.01} stagger={0.22} className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 pb-2">
+              <div className="max-w-3xl space-y-0">
+                <StaggerItem><p className="mb-2.5 text-[11px] font-bold uppercase tracking-[0.18em] text-sky-400">
                   Supply Intelligence Journal Archive
-                </p>
-                <h1 className="text-3xl sm:text-4xl lg:text-[3.25rem] font-semibold leading-[1.08] tracking-[-0.035em] text-white">
+                </p></StaggerItem>
+                <StaggerItem><h1 className="text-3xl sm:text-4xl lg:text-[3.25rem] font-semibold leading-[1.08] tracking-[-0.035em] text-white">
                   Articles, Intelligence & Strategic Frameworks
-                </h1>
-                <p className="mt-4 text-base sm:text-lg leading-relaxed text-slate-300 max-w-2xl">
+                </h1></StaggerItem>
+                <StaggerItem><p className="mt-4 text-base sm:text-lg leading-relaxed text-slate-300 max-w-2xl">
                   In-depth research, tactical operating models, and empirical analyses across modern procurement, global freight corridors, enterprise AI, and capital projects.
-                </p>
+                </p></StaggerItem>
               </div>
 
-            </div>
+            </Stagger>
           </Container>
         </section>
 
         {/* Interactive Filter & Article Grid */}
         <section className="py-10 sm:py-14 border-b border-slate-200">
           <Container size="full">
-            <BlogFilter
-              initialArticles={articles}
-              topics={topics}
-              initialTopicSlug={initialTopic}
-            />
+            <Reveal amount={0.05}>
+              <BlogFilter
+                initialArticles={articles}
+                topics={topics}
+                initialTopicSlug={initialTopic}
+              />
+            </Reveal>
           </Container>
         </section>
 

@@ -10,6 +10,7 @@ import {
   Building2,
   ExternalLink,
 } from 'lucide-react'
+import { Reveal } from '@/components/common/Reveal'
 import { PageHeroBanner } from '@/components/common/PageHeroBanner'
 import { ContactForm } from '@/components/contact/ContactForm'
 import { NewsletterSection } from '@/components/home/NewsletterSection'
@@ -97,7 +98,8 @@ export default function ContactPage() {
         {/* Main 2-Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
           {/* Left Column (8 cols): Interactive Contact Form */}
-          <div className="lg:col-span-8 rounded-2xl border border-slate-200 bg-white p-6 sm:p-10 lg:p-12 shadow-xs">
+          <Reveal className="lg:col-span-8" amount={0.05}>
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-10 lg:p-12 shadow-xs">
             <div className="mb-6 pb-4 border-b border-slate-200">
               <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-brand-sky block mb-1">
                 Direct Dispatch
@@ -112,9 +114,11 @@ export default function ContactPage() {
 
             <ContactForm />
           </div>
+          </Reveal>
 
           {/* Right Column (4 cols): Direct Desks & Bureau Offices */}
-          <aside className="lg:col-span-4 space-y-6" aria-label="Contact Information">
+          <Reveal className="lg:col-span-4" delay={0.15} amount={0.05}>
+          <aside className="space-y-6" aria-label="Contact Information">
             {/* Direct Desks Card */}
             <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-7 shadow-xs space-y-4">
               <h3 className="text-lg font-bold text-slate-950 border-b border-slate-200 pb-3">
@@ -209,9 +213,11 @@ export default function ContactPage() {
               </p>
             </div>
           </aside>
+          </Reveal>
         </div>
 
         {/* Editorial Pitch & FAQ Section */}
+        <Reveal>
         <section className="rounded-2xl border border-slate-200 bg-white p-8 sm:p-12 shadow-xs">
           <div className="max-w-3xl mb-8">
             <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-brand-sky block mb-1">
@@ -244,6 +250,7 @@ export default function ContactPage() {
             ))}
           </div>
         </section>
+        </Reveal>
 
       </div>
       <NewsletterSection />

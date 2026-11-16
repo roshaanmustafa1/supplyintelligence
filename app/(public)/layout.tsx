@@ -2,6 +2,7 @@ import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { SkipToContent } from '@/components/common/SkipToContent'
 import { OrganizationJsonLd, WebSiteJsonLd } from '@/components/seo/JsonLd'
+import { SiteLoader } from '@/components/common/SiteLoader'
 import { AgentationDev } from '@/components/dev/AgentationDev'
 import { getSearchArticles } from '@/lib/article-search'
 
@@ -15,6 +16,7 @@ export default async function PublicLayout({
   const searchArticles = await getSearchArticles()
   return (
     <div className="contents font-heading">
+      <SiteLoader />
       <SkipToContent />
       <OrganizationJsonLd />
       <WebSiteJsonLd />

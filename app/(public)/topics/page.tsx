@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { getAllTopics } from '@/lib/topics'
 import { getAllArticles } from '@/lib/articles'
+import { Stagger, StaggerItem } from '@/components/common/Reveal'
 import { Container } from '@/components/common/Container'
 import { NewsletterSection } from '@/components/home/NewsletterSection'
 import { TopicCard } from '@/components/topics/TopicCard'
@@ -41,10 +42,13 @@ export default async function TopicsPage() {
             </div>
             <span className="text-sm text-slate-500">{topics.length} disciplines to explore</span>
           </div>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          <Stagger className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
             {topics.map((topic) => (
-              <TopicCard key={topic.id} topic={topic} articleCount={articleCounts[topic.slug] || 0} />
+              <StaggerItem key={topic.id} className="grid">
+                <TopicCard topic={topic} articleCount={articleCounts[topic.slug] || 0} />
+              </StaggerItem>
             ))}
+            <StaggerItem className="grid">
             <div className="flex flex-col items-start justify-center rounded-2xl bg-linear-to-br from-sky-950 via-slate-900 to-slate-950 p-6 shadow-lg shadow-slate-950/20 sm:p-8">
               <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.16em] text-sky-300">Connect the dots</p>
               <h3 className="max-w-xs text-2xl font-semibold leading-snug tracking-tight text-white">
@@ -61,7 +65,8 @@ export default async function TopicsPage() {
                 <ArrowRight className="size-4" aria-hidden="true" />
               </Link>
             </div>
-          </div>
+            </StaggerItem>
+          </Stagger>
         </Container>
       </section>
       <NewsletterSection />

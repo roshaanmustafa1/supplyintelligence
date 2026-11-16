@@ -1,5 +1,6 @@
 import { type Article } from '@/data/articles'
 import { ArticleCard } from '@/components/blog/ArticleCard'
+import { Stagger, StaggerItem } from '@/components/common/Reveal'
 import { cn } from '@/lib/utils'
 
 interface ArticleGridProps {
@@ -27,19 +28,20 @@ export function ArticleGrid({
   }
 
   return (
-    <div
+    <Stagger
       className={cn(
         'grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3',
         className
       )}
     >
       {articles.map((article, index) => (
-        <ArticleCard
-          key={article.slug}
-          article={article}
-          priorityImage={priorityFirst && index === 0}
-        />
+        <StaggerItem key={article.slug} className="grid">
+          <ArticleCard
+            article={article}
+            priorityImage={priorityFirst && index === 0}
+          />
+        </StaggerItem>
       ))}
-    </div>
+    </Stagger>
   )
 }
