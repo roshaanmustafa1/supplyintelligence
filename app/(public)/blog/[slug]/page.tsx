@@ -34,6 +34,7 @@ export async function generateMetadata({
   return {
     title: article.seoTitle || `${article.title} | Supply Intelligence`,
     description: article.seoDescription || article.excerpt,
+    alternates: { canonical: `/blog/${article.slug}` },
     keywords: article.tags,
     authors: [{ name: article.author.name }],
     openGraph: {

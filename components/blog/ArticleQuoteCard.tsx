@@ -37,7 +37,7 @@ export function ArticleQuoteCard({ quote }: ArticleQuoteCardProps) {
       <div className="flex items-center gap-3.5 pt-2">
         <div className="relative size-12 rounded-full overflow-hidden bg-slate-100 ring-2 ring-white shadow-xs shrink-0">
           <Image
-            src="/images/quote-alexander.jpg"
+            src="/images/quote-alexander.webp"
             alt={attributionName}
             fill
             sizes="48px"

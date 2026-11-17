@@ -42,7 +42,7 @@ export function NewsletterSection() {
               <div className="flex items-center gap-2.5">
                 <div className="flex size-7 items-center justify-center bg-white/10 border border-white/20 p-1">
                   <Image
-                    src="/images/logo-mark.png"
+                    src="/images/logo-mark.webp"
                     alt="Supply Intelligence"
                     width={18}
                     height={20}

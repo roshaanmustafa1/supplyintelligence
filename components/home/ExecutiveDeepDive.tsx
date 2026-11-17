@@ -116,7 +116,7 @@ export function ExecutiveDeepDive() {
           {/* Right Column: Visual Frame */}
           <div className="relative min-h-[360px] sm:min-h-[420px] lg:min-h-full border-t lg:border-t-0 lg:border-l border-slate-200 overflow-hidden bg-slate-100 group">
             <Image
-              src="/images/logistics-freight-corridors.jpg"
+              src="/images/logistics-freight-corridors.webp"
               alt="Multi-modal freight corridor showing intermodal shipping infrastructure"
               fill
               priority
@@ -129,7 +129,7 @@ export function ExecutiveDeepDive() {
             {/* SI Research Badge */}
             <div className="absolute top-4 left-4 z-10 flex items-center gap-2 bg-slate-950/90 backdrop-blur-xs px-3 py-1.5 border border-white/10 text-white">
               <Image
-                src="/images/logo-mark.png"
+                src="/images/logo-mark.webp"
                 alt="Supply Intelligence"
                 width={14}
                 height={16}

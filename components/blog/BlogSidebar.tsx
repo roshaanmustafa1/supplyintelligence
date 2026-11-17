@@ -50,7 +50,7 @@ export function BlogSidebar({
     // User requested: "ignore search for now we will make search functionality complete after"
   }
 
-  const authorAvatar = author.avatar || '/images/author-elena.jpg'
+  const authorAvatar = author.avatar || '/images/author-elena.webp'
 
   return (
     <aside className="space-y-6 sm:space-y-7" aria-label="Blog Sidebar">

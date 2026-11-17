@@ -165,7 +165,7 @@ export function SettingsManager({ initialSettings }: SettingsManagerProps) {
           <div className="rounded-xl border border-dashboard-border/80 bg-dashboard-accent/40 p-3.5 text-sm">
             <p className="font-semibold text-dashboard-foreground">Current Active Model:</p>
             <p className="text-dashboard-muted-foreground">
-              Google Gemini 2.5 Flash &bull; Temperature: 0.7 &bull; Max Tokens: 8,192
+              Google Gemini 3.8 Flash &bull; Temperature: 0.7 &bull; Max Tokens: 8,192
             </p>
           </div>
         </div>

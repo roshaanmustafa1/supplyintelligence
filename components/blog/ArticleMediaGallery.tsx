@@ -12,9 +12,9 @@ interface ArticleMediaGalleryProps {
 }
 
 export function ArticleMediaGallery({
-  imageLeft = '/images/blog-discussion.jpg',
+  imageLeft = '/images/blog-discussion.webp',
   imageLeftAlt = 'Strategic operations review meeting',
-  imageRight = '/images/blog-video-thumb.jpg',
+  imageRight = '/images/blog-video-thumb.webp',
   imageRightAlt = 'Executive boardroom briefing video preview',
 }: ArticleMediaGalleryProps) {
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false)

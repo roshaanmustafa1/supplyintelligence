@@ -16,6 +16,7 @@ import { ContactForm } from '@/components/contact/ContactForm'
 import { NewsletterSection } from '@/components/home/NewsletterSection'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/contact' },
   title: 'Contact Us & Editorial Inquiries | Supply Intelligence',
   description:
     'Connect with the Supply Intelligence editorial board, submit practitioner manuscripts, request advisory consultations, or reach our global bureaus.',

@@ -1,6 +1,11 @@
 import { GoogleGenAI } from '@google/genai'
 import { prisma } from '@/lib/db'
 
+/** Gemini model used for every AI feature. */
+export const GEMINI_MODEL = 'gemini-3.8-flash'
+/** Used by article import when the primary model is overloaded. */
+export const GEMINI_FALLBACK_MODEL = 'gemini-2.5-flash'
+
 export interface GenerateArticleOptions {
   topic: string
   category?: string
@@ -54,7 +59,7 @@ Return strictly a valid JSON array of objects with keys: "title", "category", "r
 Do not wrap in markdown quotes or extra text.`
 
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: GEMINI_MODEL,
         contents: prompt,
       })
 
@@ -145,7 +150,7 @@ You must return strictly valid JSON matching this schema:
 Do NOT wrap the output in markdown codeblocks (no \`\`\`json). Output pure raw JSON.`
 
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: GEMINI_MODEL,
         contents: prompt,
       })
 
@@ -161,7 +166,7 @@ Do NOT wrap the output in markdown codeblocks (no \`\`\`json). Output pure raw J
             actorType: 'USER',
             action: 'AI_ARTICLE_SYNTHESIZED',
             resourceType: 'AI_STUDIO',
-            changesAfter: JSON.stringify({ model: 'gemini-2.5-flash', topic: options.topic, title: data.title }),
+            changesAfter: JSON.stringify({ model: GEMINI_MODEL, topic: options.topic, title: data.title }),
           },
         })
       }

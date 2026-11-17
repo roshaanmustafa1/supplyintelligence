@@ -31,8 +31,8 @@ export function DashboardTopbar({ onOpenMobile, user }: DashboardTopbarProps) {
         </button>
         <Link href="/dashboard" className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap" aria-label="Supply Intelligence dashboard">
           <Image src="/images/logo.png" alt="Supply Intelligence" width={1024} height={313} priority className="hidden h-10.5 w-auto object-contain sm:block dark:hidden" />
-          <Image src="/images/logo-dark.png" alt="Supply Intelligence" width={1024} height={313} priority className="hidden h-10.5 w-auto object-contain sm:dark:block" />
-          <Image src="/images/logo-mark.png" alt="Supply Intelligence" width={416} height={479} priority className="h-9 w-8 object-contain sm:hidden" />
+          <Image src="/images/logo-dark.webp" alt="Supply Intelligence" width={1024} height={313} priority className="hidden h-10.5 w-auto object-contain sm:dark:block" />
+          <Image src="/images/logo-mark.webp" alt="Supply Intelligence" width={416} height={479} priority className="h-9 w-8 object-contain sm:hidden" />
         </Link>
       </div>
 

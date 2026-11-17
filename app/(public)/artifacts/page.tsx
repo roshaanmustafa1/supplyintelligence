@@ -10,6 +10,7 @@ import { NewsletterSection } from '@/components/home/NewsletterSection'
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/artifacts' },
   title: 'Artifacts & Templates | Supply Intelligence',
   description:
     'Practical supply chain resources designed to simplify procurement, supplier evaluation, inventory management, and operational decision-making.',

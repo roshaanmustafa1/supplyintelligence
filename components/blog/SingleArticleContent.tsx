@@ -21,7 +21,7 @@ export function SingleArticleContent({ article, comments, commentsCount }: Singl
   const remainingSections = article.sections.slice(2)
 
   // Use the special featured team image or article image
-  const featuredImageSrc = article.image || '/images/blog-featured-team.jpg'
+  const featuredImageSrc = article.image || '/images/blog-featured-team.webp'
 
   return (
     <article className="space-y-8 text-slate-800">
@@ -124,8 +124,8 @@ export function SingleArticleContent({ article, comments, commentsCount }: Singl
       {/* 7. Two-Column Media Showcase (Image + Video with Play Button) matching screenshot */}
       {article.bodyHtml === undefined && (
         <ArticleMediaGallery
-          imageLeft="/images/blog-discussion.jpg"
-          imageRight="/images/blog-video-thumb.jpg"
+          imageLeft="/images/blog-discussion.webp"
+          imageRight="/images/blog-video-thumb.webp"
         />
       )}
 

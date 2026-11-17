@@ -9,11 +9,11 @@ export const dynamic = 'force-dynamic'
 // Existing library images, imported into the database on first visit so they can be managed.
 const SEED_ASSETS = [
   { title: 'Hero Container Ship entering Terminal', path: '/images/hero-container-ship.jpg', alt: 'Large cargo container ship sailing into industrial maritime port', kb: 240 },
-  { title: 'Procurement Process Analytics Display', path: '/images/procurement-workflows.jpg', alt: 'Corporate executive dashboard showing procurement workflows and KPIs', kb: 185 },
-  { title: 'Intelligent Automated Distribution Center', path: '/images/supply-chain-flow.jpg', alt: 'Automated warehouse distribution hub with conveyor system', kb: 310 },
+  { title: 'Procurement Process Analytics Display', path: '/images/procurement-workflows.webp', alt: 'Corporate executive dashboard showing procurement workflows and KPIs', kb: 185 },
+  { title: 'Intelligent Automated Distribution Center', path: '/images/supply-chain-flow.webp', alt: 'Automated warehouse distribution hub with conveyor system', kb: 310 },
   { title: 'Intermodal Freight Railway Corridor', path: '/images/freight-corridors.jpg', alt: 'Freight train transporting double-stacked shipping containers through mountain pass', kb: 275 },
-  { title: 'Executive Logistics Boardroom Strategy', path: '/images/blog-discussion.jpg', alt: 'Senior supply chain leaders reviewing operational plans in conference room', kb: 215 },
-  { title: 'Autonomous Distribution Hub Video Showcase', path: '/images/blog-video-thumb.jpg', alt: 'Smart conveyor sorting facility operations preview', kb: 190 },
+  { title: 'Executive Logistics Boardroom Strategy', path: '/images/blog-discussion.webp', alt: 'Senior supply chain leaders reviewing operational plans in conference room', kb: 215 },
+  { title: 'Autonomous Distribution Hub Video Showcase', path: '/images/blog-video-thumb.webp', alt: 'Smart conveyor sorting facility operations preview', kb: 190 },
 ]
 
 async function loadAssets() {

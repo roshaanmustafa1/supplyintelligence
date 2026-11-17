@@ -57,6 +57,7 @@ export async function generateMetadata({
   return {
     title,
     description,
+    alternates: { canonical: `/artifacts/${dto.slug}` },
     openGraph: {
       type: 'website',
       url,

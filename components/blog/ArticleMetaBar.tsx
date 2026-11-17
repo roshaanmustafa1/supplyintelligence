@@ -18,7 +18,7 @@ export function ArticleMetaBar({
   categorySlug,
   commentsCount = 2,
 }: ArticleMetaBarProps) {
-  const avatarSrc = author.avatar || '/images/author-marcus.jpg'
+  const avatarSrc = author.avatar || '/images/author-marcus.webp'
 
   return (
     <div className="flex flex-wrap items-center gap-y-2.5 gap-x-4 sm:gap-x-6 text-xs sm:text-[13px] text-slate-500 font-medium py-3 border-b border-slate-200/80">

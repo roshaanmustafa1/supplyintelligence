@@ -20,7 +20,7 @@ export default function NotificationsPage() {
     },
     {
       id: 'notif-3',
-      title: 'Gemini 2.5 Flash Engine Connected',
+      title: 'Gemini 3.8 Flash Engine Connected',
       body: 'AI Content Studio is active with automatic fallback to local intelligence synthesis.',
       type: 'INFO',
       time: '25m ago',

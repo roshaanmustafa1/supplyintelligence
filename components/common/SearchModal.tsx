@@ -101,7 +101,7 @@ export function SearchModal({ articles, isOpen, onClose }: SearchModalProps) {
           {query.trim() === '' ? (
             <div className="py-8 text-center text-sm text-muted-foreground flex flex-col items-center">
               <Image
-                src="/images/logo-mark.png"
+                src="/images/logo-mark.webp"
                 alt=""
                 width={32}
                 height={36}

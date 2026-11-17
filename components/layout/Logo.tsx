@@ -22,18 +22,18 @@ export function Logo({
   const isDark = variant === 'dark'
 
   // Determine source image and intrinsic aspect ratio
-  let src = isDark ? '/images/logo-dark.png' : '/images/logo.png'
+  let src = isDark ? '/images/logo-dark.webp' : '/images/logo.png'
   let width = 1024
   let height = 313
   let defaultImgClass = 'h-8 sm:h-9 w-auto object-contain'
 
   if (layout === 'stacked') {
-    src = isDark ? '/images/logo-stacked-dark.png' : '/images/logo-stacked.png'
+    src = isDark ? '/images/logo-stacked-dark.webp' : '/images/logo-stacked.webp'
     width = 1024
     height = 830
     defaultImgClass = 'h-14 sm:h-16 w-auto object-contain'
   } else if (layout === 'mark') {
-    src = '/images/logo-mark.png'
+    src = '/images/logo-mark.webp'
     width = 416
     height = 479
     defaultImgClass = 'size-8 object-contain'

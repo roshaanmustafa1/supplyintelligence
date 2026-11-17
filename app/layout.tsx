@@ -26,11 +26,11 @@ const fontMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://supplyintelligence.com'),
   title: {
-    default: 'Supply Intelligence | Procurement, Supply Chain & AI Insights',
+    default: 'Supply Intelligence | Supply Chain, Procurement & AI',
     template: '%s | Supply Intelligence',
   },
   description:
-    'Practical insights and expert perspectives on procurement, supply chain, AI, logistics and project delivery.',
+    'Practical insights and expert perspectives on procurement, global supply chain, logistics, AI operations, and strategic enterprise project delivery.',
   keywords: [
     'Procurement',
     'Supply Chain',
@@ -55,9 +55,9 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://supplyintelligence.com',
     siteName: 'Supply Intelligence',
-    title: 'Supply Intelligence | Procurement, Supply Chain & AI Insights',
+    title: 'Supply Intelligence | Supply Chain, Procurement & AI',
     description:
-      'Practical insights and expert perspectives on procurement, supply chain, AI, logistics and project delivery.',
+      'Practical insights and expert perspectives on procurement, global supply chain, logistics, AI operations, and strategic enterprise project delivery.',
     images: [
       {
         url: '/images/hero-container-ship.jpg',
@@ -69,9 +69,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Supply Intelligence | Procurement, Supply Chain & AI Insights',
+    title: 'Supply Intelligence | Supply Chain, Procurement & AI',
     description:
-      'Practical insights and expert perspectives on procurement, supply chain, AI, logistics and project delivery.',
+      'Practical insights and expert perspectives on procurement, global supply chain, logistics, AI operations, and strategic enterprise project delivery.',
     images: ['/images/hero-container-ship.jpg'],
     creator: '@SupplyIntel',
   },

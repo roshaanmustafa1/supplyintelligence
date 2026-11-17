@@ -10,6 +10,7 @@ import { TopicCard } from '@/components/topics/TopicCard'
 import { TopicsHero } from '@/components/topics/TopicsHero'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/topics' },
   title: 'Topics & Research Disciplines | Supply Intelligence',
   description:
     'Explore practical insights across procurement, supply chain, AI and digital transformation, logistics, and project delivery.',

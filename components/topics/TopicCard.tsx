@@ -7,23 +7,23 @@ const icons = { ShoppingBag, Network, Sparkles, Ship, CheckCircle2 }
 
 const presentation: Record<string, { image: string; focus: string[] }> = {
   procurement: {
-    image: '/images/procurement-workflows.jpg',
+    image: '/images/procurement-workflows.webp',
     focus: ['Strategic sourcing', 'Supplier management', 'Spend analytics'],
   },
   'supply-chain': {
-    image: '/images/supply-chain-flow.jpg',
+    image: '/images/supply-chain-flow.webp',
     focus: ['Network design', 'Inventory planning', 'Risk & resilience'],
   },
   'ai-digital-transformation': {
-    image: '/images/ai-procurement-analytics.jpg',
+    image: '/images/ai-procurement-analytics.webp',
     focus: ['Automation', 'Predictive analytics', 'Digital operations'],
   },
   logistics: {
-    image: '/images/logistics-freight-corridors.jpg',
+    image: '/images/logistics-freight-corridors.webp',
     focus: ['Global freight', 'Port operations', 'Trade corridors'],
   },
   'project-delivery': {
-    image: '/images/project-delivery-infrastructure.jpg',
+    image: '/images/project-delivery-infrastructure.webp',
     focus: ['Capital projects', 'EPC delivery', 'Contractor management'],
   },
 }

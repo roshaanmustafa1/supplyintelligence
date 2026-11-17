@@ -10,7 +10,7 @@ export default function NotFound() {
         <div className="rounded-2xl border border-border bg-card p-8 sm:p-12 text-center shadow-xs">
           <div className="flex justify-center mb-5">
             <Image
-              src="/images/logo-mark.png"
+              src="/images/logo-mark.webp"
               alt="Supply Intelligence"
               width={56}
               height={64}

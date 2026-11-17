@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { getLatestArticles } from '@/lib/articles'
 import { IntelligenceHero } from '@/components/home/IntelligenceHero'
 import { LatestArticles } from '@/components/home/LatestArticles'
@@ -5,6 +6,10 @@ import { StrategicToolkits } from '@/components/home/StrategicToolkits'
 import { IndustryCaseStudies } from '@/components/home/IndustryCaseStudies'
 import { Reveal } from '@/components/common/Reveal'
 import { NewsletterSection } from '@/components/home/NewsletterSection'
+
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+}
 
 export default async function HomePage() {
   const latestArticles = await getLatestArticles(3)

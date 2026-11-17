@@ -7,6 +7,7 @@ import { BlogFilter } from '@/components/blog/BlogFilter'
 import { NewsletterSection } from '@/components/home/NewsletterSection'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/blog' },
   title: 'Articles & Editorial Archive | Supply Intelligence',
   description:
     'Comprehensive archive of practical insights, frameworks, and field perspectives on procurement, supply chain orchestration, AI, and project delivery.',

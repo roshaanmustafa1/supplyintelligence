@@ -6,8 +6,8 @@ import { type Article } from '@/data/articles'
 import { Container } from '@/components/common/Container'
 
 const spotlights = [
-  { category: 'Logistics', title: 'A world in motion. Stay one step ahead.', image: '/images/logistics-freight-corridors.jpg', slug: 'logistics' },
-  { category: 'AI & Digital', title: 'The next chapter of smarter operations.', image: '/images/ai-procurement-analytics.jpg', slug: 'ai-digital-transformation' },
+  { category: 'Logistics', title: 'A world in motion. Stay one step ahead.', image: '/images/logistics-freight-corridors.webp', slug: 'logistics' },
+  { category: 'AI & Digital', title: 'The next chapter of smarter operations.', image: '/images/ai-procurement-analytics.webp', slug: 'ai-digital-transformation' },
 ]
 
 export function IntelligenceHero({ article }: { article?: Article }) {
@@ -19,7 +19,7 @@ export function IntelligenceHero({ article }: { article?: Article }) {
         <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.22em] text-brand-sky">Ideas. Context. Perspective.</p>
-            <h2 id="intelligence-hero-heading" className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">The Intelligence Edit</h2>
+            <h1 id="intelligence-hero-heading" className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">The Intelligence Edit</h1>
           </div>
           <Link href="/blog" className="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 transition-colors hover:text-brand-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky">
             Explore the journal <ArrowUpRight className="size-4" aria-hidden="true" />
