@@ -1,14 +1,14 @@
 import type { Metadata } from 'next'
 import {
   Mail,
-  MapPin,
-  Phone,
   Clock,
   ShieldCheck,
   FileText,
   HelpCircle,
-  Building2,
-  ExternalLink,
+  Briefcase,
+  Newspaper,
+  Handshake,
+  Globe2,
 } from 'lucide-react'
 import { Reveal } from '@/components/common/Reveal'
 import { PageHeroBanner } from '@/components/common/PageHeroBanner'
@@ -19,33 +19,37 @@ export const metadata: Metadata = {
   alternates: { canonical: '/contact' },
   title: 'Contact Us & Editorial Inquiries | Supply Intelligence',
   description:
-    'Connect with the Supply Intelligence editorial board, submit practitioner manuscripts, request advisory consultations, or reach our global bureaus.',
+    'Connect with the Supply Intelligence editorial board, submit practitioner manuscripts, request advisory consultations, or get in touch with our team.',
   openGraph: {
     title: 'Contact Us & Editorial Inquiries | Supply Intelligence',
     description:
-      'Connect with the Supply Intelligence editorial board, submit practitioner manuscripts, request advisory consultations, or reach our global bureaus.',
+      'Connect with the Supply Intelligence editorial board, submit practitioner manuscripts, request advisory consultations, or get in touch with our team.',
     url: 'https://supplyintelligence.com/contact',
   },
 }
 
-const bureaus = [
+const EMAIL = 'contact@supplyintelligence.org'
+
+const topics = [
   {
-    city: 'New York (Global HQ)',
-    address: '120 Wall Street, 28th Floor, New York, NY 10005, USA',
-    phone: '+1 (800) 555-0199',
-    focus: 'Executive Editorial & Macro Procurement Research',
+    icon: FileText,
+    title: 'Editorial & Manuscripts',
+    text: 'Pitch an article, share a field study, or suggest a topic for the journal.',
   },
   {
-    city: 'London (European Bureau)',
-    address: '1 Canada Square, Canary Wharf, London E14 5AA, UK',
-    phone: '+44 20 7946 0912',
-    focus: 'Maritime Freight & Cross-Border Trade Compliance',
+    icon: Briefcase,
+    title: 'Advisory & Toolkits',
+    text: 'Questions about templates, artifacts, or sourcing diagnostic workshops.',
   },
   {
-    city: 'Singapore (Asia-Pacific Hub)',
-    address: 'Marina Bay Financial Centre, Tower 2, Singapore 018983',
-    phone: '+65 6789 0123',
-    focus: 'Nearshoring Networks & Transshipment Telemetry',
+    icon: Newspaper,
+    title: 'Press & Citations',
+    text: 'Media requests, expert commentary, and permission to cite our research.',
+  },
+  {
+    icon: Handshake,
+    title: 'Partnerships',
+    text: 'Collaborations, speaking invitations, and community initiatives.',
   },
 ]
 
@@ -79,7 +83,7 @@ export default function ContactPage() {
       <PageHeroBanner
         eyebrow="Editorial Desk & Advisory Inquiries"
         title="Connect With Our Research & Editorial Board"
-        description="Whether submitting a field study manuscript, requesting customized sourcing diagnostic workshops, or seeking press commentary, our practitioners are accessible across our global bureaus."
+        description="Whether submitting a field study manuscript, requesting customized sourcing diagnostic workshops, or seeking press commentary, our team is just an email away."
         breadcrumbs={[{ label: 'Contact' }]}
         badge={
           <div className="flex flex-wrap items-center gap-3 bg-slate-900/80 border border-slate-700/80 p-3 sm:p-4 rounded-xl backdrop-blur-xs">
@@ -88,8 +92,8 @@ export default function ContactPage() {
               <span>SLA: <strong className="text-white">1 Business Day</strong></span>
             </div>
             <div className="flex items-center gap-2 text-xs text-slate-300">
-              <Building2 className="size-4 text-brand-sky" />
-              <span><strong className="text-white">3</strong> Global Bureaus</span>
+              <Mail className="size-4 text-brand-sky" />
+              <span><strong className="text-white">{EMAIL}</strong></span>
             </div>
           </div>
         }
@@ -120,86 +124,52 @@ export default function ContactPage() {
           {/* Right Column (4 cols): Direct Desks & Bureau Offices */}
           <Reveal className="lg:col-span-4" delay={0.15} amount={0.05}>
           <aside className="space-y-6" aria-label="Contact Information">
-            {/* Direct Desks Card */}
+            {/* Contact Card */}
             <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-7 shadow-xs space-y-4">
               <h3 className="text-lg font-bold text-slate-950 border-b border-slate-200 pb-3">
-                Direct Editorial Desks
+                Get in Touch
               </h3>
-
-              <ul className="space-y-4 text-xs sm:text-sm">
-                <li className="flex items-start gap-3">
-                  <div className="size-9 rounded-lg bg-sky-50 text-brand-sky border border-sky-100 flex items-center justify-center shrink-0 mt-0.5">
-                    <Mail className="size-4" />
-                  </div>
-                  <div>
-                    <span className="font-bold text-slate-900 block text-xs uppercase tracking-wider">
-                      Editorial & Manuscripts
-                    </span>
-                    <a
-                      href="mailto:editorial@supplyintelligence.com"
-                      className="text-brand-sky hover:underline font-medium break-all"
-                    >
-                      editorial@supplyintelligence.com
-                    </a>
-                  </div>
-                </li>
-
-                <li className="flex items-start gap-3">
-                  <div className="size-9 rounded-lg bg-sky-50 text-brand-sky border border-sky-100 flex items-center justify-center shrink-0 mt-0.5">
-                    <FileText className="size-4" />
-                  </div>
-                  <div>
-                    <span className="font-bold text-slate-900 block text-xs uppercase tracking-wider">
-                      Advisory & Toolkits
-                    </span>
-                    <a
-                      href="mailto:advisory@supplyintelligence.com"
-                      className="text-brand-sky hover:underline font-medium break-all"
-                    >
-                      advisory@supplyintelligence.com
-                    </a>
-                  </div>
-                </li>
-
-                <li className="flex items-start gap-3">
-                  <div className="size-9 rounded-lg bg-sky-50 text-brand-sky border border-sky-100 flex items-center justify-center shrink-0 mt-0.5">
-                    <ShieldCheck className="size-4" />
-                  </div>
-                  <div>
-                    <span className="font-bold text-slate-900 block text-xs uppercase tracking-wider">
-                      Press & Citations
-                    </span>
-                    <a
-                      href="mailto:press@supplyintelligence.com"
-                      className="text-brand-sky hover:underline font-medium break-all"
-                    >
-                      press@supplyintelligence.com
-                    </a>
-                  </div>
-                </li>
-              </ul>
-            </div>
-
-            {/* Bureau Offices Card */}
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-7 shadow-xs space-y-4">
-              <h3 className="text-lg font-bold text-slate-950 border-b border-slate-200 pb-3">
-                Global Bureau Locations
-              </h3>
-
-              <div className="space-y-4">
-                {bureaus.map((b) => (
-                  <div key={b.city} className="space-y-1.5 text-xs text-slate-600 border-b border-slate-100 pb-3 last:border-0 last:pb-0">
-                    <div className="flex items-center gap-1.5 font-bold text-slate-900">
-                      <MapPin className="size-3.5 text-brand-sky shrink-0" />
-                      <span>{b.city}</span>
-                    </div>
-                    <p className="pl-5 text-slate-600 leading-relaxed">{b.address}</p>
-                    <p className="pl-5 text-brand-sky font-semibold flex items-center gap-1">
-                      <Phone className="size-3" />
-                      <span>{b.phone}</span>
-                    </p>
-                  </div>
-                ))}
+              <div className="flex items-start gap-3 text-xs sm:text-sm">
+                <div className="size-9 rounded-lg bg-sky-50 text-brand-sky border border-sky-100 flex items-center justify-center shrink-0 mt-0.5">
+                  <Mail className="size-4" />
+                </div>
+                <div>
+                  <span className="font-bold text-slate-900 block text-xs uppercase tracking-wider">
+                    Email Us
+                  </span>
+                  <a
+                    href={`mailto:${EMAIL}`}
+                    className="text-brand-sky hover:underline font-medium break-all"
+                  >
+                    {EMAIL}
+                  </a>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 text-xs sm:text-sm">
+                <div className="size-9 rounded-lg bg-sky-50 text-brand-sky border border-sky-100 flex items-center justify-center shrink-0 mt-0.5">
+                  <Globe2 className="size-4" />
+                </div>
+                <div>
+                  <span className="font-bold text-slate-900 block text-xs uppercase tracking-wider">
+                    Where We Work
+                  </span>
+                  <p className="text-slate-600 leading-relaxed">
+                    A fully remote editorial team serving readers and practitioners worldwide.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 text-xs sm:text-sm">
+                <div className="size-9 rounded-lg bg-sky-50 text-brand-sky border border-sky-100 flex items-center justify-center shrink-0 mt-0.5">
+                  <ShieldCheck className="size-4" />
+                </div>
+                <div>
+                  <span className="font-bold text-slate-900 block text-xs uppercase tracking-wider">
+                    Your Privacy
+                  </span>
+                  <p className="text-slate-600 leading-relaxed">
+                    We only use your details to reply to your message.
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -207,15 +177,40 @@ export default function ContactPage() {
             <div className="rounded-2xl border border-sky-200 bg-sky-50/70 p-6 text-xs text-slate-700 space-y-2">
               <div className="flex items-center gap-2 font-bold text-slate-900">
                 <Clock className="size-4 text-brand-sky" />
-                <span>Operating Hours & Protocol</span>
+                <span>Response Time</span>
               </div>
               <p className="leading-relaxed">
-                Our editorial desks operate across Eastern (EST), Greenwich (GMT), and Singapore (SGT) time zones. Urgent research corrections receive immediate escalation.
+                We read every message and aim to reply within one business day. Urgent research corrections are escalated immediately.
               </p>
             </div>
           </aside>
           </Reveal>
         </div>
+
+        {/* What can we help with */}
+        <Reveal>
+        <section className="rounded-2xl border border-slate-200 bg-white p-8 sm:p-12 shadow-xs">
+          <div className="max-w-3xl mb-8">
+            <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-brand-sky block mb-1">
+              How We Can Help
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-950">
+              What Would You Like to Talk About?
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {topics.map(({ icon: Icon, title, text }) => (
+              <div key={title} className="p-6 rounded-xl border border-slate-200 bg-slate-50/60">
+                <div className="size-9 rounded-lg bg-sky-50 text-brand-sky border border-sky-100 flex items-center justify-center mb-3">
+                  <Icon className="size-4" />
+                </div>
+                <h3 className="text-base font-bold text-slate-950 mb-1">{title}</h3>
+                <p className="text-xs sm:text-[13px] text-slate-600 leading-relaxed">{text}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+        </Reveal>
 
         {/* Editorial Pitch & FAQ Section */}
         <Reveal>
